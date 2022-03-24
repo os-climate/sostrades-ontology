@@ -1,0 +1,989 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://sostrades.eu.airbus.corp/ontology#"
+     xml:base="https://sostrades.eu.airbus.corp/ontology"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:sos="https://sostrades.eu.airbus.corp/ontology#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:foaf="http://xmlns.com/foaf/0.1/"
+     xmlns:qudt="http://qudt.org/schema/qudt/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+    <owl:Ontology rdf:about="https://sostrades.eu.airbus.corp/ontology">
+        <owl:versionIRI rdf:resource="https://sostrades.eu.airbus.corp/ontology/1.1.0"/>
+        <dc:contributor rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Etienne Tomiak</dc:contributor>
+        <dc:contributor rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Manel Ben Mna</dc:contributor>
+        <dc:contributor rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Stephane Biard</dc:contributor>
+        <dc:description rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">This is the ontology used to represent all concepts used in the Systems of Systems Trades project. It is used to be a description of the concepts and relationship between them at any moment from the code information as well as a way to complement information with additional manually inputed info like label, definition, ...</dc:description>
+        <owl:versionInfo rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">This evolution simplify the schema and add SoSDiscipline, SoSProcesses and links betweens all SoSConcepts</owl:versionInfo>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/contributor -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/contributor"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/description -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/description"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/title -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/title"/>
+    
+
+
+    <!-- http://qudt.org/schema/qudt/Datatype -->
+
+    <owl:AnnotationProperty rdf:about="http://qudt.org/schema/qudt/Datatype"/>
+    
+
+
+    <!-- http://qudt.org/schema/qudt/expression -->
+
+    <owl:AnnotationProperty rdf:about="http://qudt.org/schema/qudt/expression"/>
+    
+
+
+    <!-- http://qudt.org/schema/qudt/symbol -->
+
+    <owl:AnnotationProperty rdf:about="http://qudt.org/schema/qudt/symbol"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#altLabel -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#altLabel">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#definition -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#definition"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#prefLabel -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#belongsTo -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#belongsTo">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#composedOf -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#composedOf"/>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#couplingIn -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#couplingIn">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#couplingOut -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#couplingOut">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#createdFrom -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#createdFrom">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#generatedBy -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#generatedBy">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#hasInput -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#hasInput">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#hasOutput -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#hasOutput">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#hasValue -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#hasValue">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#implements -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#implements">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#instanceOf -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#instanceOf"/>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#reference -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#represents -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#represents">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#usedIn -->
+
+    <owl:ObjectProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#usedIn">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#ACLTag -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#ACLTag">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#category -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#category">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#classInheritance -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#classInheritance">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#codeRepository -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#codeRepository">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#composedOf -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#composedOf">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#coupling -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#coupling">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#dataframeDescriptor -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#dataframeDescriptor">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#dataframeEditionLocked -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#dataframeEditionLocked">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#datatype -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#datatype">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#defaultValue -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#defaultValue">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#definition -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#definition">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#definitionSource -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#definitionSource">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#delivered -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#delivered">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#description -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#description">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#disciplineList -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#disciplineList">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#disciplineName -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#disciplineName">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#documentation -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#documentation">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+        <rdfs:comment xml:lang="en">Contains Markdown documentation</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#editable -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#editable">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#folderName -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#folderName">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#folderPath -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#folderPath">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#headers -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#headers">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#icon -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#icon">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#id -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#id">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#implemented -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#implemented">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#inputOf -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#inputOf">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#inputParameterUsages -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#inputParameterUsages">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#inputParameterUsagesQuantity -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#inputParameterUsagesQuantity">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#inputParameters -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#inputParameters">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#inputParametersQuantity -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#inputParametersQuantity">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#ioType -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#ioType">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#level -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#level">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#maturity -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#maturity">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#modelList -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#modelList">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#modelType -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#modelType">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#name -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#name">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#namespace -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#namespace">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#numerical -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#numerical">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#optional -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#optional">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#originSource -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#originSource">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#outputOf -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#outputOf">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#outputParameterUsages -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#outputParameterUsages">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#outputParameterUsagesQuantity -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#outputParameterUsagesQuantity">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#outputParameters -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#outputParameters">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#outputParametersQuantity -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#outputParametersQuantity">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#possibleValues -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#possibleValues">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#processList -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#processList">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#processRepositoriesList -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#processRepositoriesList">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#processUsingModel -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#processUsingModel">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#processUsingModelQuantity -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#processUsingModelQuantity">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#publicationDate -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#publicationDate">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#pythonClass -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#pythonClass">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#pythonModule -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#pythonModule">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#pythonModulePath -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#pythonModulePath">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#range -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#range">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#repository -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#repository">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#runUsecase -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#runUsecase">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#source -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#source">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#structuring -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#structuring">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#topManualDataProperty -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#treenodeType -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#treenodeType">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#unit -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#unit">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#usecaseList -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#usecaseList">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#userLevel -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#userLevel">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#validated -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#validated">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#validator -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#validator">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#version -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#version">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#visibility -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#visibility">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#CodeRepository -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#CodeRepository">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+        <rdfs:label>Code Repository</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#Coupling -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#Coupling">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#Discipline -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#Discipline">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">Discipline</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#GEMSConcept -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#GEMSConcept"/>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#GEMSMDAChain -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#GEMSMDAChain">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#GEMSConcept"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#GEMSMDODiscipline -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#GEMSMDODiscipline">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#GEMSConcept"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#GEMSMDOScenario -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#GEMSMDOScenario">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#GEMSConcept"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#Parameter -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#Parameter">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">Parameter</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#ParameterValue -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#ParameterValue">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">Parameter Value</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#Parameter_Usage -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#Parameter_Usage">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#Parameter"/>
+        <rdfs:label xml:lang="en">Parameter Usage</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSConcept -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSConcept">
+        <rdfs:label xml:lang="en">SoS Concept</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSCoupling -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSCoupling">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#GEMSMDAChain"/>
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSDiscipline"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSDiscipline -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSDiscipline">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#GEMSMDODiscipline"/>
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+        <dc:description xml:lang="en">Concept used within SoSTrades project to represent a model which include the execution code and the list of necessary parameter input and output</dc:description>
+        <rdfs:label xml:lang="en">SoS Discipline</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSEval -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSEval">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSDiscipline"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSGradients -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSGradients">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSEval"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSMultiInstances -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSMultiInstances">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSDiscipline"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSOptimScenario -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSOptimScenario">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#GEMSMDOScenario"/>
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSDiscipline"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSPostProcessingChart -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSPostProcessingChart">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSProcess -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSProcess">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">SoS Process</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSProcessRepository -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSProcessRepository">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">SoS Process Repository</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSReferenceStudy -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSReferenceStudy">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSStudy"/>
+        <rdfs:label xml:lang="en">SoS Reference Study</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSSentivity -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSSentivity">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSEval"/>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSStudy -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSStudy">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">SoS Study</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#SoSTreenode -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#SoSTreenode">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">SoS TreeNode</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#Usecase -->
+
+    <owl:Class rdf:about="https://sostrades.eu.airbus.corp/ontology#Usecase">
+        <rdfs:subClassOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#SoSConcept"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+
