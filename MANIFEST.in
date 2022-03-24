@@ -1,0 +1,4 @@
+include LICENSE
+include NOTICE
+include README.md
+include sos_ontology/data/sos_ontology/SoSTrade_Ontology_ABox.owl
