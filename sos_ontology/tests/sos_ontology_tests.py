@@ -1,3 +1,19 @@
+'''
+Copyright 2022 Airbus SAS
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+'''
+
 from sos_ontology.core.ontology import Ontology
 from sos_ontology.core.sos_ontology import SoSOntology
 from os.path import dirname, join
@@ -11,7 +27,8 @@ import json
 #     'SoSTrades_Ontology_ABox_Decentralized.owl',
 # )
 
-repositories_name_path = join(dirname(__file__), 'data', 'repositories_name.json')
+repositories_name_path = join(
+    dirname(__file__), 'data', 'repositories_name.json')
 with open(repositories_name_path, 'r') as outfile:
     repositories_name = json.loads(outfile.read())
 
@@ -19,7 +36,8 @@ processes_name_path = join(dirname(__file__), 'data', 'processes_name.json')
 with open(processes_name_path, 'r') as outfile:
     processes_name = json.loads(outfile.read())
 
-linked_process_dict_path = join(dirname(__file__), 'data', 'linked_process_dict.json')
+linked_process_dict_path = join(
+    dirname(__file__), 'data', 'linked_process_dict.json')
 with open(linked_process_dict_path, 'r') as outfile:
     linked_process_dict = json.loads(outfile.read())
 
@@ -53,7 +71,8 @@ print('Test get_models_list_filtered')
 result['models_filtered'] = onto.get_models_list_filtered(linked_process_dict)
 
 print('Test get_models_nodes_and_links_filtered')
-result['link_filtered'] = onto.get_models_nodes_and_links_filtered(linked_process_dict)
+result['link_filtered'] = onto.get_models_nodes_and_links_filtered(
+    linked_process_dict)
 
 print('Test get_metadata')
 result['get_metadata'] = onto.get_metadata(data_request)
