@@ -16,7 +16,10 @@ limitations under the License.
 
 from rdflib.namespace import SKOS, XSD, OWL, RDF, RDFS, split_uri
 from rdflib import Namespace, Literal
-from os.path import dirname, join
+from os.path import dirname, join, exists, isfile
+from os import environ
+
+from simplejson import load
 from sos_ontology.core.ontology import Ontology
 import pandas as pd
 import sos_ontology
@@ -62,19 +65,35 @@ class SoSOntology(Ontology):
 
         Ontology.__init__(self)
 
+        self.DEFAULT_PATH = (
+            join(
+                dirname(sos_ontology.__file__),
+                'data',
+                'sos_ontology',
+                'SoSTrades_Ontology_ABox_Decentralized.owl',
+            ),
+        )
+
         # Load the SoS ontology
         if source == 'file':
             if self.ontologyVersion == 1.1:
                 self.SOS = Namespace('https://sostrades.eu.airbus.corp/ontology#')
-                self.load(
-                    join(
-                        dirname(sos_ontology.__file__),
-                        'data',
-                        'sos_ontology',
-                        'SoSTrades_Ontology_ABox_Decentralized.owl',
-                    ),
-                    'xml',
-                )
+
+                environ_dict = dict(environ)
+                ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
+                load_path = ''
+                if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
+                    load_path = join(
+                        ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl'
+                    )
+                else:
+                    loadPath = self.DEFAULT_PATH
+
+                if isfile(loadPath):
+                    self.load(path=loadPath, onto_format='xml')
+                    print(f'SoSOntology loaded from path {loadPath}')
+                else:
+                    raise Exception('Impossible to load Ontology, path does not exists')
 
                 # get a list of all dataproperties that will become attributes
                 self.datapropertyDict = self.getOntologyPredicatesDict(
@@ -3098,6 +3117,13 @@ class SoSOntology(Ontology):
 
     def exportOntology(self, aboxPath=None):
         if aboxPath is not None:
+            if not exists(aboxPath):
+                # we create the file
+                try:
+                    open(aboxPath, 'w+').close()
+                except OSError:
+                    print(f'Failed creating {aboxPath}')
+
             # we export the graph with all the added triples
             self.graph.serialize(destination=aboxPath)
 
