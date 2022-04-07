@@ -1,1 +1,4 @@
-["business_case.sos_processes.business_case", "services.sos_processes", "market.sos_processes", "lifecycleanalysis.sos_processes"]
+[
+	"value_assessment.sos_processes",
+	"sos_trades_core.sos_processes.test"
+]

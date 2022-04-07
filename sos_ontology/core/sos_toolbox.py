@@ -128,7 +128,7 @@ class SoSToolbox:
 
     def write_json(self, json_file_path, dict_to_write, entity):
         if json_file_path is not None:
-            with open(json_file_path, 'w') as outfile:
+            with open(json_file_path, 'w+') as outfile:
                 outfile.write(jsonpickle.encode(dict_to_write, unpicklable=False))
             print(
                 f'Writing of {len(dict_to_write.keys())} {entity} to {json_file_path}'
@@ -528,8 +528,8 @@ class SoSToolbox:
         self, logs_dict, log_file_name, short_log_file_name, full_log_json_path
     ):
 
-        log_file = open(log_file_name, 'wb')
-        short_log_file = open(short_log_file_name, 'wb')
+        log_file = open(log_file_name, 'wb+')
+        short_log_file = open(short_log_file_name, 'wb+')
 
         # write summary of modification entity by entity
         diffDict = logs_dict['updatesDetails']

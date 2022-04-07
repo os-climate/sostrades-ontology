@@ -2,7 +2,6 @@
 
 This is SoSTrades Ontology project.
 It contains:
- - the latest version of the SoSTrades Ontology with all instances
  - the SoSTrades TBox (the ontology classes) used to create the SoSTrades ontology
  - all the necessary code to generate the SoSTrades Ontology from parsing the Python code
  - the SoSTrades Ontology API server and code
@@ -28,7 +27,7 @@ To be able to run correctly this script:
 ![](Update_process.png)
 
 ### Files generated
-Once the script is DONE, it will have updated the files:
+Once the script is DONE, it will have created the files:
  - `\data\sos_ontology\SoSTrades_Ontology_ABox_Decentralized.owl`
  - `\data\logs\ontologyCreationLogs.json`
  - `\data\terminology\SoS_Trades_Terminology_ABox.xlsx`
@@ -110,7 +109,7 @@ SoS_Toolbox class that contains common methods that can be used everywhere
 
 #### **\data\sos_ontology\SoSTrades_Ontology_ABox_Decentralized.owl**
 
-Current version of the SoSTrades Ontology with all the classes and individuals
+Generated version of the SoSTrades Ontology with all the classes and individuals
 
 #### **\data\sos_ontology\SoSTrades_Ontology_TBox.owl**
 
