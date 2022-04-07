@@ -16,3 +16,4 @@ table-logger==0.3.6
 uvicorn==0.15.0
 fastapi==0.70.0
 simplejson==3.17.5
+jinja2==3.0.1

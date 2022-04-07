@@ -16,6 +16,7 @@ limitations under the License.
 
 from sos_ontology.core.sos_entities.sos_entity import SoSEntity
 from sos_ontology.core.sos_entities.parameter import Parameter
+from numpy import array_equal
 
 
 class ParameterUsage(SoSEntity):
@@ -87,7 +88,9 @@ class ParameterUsage(SoSEntity):
                     self.dataframeEditionLocked = value
                 if key == 'user_level' and self.userLevel != value:
                     self.userLevel = value
-                if key == 'possible_values' and self.possibleValues != value:
+                if key == 'possible_values' and array_equal(
+                    self.possibleValues, value, equal_nan=False
+                ):
                     self.possibleValues = value
                 if key == 'range' and self.range != value:
                     self.range = value
