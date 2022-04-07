@@ -87,11 +87,11 @@ class SoSOntology(Ontology):
                         ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl'
                     )
                 else:
-                    loadPath = self.DEFAULT_PATH
+                    load_path = self.DEFAULT_PATH
 
-                if isfile(loadPath):
-                    self.load(path=loadPath, onto_format='xml')
-                    print(f'SoSOntology loaded from path {loadPath}')
+                if isfile(load_path):
+                    self.load(path=load_path, onto_format='xml')
+                    print(f'SoSOntology loaded from path {load_path}')
                 else:
                     raise Exception('Impossible to load Ontology, path does not exists')
 
