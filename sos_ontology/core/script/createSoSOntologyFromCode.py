@@ -55,12 +55,10 @@ ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
 if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
     SoSaBox_path = join(ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl')
 else:
-    SoSaBox_path = (
-        join(
-            dataOntologyPath,
-            'sos_ontology',
-            'SoSTrades_Ontology_ABox_Decentralized.owl',
-        ),
+    SoSaBox_path = join(
+        dataOntologyPath,
+        'sos_ontology',
+        'SoSTrades_Ontology_ABox_Decentralized.owl',
     )
 
 print('PYTHON Path to scan', PYTHONPATH_list)

@@ -65,13 +65,11 @@ class SoSOntology(Ontology):
 
         Ontology.__init__(self)
 
-        self.DEFAULT_PATH = (
-            join(
-                dirname(sos_ontology.__file__),
-                'data',
-                'sos_ontology',
-                'SoSTrades_Ontology_ABox_Decentralized.owl',
-            ),
+        self.DEFAULT_PATH = join(
+            dirname(sos_ontology.__file__),
+            'data',
+            'sos_ontology',
+            'SoSTrades_Ontology_ABox_Decentralized.owl',
         )
 
         # Load the SoS ontology
@@ -214,7 +212,7 @@ class SoSOntology(Ontology):
                 'inputParameterQuantity',
                 'modelType',
                 'implemented',
-                'validator',
+                'validated_by',
                 'delivered',
                 'originSource',
                 'icon',
@@ -549,15 +547,15 @@ class SoSOntology(Ontology):
             'Name': 1,
             'Type': 2,
             'Source': 3,
-            'Delivered': 4,
-            'Implemented': 5,
-            'Last publication date': 6,
-            'Validator': 7,
-            'Validated': 8,
-            'Discipline': 9,
-            'Processes Using Model': 10,
-            'Processes Using Model List': 11,
-            'id': 12,
+            # 'Delivered': 4,
+            # 'Implemented': 5,
+            'Last modification date': 4,
+            'Validated by': 5,
+            'Validated': 6,
+            'Discipline': 7,
+            'Processes Using Model': 8,
+            'Processes Using Model List': 9,
+            'id': 10,
         }
 
         modelList = []
@@ -604,14 +602,14 @@ class SoSOntology(Ontology):
                             ]
                         processesNumber += 1
 
-            modelRow['Type'] = modelAttributes.get('modelType', '')
-            modelRow['Source'] = modelAttributes.get('originSource', '')
-            modelRow['Delivered'] = modelAttributes.get('delivered', '')
-            modelRow['Implemented'] = modelAttributes.get('implemented', '')
-            modelRow['Last publication date'] = modelAttributes.get(
-                'publicationDate', ''
+            modelRow['Type'] = modelAttributes.get('type', '')
+            modelRow['Source'] = modelAttributes.get('source', '')
+            # modelRow['Delivered'] = modelAttributes.get('delivered', '')
+            # modelRow['Implemented'] = modelAttributes.get('implemented', '')
+            modelRow['Last modification date'] = modelAttributes.get(
+                'last_modification_date', ''
             )
-            modelRow['Validator'] = modelAttributes.get('validator', '')
+            modelRow['Validated by'] = modelAttributes.get('validated_by', '')
             modelRow['Validated'] = modelAttributes.get('validated', '')
             modelRow['Discipline'] = disciplineLabel
             modelRow['Processes Using Model'] = processesNumber
@@ -691,20 +689,20 @@ class SoSOntology(Ontology):
                                         processesDict[repo_name] = [process_name]
                                     processesNumber += 1
 
-            if model_authorised or modelAttributes.get('delivered', '') == 'NO':
+            if model_authorised:
                 # Add model to list
                 new_model = ModelStatus()
                 new_model.name = self.label(modelURI)
                 new_model.id = modelAttributes.get('id', '')
                 new_model.description = modelAttributes.get('description', 'Unknown')
-                new_model.model_type = modelAttributes.get('modelType', 'Unknown')
-                new_model.source = modelAttributes.get('originSource', 'Unknown')
-                new_model.delivered = modelAttributes.get('delivered', 'YES')
-                new_model.implemented = modelAttributes.get('implemented', 'YES')
-                new_model.last_publication_date = modelAttributes.get(
-                    'publicationDate', ''
+                new_model.model_type = modelAttributes.get('type', 'Unknown')
+                new_model.source = modelAttributes.get('source', 'Unknown')
+                # new_model.delivered = modelAttributes.get('delivered', 'YES')
+                # new_model.implemented = modelAttributes.get('implemented', 'YES')
+                new_model.last_modification_date = modelAttributes.get(
+                    'last_modification_date', ''
                 )
-                new_model.validator = modelAttributes.get('validator', 'Unknown')
+                new_model.validated_by = modelAttributes.get('validated_by', 'Unknown')
                 new_model.validated = modelAttributes.get('validated', 'NO')
                 new_model.discipline = codeRepositoryLabel
                 new_model.processes_using_model = processesNumber
@@ -729,15 +727,15 @@ class SoSOntology(Ontology):
             'Name': 1,
             'Type': 2,
             'Source': 3,
-            'Delivered': 4,
-            'Implemented': 5,
-            'Last publication date': 6,
-            'Validator': 7,
-            'Validated': 8,
-            'Discipline': 9,
-            'Processes Using Model': 10,
-            'Processes Using Model List': 11,
-            'id': 12,
+            # 'Delivered': 4,
+            # 'Implemented': 5,
+            'Last modification date': 4,
+            'Validated by': 5,
+            'Validated': 6,
+            'Discipline': 7,
+            'Processes Using Model': 8,
+            'Processes Using Model List': 9,
+            'id': 10,
         }
 
         cleanedModels = []
@@ -2915,16 +2913,16 @@ class SoSOntology(Ontology):
                     )
 
                 if (
-                    modelRow['Last publication date (month-year)'] is not None
-                    and modelRow['Last publication date (month-year)'] != ''
+                    modelRow['Last modification date (month-year)'] is not None
+                    and modelRow['Last modification date (month-year)'] != ''
                 ):
-                    # we update the model Last publication date (month-year)
+                    # we update the model Last modification date (month-year)
                     modelNewTriples.append(
                         (
                             modelURI,
                             self.SOS.publicationDate,
                             self.getLiteral(
-                                modelRow, 'Last publication date (month-year)'
+                                modelRow, 'Last modification date (month-year)'
                             ),
                             self.graph,
                         )

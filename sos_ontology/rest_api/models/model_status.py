@@ -16,17 +16,14 @@ limitations under the License.
 
 
 class ModelStatus:
-
     def __init__(self):
         self.id = None
         self.name = ''
         self.description = ''
         self.model_type = None
         self.source = None
-        self.delivered = False
-        self.implemented = False
-        self.last_publication_date = None
-        self.validator = None
+        self.last_modification_date = None
+        self.validated_by = None
         self.validated = None
         self.discipline = None
         self.processes_using_model = None
@@ -35,18 +32,15 @@ class ModelStatus:
         self.outputs_parameters_quantity = None
 
     def serialize(self):
-        """ json serializer for dto purpose
-        """
+        """json serializer for dto purpose"""
         return {
             'id': self.id,
             'name': self.name,
             'description': self.description,
             'model_type': self.model_type,
             'source': self.source,
-            'delivered': self.delivered,
-            'implemented': self.implemented,
-            'last_publication_date': self.last_publication_date,
-            'validator': self.validator,
+            'last_modification_date': self.last_modification_date,
+            'validated_by': self.validated_by,
             'validated': self.validated,
             'discipline': self.discipline,
             'processes_using_model': self.processes_using_model,
