@@ -245,7 +245,6 @@ def load_ontology_repository_metadata_by_names():
         )
 
     ontology = SoSOntology.instance()
-    print(len(ontology.graph))
 
     result = {}
 
