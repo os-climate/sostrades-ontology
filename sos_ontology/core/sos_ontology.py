@@ -208,13 +208,20 @@ class SoSOntology(Ontology):
                 'uri',
                 'description',
                 'pythonClass',
-                'outputParameterQuantity',
-                'inputParameterQuantity',
+                'outputParameterUsagesQuantity',
+                'inputParameterUsagesQuantity',
                 'modelType',
-                'implemented',
+                'type',
+                'validated',
                 'validated_by',
-                'delivered',
-                'originSource',
+                'last_modification_date',
+                'publicationDate',
+                'codeRepository',
+                'pythonModulePath',
+                'category',
+                'definition',
+                'version',
+                'source',
                 'icon',
             ]
 
@@ -547,8 +554,6 @@ class SoSOntology(Ontology):
             'Name': 1,
             'Type': 2,
             'Source': 3,
-            # 'Delivered': 4,
-            # 'Implemented': 5,
             'Last modification date': 4,
             'Validated by': 5,
             'Validated': 6,
@@ -604,8 +609,6 @@ class SoSOntology(Ontology):
 
             modelRow['Type'] = modelAttributes.get('type', '')
             modelRow['Source'] = modelAttributes.get('source', '')
-            # modelRow['Delivered'] = modelAttributes.get('delivered', '')
-            # modelRow['Implemented'] = modelAttributes.get('implemented', '')
             modelRow['Last modification date'] = modelAttributes.get(
                 'last_modification_date', ''
             )
@@ -697,8 +700,6 @@ class SoSOntology(Ontology):
                 new_model.description = modelAttributes.get('description', 'Unknown')
                 new_model.model_type = modelAttributes.get('type', 'Unknown')
                 new_model.source = modelAttributes.get('source', 'Unknown')
-                # new_model.delivered = modelAttributes.get('delivered', 'YES')
-                # new_model.implemented = modelAttributes.get('implemented', 'YES')
                 new_model.last_modification_date = modelAttributes.get(
                     'last_modification_date', ''
                 )
@@ -727,8 +728,6 @@ class SoSOntology(Ontology):
             'Name': 1,
             'Type': 2,
             'Source': 3,
-            # 'Delivered': 4,
-            # 'Implemented': 5,
             'Last modification date': 4,
             'Validated by': 5,
             'Validated': 6,
@@ -742,9 +741,7 @@ class SoSOntology(Ontology):
         cleanedModels = self.get_models_list(onlyTable=True)
 
         #  Sort the results to display Official models first
-        modelsStatusSorted = sorted(
-            cleanedModels, key=lambda x: (x['Type'], x['Delivered'])
-        )
+        modelsStatusSorted = sorted(cleanedModels, key=lambda x: (x['Type']))
 
         #  Convert the result to ease the display as a table in the GUI
         modelsStatusTable = []
@@ -1382,21 +1379,21 @@ class SoSOntology(Ontology):
                 # add sosDiscipline validated_by
                 (
                     sosDisciplineURI,
-                    self.SOS.validator,
+                    self.SOS.validated_by,
                     self.toLiteral(sos_discipline.validated_by),
                     self.graph,
                 ),
                 # add sosDiscipline maturity
                 (
                     sosDisciplineURI,
-                    self.SOS.maturity,
-                    self.toLiteral(sos_discipline.maturity),
+                    self.SOS.type,
+                    self.toLiteral(sos_discipline.type),
                     self.graph,
                 ),
                 # add sosDiscipline publication Date
                 (
                     sosDisciplineURI,
-                    self.SOS.publicationDate,
+                    self.SOS.last_modification_date,
                     self.toLiteral(sos_discipline.last_modification_date),
                     self.graph,
                 ),

@@ -26,7 +26,7 @@ class SoSDiscipline(SoSEntity):
         pythonModulePath: str,
         definition: str,
         validated: str,
-        maturity: str,
+        type: str,
         icon: str,
         documentation: str,
         last_modification_date: str,
@@ -45,7 +45,7 @@ class SoSDiscipline(SoSEntity):
         self.pythonModulePath = pythonModulePath
         self.definition = definition
         self.validated = validated
-        self.maturity = maturity
+        self.type = type
         self.icon = icon
         self.documentation = documentation
         self.last_modification_date = last_modification_date
