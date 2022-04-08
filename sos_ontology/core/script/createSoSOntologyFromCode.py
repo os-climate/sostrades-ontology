@@ -36,19 +36,32 @@ if len(sys.argv) > 1:
     webhookURL = str(sys.argv[1])
 
 BUILD_URL = None
-environDict = dict(environ)
+environ_dict = dict(environ)
 # prepare necessary paths
 dataPath = dirname(dirname(dirname(sos_ontology.__file__)))
 dataOntologyPath = join(dirname(sos_ontology.__file__), 'data')
 
 # retrieve PYTHONPATH
 try:
-    PYTHONPATH_list = environDict['PYTHONPATH'].split(pathsep)
+    PYTHONPATH_list = environ_dict['PYTHONPATH'].split(pathsep)
     if '' in PYTHONPATH_list:
         PYTHONPATH_list.remove('')
 except Exception as ex:
     PYTHONPATH_list = []
     print('Impossible to retrieve Python Path. Stopping script')
+
+# retrieve path to current SoSOntology
+ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
+if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
+    SoSaBox_path = join(ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl')
+else:
+    SoSaBox_path = (
+        join(
+            dataOntologyPath,
+            'sos_ontology',
+            'SoSTrades_Ontology_ABox_Decentralized.owl',
+        ),
+    )
 
 print('PYTHON Path to scan', PYTHONPATH_list)
 if len(PYTHONPATH_list) > 0:
@@ -57,11 +70,7 @@ if len(PYTHONPATH_list) > 0:
         'SoStBox': join(
             dataOntologyPath, 'sos_ontology', 'SoSTrades_Ontology_TBox.owl'
         ),
-        'SoSaBox': join(
-            dataOntologyPath,
-            'sos_ontology',
-            'SoSTrades_Ontology_ABox_Decentralized.owl',
-        ),
+        'SoSaBox': SoSaBox_path,
         'ontologyCreationLogs': join(
             dataOntologyPath, 'logs', 'ontologyCreationLogs.json'
         ),
@@ -162,8 +171,8 @@ print(
     '#####################    SEND GOOGLE CHAT NOTIFICATION    #########################'
 )
 
-if 'BUILD_URL' in environDict:
-    BUILD_URL = environDict['BUILD_URL']
+if 'BUILD_URL' in environ_dict:
+    BUILD_URL = environ_dict['BUILD_URL']
 
 if webhookURL is not None and BUILD_URL is not None:
     with open('short_log.txt', 'r') as short_log_file:
