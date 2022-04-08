@@ -460,6 +460,14 @@
     
 
 
+    <!-- https://sostrades.eu.airbus.corp/ontology#last_modification_date -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#last_modification_date">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- https://sostrades.eu.airbus.corp/ontology#level -->
 
     <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#level">
@@ -699,6 +707,14 @@
     <!-- https://sostrades.eu.airbus.corp/ontology#treenodeType -->
 
     <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#treenodeType">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://sostrades.eu.airbus.corp/ontology#type -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#type">
         <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
     </owl:DatatypeProperty>
     

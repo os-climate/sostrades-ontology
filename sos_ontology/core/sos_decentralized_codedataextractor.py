@@ -474,7 +474,7 @@ class SoSCodeDataExtractor:
             pythonModulePath=fullpath,
             definition=modelAttributes['_ontology_data'].get('definition', ''),
             validated=modelAttributes['_ontology_data'].get('validated', ''),
-            maturity=modelAttributes['_ontology_data'].get('type', ''),
+            type=modelAttributes['_ontology_data'].get('type', ''),
             icon=modelAttributes['_ontology_data'].get('icon', ''),
             documentation=self.get_markdown_documentation(abspath(entry)),
             last_modification_date=modelAttributes['_ontology_data'].get(
@@ -534,6 +534,7 @@ class SoSCodeDataExtractor:
                 )
                 self.parameters_usages.add(new_param_usage)
                 parameter_entity.add_usage(new_param_usage)
+                parameter_usage_entity = new_param_usage
             else:
                 parameter_usage_entity.updateAttributes(attributesDict=attributes)
             if io == "input":

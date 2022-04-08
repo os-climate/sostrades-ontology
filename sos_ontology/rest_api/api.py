@@ -19,7 +19,6 @@ from flask import request, jsonify, make_response
 from werkzeug.exceptions import BadRequest
 
 from sos_ontology.core.sos_ontology import SoSOntology
-import json
 
 SoSOntology.instance()
 app = Flask(__name__)
