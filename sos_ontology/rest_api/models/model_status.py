@@ -19,32 +19,38 @@ class ModelStatus:
     def __init__(self):
         self.id = None
         self.name = ''
-        self.description = ''
-        self.model_type = None
+        self.definition = ''
+        self.type = None
         self.source = None
         self.last_modification_date = None
         self.validated_by = None
         self.validated = None
-        self.discipline = None
+        self.code_repository = None
         self.processes_using_model = None
         self.processes_using_model_list = None
         self.inputs_parameters_quantity = None
         self.outputs_parameters_quantity = None
+        self.icon = None
+        self.version = None
+        self.category = None
 
     def serialize(self):
         """json serializer for dto purpose"""
         return {
             'id': self.id,
             'name': self.name,
-            'description': self.description,
-            'model_type': self.model_type,
+            'definition': self.definition,
+            'type': self.type,
             'source': self.source,
             'last_modification_date': self.last_modification_date,
             'validated_by': self.validated_by,
             'validated': self.validated,
-            'discipline': self.discipline,
+            'code_repository': self.code_repository,
             'processes_using_model': self.processes_using_model,
             'processes_using_model_list': self.processes_using_model_list,
             'inputs_parameters_quantity': self.inputs_parameters_quantity,
             'outputs_parameters_quantity': self.outputs_parameters_quantity,
+            'icon': self.icon,
+            'version': self.version,
+            'category': self.category,
         }

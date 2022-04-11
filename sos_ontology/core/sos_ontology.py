@@ -646,7 +646,7 @@ class SoSOntology(Ontology):
                 modelURI, {**self.datapropertyDict, **self.annotationPropertyDict}
             )
 
-            # get discipline label
+            # get code repository label
             codeRepositoryLabel = ''
             for codeRepoURI in self.graph.objects(
                 subject=modelURI, predicate=self.SOS.belongsTo
@@ -697,23 +697,26 @@ class SoSOntology(Ontology):
                 new_model = ModelStatus()
                 new_model.name = self.label(modelURI)
                 new_model.id = modelAttributes.get('id', '')
-                new_model.description = modelAttributes.get('description', 'Unknown')
-                new_model.model_type = modelAttributes.get('type', 'Unknown')
-                new_model.source = modelAttributes.get('source', 'Unknown')
+                new_model.definition = modelAttributes.get('definition', '')
+                new_model.type = modelAttributes.get('type', '')
+                new_model.source = modelAttributes.get('source', '')
                 new_model.last_modification_date = modelAttributes.get(
                     'last_modification_date', ''
                 )
-                new_model.validated_by = modelAttributes.get('validated_by', 'Unknown')
+                new_model.validated_by = modelAttributes.get('validated_by', '')
                 new_model.validated = modelAttributes.get('validated', 'NO')
-                new_model.discipline = codeRepositoryLabel
+                new_model.code_repository = codeRepositoryLabel
                 new_model.processes_using_model = processesNumber
                 new_model.processes_using_model_list = processesDict
                 new_model.inputs_parameters_quantity = modelAttributes.get(
-                    'inputParametersQuantity', ''
+                    'inputParameterUsagesQuantity', ''
                 )
                 new_model.outputs_parameters_quantity = modelAttributes.get(
-                    'outputParametersQuantity', ''
+                    'outputParameterUsagesQuantity', ''
                 )
+                new_model.icon = modelAttributes.get('icon', '')
+                new_model.version = modelAttributes.get('version', '')
+                new_model.category = modelAttributes.get('category', '')
 
                 model_list.append(new_model)
 
