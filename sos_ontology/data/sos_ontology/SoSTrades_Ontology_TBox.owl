@@ -752,6 +752,14 @@
     
 
 
+    <!-- https://sostrades.eu.airbus.corp/ontology#validated_by -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#validated_by">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topManualDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- https://sostrades.eu.airbus.corp/ontology#validator -->
 
     <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#validator">
