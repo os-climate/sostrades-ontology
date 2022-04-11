@@ -50,12 +50,15 @@ except Exception as ex:
     PYTHONPATH_list = []
     print('Impossible to retrieve Python Path. Stopping script')
 
+
 # retrieve path to current SoSOntology
 ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
 if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
-    SoSaBox_path = join(ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl')
+    SoSaBox_current_path = join(
+        ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl'
+    )
 else:
-    SoSaBox_path = join(
+    SoSaBox_current_path = join(
         dataOntologyPath,
         'sos_ontology',
         'SoSTrades_Ontology_ABox_Decentralized.owl',
@@ -68,7 +71,12 @@ if len(PYTHONPATH_list) > 0:
         'SoStBox': join(
             dataOntologyPath, 'sos_ontology', 'SoSTrades_Ontology_TBox.owl'
         ),
-        'SoSaBox': SoSaBox_path,
+        'SoSaBox': join(
+            dataOntologyPath,
+            'sos_ontology',
+            'SoSTrades_Ontology_ABox_Decentralized.owl',
+        ),
+        'SoSaBoxCurrent': SoSaBox_current_path,
         'ontologyCreationLogs': join(
             dataOntologyPath, 'logs', 'ontologyCreationLogs.json'
         ),
@@ -119,7 +127,7 @@ if len(PYTHONPATH_list) > 0:
     print(
         "#####################    LOAD PREVIOUS ONTOLOGY    #########################"
     )
-    oldOnto.load(pathsDict["SoSaBox"], "xml")
+    oldOnto.load(pathsDict["SoSaBoxCurrent"], "xml")
 
     print(
         "#####################    EXPORT UPDATED ONTOLOGY TO OWL   #########################"
