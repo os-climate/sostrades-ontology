@@ -355,13 +355,11 @@ class SoSToolbox:
                 log_file.write(
                     b"\n\n--------------Parameter inconsistencies found in the code:--------------\n\n"
                 )
-                try:
-                    self.log_inconsistencies_as_table(
-                        inconsistencies_dict=logs_dict["inconsistencies"],
-                        log_file=log_file,
-                    )
-                except:
-                    print('Error in logging inconsistencies as table')
+
+                self.log_inconsistencies_as_table(
+                    unsorted_inconsistencies_dict=logs_dict["inconsistencies"],
+                    log_file=log_file,
+                )
 
         log_file.close()
         short_log_file.close()
@@ -403,72 +401,76 @@ class SoSToolbox:
                         tbl('', param)
                 tbl('-' * max_width_first_col, '-' * max_width_second_col)
 
-    def log_inconsistencies_as_table(self, inconsistencies_dict, log_file):
-        if inconsistencies_dict != {}:
-            inconsistencies_df = pd.DataFrame(
-                columns={'Disciplines', 'Type', 'Parameter'}
-            )
-            for parameter, specific_dict in inconsistencies_dict.items():
-                first_row = True
-                for inconsistency_type, values_dict in specific_dict.items():
-                    for value, disciplines_list in values_dict.items():
-                        for i, discipline in enumerate(disciplines_list):
-                            parameter_name = ''
-                            if first_row:
-                                parameter_name = parameter
-                                first_row = False
-                            if i == 0:
-                                inconsistencies_df.append(
-                                    [
-                                        {
-                                            'Parameter': parameter_name,
-                                            'Type': f'{inconsistency_type}: {value}',
-                                            'Disciplines': discipline,
-                                        }
-                                    ]
-                                )
-                            else:
-                                inconsistencies_df.append(
-                                    [
-                                        {
-                                            'Parameter': parameter_name,
-                                            'Type': '',
-                                            'Disciplines': discipline,
-                                        }
-                                    ]
-                                )
+    def log_inconsistencies_as_table(self, unsorted_inconsistencies_dict, log_file):
+        if unsorted_inconsistencies_dict != {}:
+            param_sorted = list(sorted(unsorted_inconsistencies_dict.keys()))
+            inconsistencies_dict = {
+                k: unsorted_inconsistencies_dict[k] for k in param_sorted
+            }
 
-            max_width_first_col = max(
-                [len(k) for k in inconsistencies_df['Parameter'].values.to_list()]
-            )
-            max_width_first_col = max([max_width_first_col, len('Parameter')])
-            max_width_second_col = max(
-                [len(k) for k in inconsistencies_df['Type'].values.to_list()]
-            )
-            max_width_second_col = max([max_width_second_col, len('Type')])
-            max_width_third_col = max(
-                [len(k) for k in inconsistencies_df['Disciplines'].values.to_list()]
-            )
-            max_width_third_col = max([max_width_third_col, len('Disciplines')])
+            first_col_elements = ['Parameter']
+            second_col_elements = ['Inconsistent Info']
+            third_col_elements = ['Disciplines']
+            for param, param_dict in inconsistencies_dict.items():
+                first_col_elements.append(param)
+                for inconsistency_type, values_dict in param_dict.items():
+                    second_col_elements.append(inconsistency_type)
+                    for value, disciplines_list in values_dict.items():
+                        third_col_elements.append(
+                            f'{value}: {len(disciplines_list)} disciplines'
+                        )
+
+            max_width_first_col = max([len(k) for k in first_col_elements])
+            max_width_second_col = max([len(k) for k in second_col_elements])
+            max_width_third_col = max([len(k) for k in third_col_elements])
+
             tbl = TableLogger(
                 columns='Parameter,Type,Disciplines',
                 colwidth={
-                    'Parameter': inconsistencies_df['Parameter'].values.to_list(),
-                    'Type': inconsistencies_df['Type'].values.to_list(),
-                    'Disciplines': inconsistencies_df['Disciplines'].values.to_list(),
+                    'Parameter': max_width_first_col,
+                    'Inconsistent Info': max_width_second_col,
+                    'Disciplines': max_width_third_col,
                 },
                 file=log_file,
             )
-            for index, row in inconsistencies_df.iterrows():
-                if row['Parameter'] != '':
-                    tbl(
-                        '-' * max_width_first_col,
-                        '-' * max_width_second_col,
-                        '-' * max_width_third_col,
-                    )
-                tbl(row['Parameter'], row['Type'], row['Disciplines'])
-            tbl(
-                '-' * max_width_first_col,
-                '-' * max_width_second_col,
-                '-' * max_width_third_col,
-            )
+
+            for parameter, param_dict in inconsistencies_dict.items():
+                first_row_param = True
+                inconsistency_type_count = 0
+                for inconsistency_type, values_dict in param_dict.items():
+                    first_row_type = True
+                    inconsistency_type_count += 1
+                    for value, disciplines_list in values_dict.items():
+                        if first_row_param:
+                            first_row_param = False
+                            first_row_type = False
+                            tbl(
+                                parameter,
+                                f'{inconsistency_type}',
+                                f'{value}: {len(disciplines_list)} disciplines',
+                            )
+                        elif first_row_type:
+                            first_row_type = False
+                            tbl(
+                                '',
+                                f'{inconsistency_type}',
+                                f'{value}: {len(disciplines_list)} disciplines',
+                            )
+
+                        else:
+                            tbl(
+                                '',
+                                '',
+                                f'{value}: {len(disciplines_list)} disciplines',
+                            )
+                    if inconsistency_type_count < len(param_dict.keys()):
+                        tbl(
+                            '',
+                            '-' * max_width_second_col,
+                            '-' * max_width_third_col,
+                        )
+                tbl(
+                    '-' * max_width_first_col,
+                    '-' * max_width_second_col,
+                    '-' * max_width_third_col,
+                )
