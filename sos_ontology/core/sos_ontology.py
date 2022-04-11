@@ -2309,18 +2309,6 @@ class SoSOntology(Ontology):
                     (parameterUsageURI, self.SOS.instanceOf, parameterURI, self.graph),
                 ]
 
-                # # we search for the process URI
-                # sos_disciplineURI = self.value(
-                #     None, self.SOS.id, self.toLiteral(parameterUsage.sos_discipline.id), 'uri')
-
-                # if sos_disciplineURI is not None:
-                #     if parameterUsage.io_type == 'in':
-                #         parameterUsageTriples.append(
-                #             (sos_disciplineURI, self.SOS.hasInput, parameterUsageURI, self.graph))
-                #     elif parameterUsage.io_type == 'out':
-                #         parameterUsageTriples.append(
-                #             (sos_disciplineURI, self.SOS.hasOutput, parameterUsageURI, self.graph))
-
                 self.add_triples_list(parameterUsageTriples)
 
     def createReferenceStudyTriples(self, processDataDict):

@@ -20,6 +20,7 @@ from os import path
 from filecmp import cmp
 import jsonpickle
 from table_logger import TableLogger
+import pandas as pd
 
 
 class SoSToolbox:
@@ -631,7 +632,7 @@ class SoSToolbox:
                             process_error_dict['message'], process_error_dict['error']
                         )
 
-        # write info about ontology info mising
+        # write info about ontology info missing
         if "ontologyInfo" in logs_dict:
             log_file.write(
                 b"\n\n--------------Missing Ontology info:--------------\n\n"
@@ -719,6 +720,16 @@ class SoSToolbox:
                     first_col_name='Code Repository',
                     second_col_name='parameter does not exist in code',
                     log_file=log_file,
+                )
+
+        if "inconsistencies" in logs_dict:
+            if logs_dict["inconsistencies"] != {}:
+                log_file.write(
+                    b"\n\n--------------Parameter inconsistencies found in the code:--------------\n\n"
+                )
+
+                self.log_inconsistencies_as_table(
+                    inconsistencies_dict=logs_dict["inconsistencies"], log_file=log_file
                 )
 
         log_file.close()
@@ -843,3 +854,69 @@ class SoSToolbox:
                     else:
                         tbl('', param)
                 tbl('-' * max_width_first_col, '-' * max_width_second_col)
+
+    def log_as_three_columns_table(self, inconsistencies_dict, log_file):
+        if inconsistencies_dict != {}:
+            inconsistencies_df = pd.DataFrame(
+                columns={'Disciplines', 'Type', 'Parameter'}
+            )
+            for parameter, specific_dict in inconsistencies_dict.items():
+                first_row = True
+                for inconsistency_type, values_dict in specific_dict.items():
+                    for value, disciplines_list in values_dict.items():
+                        for i, discipline in enumerate(disciplines_list):
+                            parameter_name = ''
+                            if first_row:
+                                parameter_name = parameter
+                                first_row = False
+                            if i == 0:
+                                inconsistencies_df.append(
+                                    [
+                                        {
+                                            'Parameter': parameter_name,
+                                            'Type': f'{inconsistency_type}: {value}',
+                                            'Disciplines': discipline,
+                                        }
+                                    ]
+                                )
+                            else:
+                                inconsistencies_df.append(
+                                    [
+                                        {
+                                            'Parameter': parameter_name,
+                                            'Type': '',
+                                            'Disciplines': discipline,
+                                        }
+                                    ]
+                                )
+
+            max_width_first_col = max([len(k) for k in inconsistencies_df['Parameter']])
+            max_width_first_col = max([max_width_first_col, len('Parameter')])
+            max_width_second_col = max([len(k) for k in inconsistencies_df['Type']])
+            max_width_second_col = max([max_width_second_col, len('Type')])
+            max_width_third_col = max(
+                [len(k) for k in inconsistencies_df['Disciplines']]
+            )
+            max_width_third_col = max([max_width_third_col, len('Disciplines')])
+            tbl = TableLogger(
+                columns='Parameter,Type,Disciplines',
+                colwidth={
+                    'Parameter': inconsistencies_df['Parameter'].values.to_list(),
+                    'Type': inconsistencies_df['Type'].values.to_list(),
+                    'Disciplines': inconsistencies_df['Disciplines'].values.to_list(),
+                },
+                file=log_file,
+            )
+            for index, row in inconsistencies_df.iterrows():
+                if row['Parameter'] != '':
+                    tbl(
+                        '-' * max_width_first_col,
+                        '-' * max_width_second_col,
+                        '-' * max_width_third_col,
+                    )
+                tbl(row['Parameter'], row['Type'], row['Disciplines'])
+            tbl(
+                '-' * max_width_first_col,
+                '-' * max_width_second_col,
+                '-' * max_width_third_col,
+            )
