@@ -400,7 +400,7 @@ class SoSToolbox:
                         tbl('', param)
                 tbl('-' * max_width_first_col, '-' * max_width_second_col)
 
-    def log_as_three_columns_table(self, inconsistencies_dict, log_file):
+    def log_inconsistencies_as_table(self, inconsistencies_dict, log_file):
         if inconsistencies_dict != {}:
             inconsistencies_df = pd.DataFrame(
                 columns={'Disciplines', 'Type', 'Parameter'}
