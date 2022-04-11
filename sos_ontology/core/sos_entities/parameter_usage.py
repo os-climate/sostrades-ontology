@@ -42,6 +42,8 @@ class ParameterUsage(SoSEntity):
         self.numerical = None
         self.coupling = None
         self.io_type = None
+        self.datatype = None
+        self.unit = None
         self.editable = None
         self.sos_discipline = sos_discipline
         self.instanceOf = parameter
@@ -74,6 +76,10 @@ class ParameterUsage(SoSEntity):
                 self.editable = value
             if key == 'io_type':
                 self.io_type = value
+            if key == 'type':
+                self.datatype = value
+            if key == 'unit':
+                self.unit = value
         parameter.add_usage(self)
 
     def updateAttributes(self, attributesDict):

@@ -151,9 +151,9 @@ class SoSCodeDataExtractor:
                 category == "multiple_parameters_info"
                 or category == "no_parameter_info"
                 or category == "parameter_does_not_exist"
+                or category == "synthesis"
+                or category == "inconsistencies"
             ):
-                self.logs_dict[category][sub_category] = message
-            elif category == "synthesis":
                 self.logs_dict[category][sub_category] = message
 
     def get_classes_from_parsing_code(self, file):
@@ -463,13 +463,14 @@ class SoSCodeDataExtractor:
         )
 
         model_id = fullpath.replace(".py", "").replace(sep, ".")
+        short_id = entry.name.replace(".py", "") + "." + class_info["name"]
         modelAttributes = self.get_sos_discipline_internal_variables(
             entry, loadingPath, model_id
         )
 
         new_sos_discipline = SoSDiscipline(
             id=model_id,
-            label=modelAttributes['_ontology_data'].get('label', model_id),
+            label=modelAttributes['_ontology_data'].get('label', short_id),
             repository=self.current_code_repo,
             pythonModulePath=fullpath,
             definition=modelAttributes['_ontology_data'].get('definition', ''),
@@ -870,10 +871,34 @@ class SoSCodeDataExtractor:
                 parameter_code_repositories = list(set(parameter_code_repositories))
                 no_parameter_info[parameter.id] = parameter_code_repositories
 
+            datatypeDict = {}
+            unitDict = {}
+            for parameter_usage in parameter.instances_list:
+                unitDict.setdefault(parameter_usage.unit, [])
+                unitDict[parameter_usage.unit].append(parameter_usage.sos_discipline.id)
+
+                datatypeDict.setdefault(parameter_usage.datatype, [])
+                datatypeDict[parameter_usage.datatype].append(
+                    parameter_usage.sos_discipline.id
+                )
+
+            message = {}
+            if len(unitDict.keys()) > 1:
+                message['unit'] = unitDict
+            if len(datatypeDict.keys()) > 1:
+                message['datatype'] = datatypeDict
+
+            if message != {}:
+                self.add_to_log(
+                    category="inconsistencies",
+                    sub_category=parameter.id,
+                    message=message,
+                )
+
         if no_parameter_info != {}:
             # transform dictionnary from
             # {parameter:[code_repository_list]} to
-            # {code_repository:[pmarameter_list]}
+            # {code_repository:[parameter_list]}
 
             code_repo_list = list(
                 set(
