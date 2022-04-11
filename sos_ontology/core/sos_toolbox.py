@@ -355,10 +355,13 @@ class SoSToolbox:
                 log_file.write(
                     b"\n\n--------------Parameter inconsistencies found in the code:--------------\n\n"
                 )
-
-                self.log_inconsistencies_as_table(
-                    inconsistencies_dict=logs_dict["inconsistencies"], log_file=log_file
-                )
+                try:
+                    self.log_inconsistencies_as_table(
+                        inconsistencies_dict=logs_dict["inconsistencies"],
+                        log_file=log_file,
+                    )
+                except:
+                    print('Error in logging inconsistencies as table')
 
         log_file.close()
         short_log_file.close()
@@ -435,12 +438,16 @@ class SoSToolbox:
                                     ]
                                 )
 
-            max_width_first_col = max([len(k) for k in inconsistencies_df['Parameter']])
+            max_width_first_col = max(
+                [len(k) for k in inconsistencies_df['Parameter'].values.to_list()]
+            )
             max_width_first_col = max([max_width_first_col, len('Parameter')])
-            max_width_second_col = max([len(k) for k in inconsistencies_df['Type']])
+            max_width_second_col = max(
+                [len(k) for k in inconsistencies_df['Type'].values.to_list()]
+            )
             max_width_second_col = max([max_width_second_col, len('Type')])
             max_width_third_col = max(
-                [len(k) for k in inconsistencies_df['Disciplines']]
+                [len(k) for k in inconsistencies_df['Disciplines'].values.to_list()]
             )
             max_width_third_col = max([max_width_third_col, len('Disciplines')])
             tbl = TableLogger(
