@@ -355,11 +355,13 @@ class SoSToolbox:
                 log_file.write(
                     b"\n\n--------------Parameter inconsistencies found in the code:--------------\n\n"
                 )
-
-                self.log_inconsistencies_as_table(
-                    unsorted_inconsistencies_dict=logs_dict["inconsistencies"],
-                    log_file=log_file,
-                )
+                try:
+                    self.log_inconsistencies_as_table(
+                        unsorted_inconsistencies_dict=logs_dict["inconsistencies"],
+                        log_file=log_file,
+                    )
+                except Exception as ex:
+                    print(f'{type(ex)} - {ex}')
 
         log_file.close()
         short_log_file.close()
