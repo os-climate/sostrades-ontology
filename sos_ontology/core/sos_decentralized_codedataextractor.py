@@ -853,7 +853,7 @@ class SoSCodeDataExtractor:
                         exception=ex,
                     )
 
-        # write log of multiple info for a parameter and no info for parameter
+        # write log of multiple info for a parameter, no info for parameter and inconsistencies for multiple info
         no_parameter_info = {}
         for parameter in self.parameters.sos_entity_list:
             if len(parameter.code_repositories) > 1:
@@ -862,6 +862,7 @@ class SoSCodeDataExtractor:
                     sub_category=parameter.id,
                     message=[repo.id for repo in parameter.code_repositories],
                 )
+
             elif len(parameter.code_repositories) == 0:
                 parameter_code_repositories = []
                 for instance in parameter.instances_list:
@@ -875,12 +876,22 @@ class SoSCodeDataExtractor:
             unitDict = {}
             for parameter_usage in parameter.instances_list:
                 unitDict.setdefault(parameter_usage.unit, [])
-                unitDict[parameter_usage.unit].append(parameter_usage.sos_discipline.id)
+                unitDict[parameter_usage.unit].append(
+                    ('discipline', parameter_usage.sos_discipline.id)
+                )
 
                 datatypeDict.setdefault(parameter_usage.datatype, [])
                 datatypeDict[parameter_usage.datatype].append(
-                    parameter_usage.sos_discipline.id
+                    ('discipline', parameter_usage.sos_discipline.id)
                 )
+
+            if len(parameter.code_repositories) > 1:
+                for repo, attributes in parameter.code_repositories_attributes.items():
+                    unitDict.setdefault(attributes['unit'], [])
+                    unitDict[attributes['unit']].append(('glossary', repo))
+
+                    datatypeDict.setdefault(attributes['datatype'], [])
+                    datatypeDict[attributes['datatype']].append(('glossary', repo))
 
             message = {}
             if len(unitDict.keys()) > 1:
@@ -971,6 +982,9 @@ class SoSCodeDataExtractor:
             if parameter is not None:
                 parameter.updateOntologyAttributes(ontology_data)
                 parameter.add_code_repository(code_repository)
+                parameter.add_code_repository_attributes(
+                    code_repository=code_repository, attributesDict=ontology_data
+                )
             else:
                 # parameter does not exist
                 not_existing_parameters.append(parameter_id)
