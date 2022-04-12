@@ -410,26 +410,40 @@ class SoSToolbox:
 
             first_col_elements = ['Parameter']
             second_col_elements = ['Inconsistent Info']
-            third_col_elements = ['Disciplines']
+            third_col_elements = ['Discipline / Glossary']
             for param, param_dict in inconsistencies_dict.items():
                 first_col_elements.append(param)
                 for inconsistency_type, values_dict in param_dict.items():
                     second_col_elements.append(inconsistency_type)
                     for value, disciplines_list in values_dict.items():
-                        third_col_elements.append(
-                            f'{value}: {len(disciplines_list)} disciplines'
+                        disc_count = len(
+                            [t[1] for t in disciplines_list if t[0] == 'discipline']
                         )
+                        glossary_count = len(
+                            [t[1] for t in disciplines_list if t[0] == 'glossary']
+                        )
+                        element_message_list = []
+                        if disc_count > 0:
+                            element_message_list.append(
+                                [f'{value}: {disc_count} disciplines']
+                            )
+                        if glossary_count > 0:
+                            element_message_list.append(
+                                [f'{value}: {glossary_count} glossaries']
+                            )
+                        if len(element_message_list) > 0:
+                            third_col_elements.append('\n'.join(element_message_list))
 
             max_width_first_col = max([len(k) for k in first_col_elements])
             max_width_second_col = max([len(k) for k in second_col_elements])
             max_width_third_col = max([len(k) for k in third_col_elements])
 
             tbl = TableLogger(
-                columns='Parameter,Type,Disciplines',
+                columns='Parameter,Type,Discipline / Glossary',
                 colwidth={
                     'Parameter': max_width_first_col,
                     'Inconsistent Info': max_width_second_col,
-                    'Disciplines': max_width_third_col,
+                    'Discipline / Glossary': max_width_third_col,
                 },
                 file=log_file,
             )
@@ -441,20 +455,37 @@ class SoSToolbox:
                     first_row_type = True
                     inconsistency_type_count += 1
                     for value, disciplines_list in values_dict.items():
+
+                        disc_count = len(
+                            [t[1] for t in disciplines_list if t[0] == 'discipline']
+                        )
+                        glossary_count = len(
+                            [t[1] for t in disciplines_list if t[0] == 'glossary']
+                        )
+                        element_message_list = []
+                        if disc_count > 0:
+                            element_message_list.append(
+                                [f'{value}: {disc_count} disciplines']
+                            )
+                        if glossary_count > 0:
+                            element_message_list.append(
+                                [f'{value}: {glossary_count} glossaries']
+                            )
+
                         if first_row_param:
                             first_row_param = False
                             first_row_type = False
                             tbl(
                                 parameter,
                                 f'{inconsistency_type}',
-                                f'{value}: {len(disciplines_list)} disciplines',
+                                '\n'.join(element_message_list),
                             )
                         elif first_row_type:
                             first_row_type = False
                             tbl(
                                 '',
                                 f'{inconsistency_type}',
-                                f'{value}: {len(disciplines_list)} disciplines',
+                                '\n'.join(element_message_list),
                             )
 
                         else:

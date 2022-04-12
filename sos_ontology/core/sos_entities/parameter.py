@@ -27,6 +27,7 @@ class Parameter(SoSEntity):
         self.ACLTag = None
         self.instances_list = []
         self.code_repositories = []
+        self.code_repositories_attributes = {}
 
         for key, value in attributesDict.items():
             if key == 'unit':
@@ -47,6 +48,10 @@ class Parameter(SoSEntity):
     def add_code_repository(self, code_repository) -> None:
         if code_repository not in self.code_repositories:
             self.code_repositories.append(code_repository)
+
+    def add_code_repository_attributes(self, code_repository, attributesDict) -> None:
+        if code_repository not in self.code_repositories:
+            self.code_repositories_attributes[code_repository.id] = attributesDict
 
     def updateOntologyAttributes(self, attributesDict):
         for key, value in attributesDict.items():
