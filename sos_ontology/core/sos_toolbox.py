@@ -425,11 +425,11 @@ class SoSToolbox:
                         element_message_list = []
                         if disc_count > 0:
                             element_message_list.append(
-                                [f'{value}: {disc_count} disciplines']
+                                f'{value}: {disc_count} disciplines'
                             )
                         if glossary_count > 0:
                             element_message_list.append(
-                                [f'{value}: {glossary_count} glossaries']
+                                f'{value}: {glossary_count} glossaries'
                             )
                         if len(element_message_list) > 0:
                             third_col_elements.append('\n'.join(element_message_list))
