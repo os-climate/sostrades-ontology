@@ -355,13 +355,11 @@ class SoSToolbox:
                 log_file.write(
                     b"\n\n--------------Parameter inconsistencies found in the code:--------------\n\n"
                 )
-                try:
-                    self.log_inconsistencies_as_table(
-                        unsorted_inconsistencies_dict=logs_dict["inconsistencies"],
-                        log_file=log_file,
-                    )
-                except Exception as ex:
-                    print(f'{type(ex)} - {ex}')
+
+                self.log_inconsistencies_as_table(
+                    unsorted_inconsistencies_dict=logs_dict["inconsistencies"],
+                    log_file=log_file,
+                )
 
         log_file.close()
         short_log_file.close()
@@ -467,11 +465,11 @@ class SoSToolbox:
                         element_message_list = []
                         if disc_count > 0:
                             element_message_list.append(
-                                [f'{value}: {disc_count} disciplines']
+                                f'{value}: {disc_count} disciplines'
                             )
                         if glossary_count > 0:
                             element_message_list.append(
-                                [f'{value}: {glossary_count} glossaries']
+                                f'{value}: {glossary_count} glossaries'
                             )
 
                         if first_row_param:
