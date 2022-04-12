@@ -467,10 +467,13 @@ class SoSCodeDataExtractor:
         modelAttributes = self.get_sos_discipline_internal_variables(
             entry, loadingPath, model_id
         )
+        disc_label = modelAttributes['_ontology_data'].get('label', short_id)
+        if disc_label == model_id:
+            disc_label = short_id
 
         new_sos_discipline = SoSDiscipline(
             id=model_id,
-            label=modelAttributes['_ontology_data'].get('label', short_id),
+            label=disc_label,
             repository=self.current_code_repo,
             pythonModulePath=fullpath,
             definition=modelAttributes['_ontology_data'].get('definition', ''),
