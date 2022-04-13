@@ -153,6 +153,7 @@ class SoSCodeDataExtractor:
                 or category == "parameter_does_not_exist"
                 or category == "synthesis"
                 or category == "inconsistencies"
+                or category == "duplicateParametersGlossary"
             ):
                 self.logs_dict[category][sub_category] = message
 
@@ -824,15 +825,43 @@ class SoSCodeDataExtractor:
                 try:
                     parameter_glossary_path = join(path, "parameters_glossary.csv")
                     if isfile(parameter_glossary_path):
-                        parameters_glossary = pd.read_csv(
-                            parameter_glossary_path,
-                            index_col="id",
+                        parameters_glossary_df = pd.read_csv(
+                            join(
+                                dirname(dirname(dirname(dirname(__file__)))),
+                                'witness-core',
+                                'parameters_glossary.csv',
+                            ),
                             na_filter=False,
                             encoding="utf-8",
                             encoding_errors="ignore",
                             keep_default_na=False,
                         )
-                        parameters_glossary_dict = parameters_glossary.to_dict("index")
+                        duplicated = parameters_glossary_df.duplicated(
+                            subset=['id'], keep='first'
+                        )
+                        if any(duplicated.values.tolist()):
+                            duplicated_list = parameters_glossary_df.loc[
+                                duplicated, 'id'
+                            ].values.tolist()
+                            print(
+                                f'There are {len(duplicated_list)} duplicated parameters in the glossary: {", ".join(duplicated_list)}, they will be ignored'
+                            )
+                            self.add_to_log(
+                                category="errors",
+                                sub_category="duplicateParametersGlossary",
+                                message={repo_id: duplicated_list},
+                            )
+                            parameters_glossary_df = (
+                                parameters_glossary_df.drop_duplicates(
+                                    subset=['id'], keep='first'
+                                )
+                            )
+
+                        parameters_glossary_df = parameters_glossary_df.set_index('id')
+                        parameters_glossary_dict = parameters_glossary_df.to_dict(
+                            "index"
+                        )
+
                         code_repo_entity = self.code_repositories.get(repo_id)
                         self.add_ontology_data_to_parameters(
                             parameters_glossary_dict, code_repo_entity
