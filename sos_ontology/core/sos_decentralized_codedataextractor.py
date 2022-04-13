@@ -826,11 +826,7 @@ class SoSCodeDataExtractor:
                     parameter_glossary_path = join(path, "parameters_glossary.csv")
                     if isfile(parameter_glossary_path):
                         parameters_glossary_df = pd.read_csv(
-                            join(
-                                dirname(dirname(dirname(dirname(__file__)))),
-                                'witness-core',
-                                'parameters_glossary.csv',
-                            ),
+                            parameter_glossary_path,
                             na_filter=False,
                             encoding="utf-8",
                             encoding_errors="ignore",
