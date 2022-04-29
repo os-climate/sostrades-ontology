@@ -1731,6 +1731,20 @@ class SoSOntology(Ontology):
                         self.toLiteral(parameterUsage.editable),
                         self.graph,
                     ),
+                    # add parameterUsage datatype
+                    (
+                        parameterUsageURI,
+                        self.SOS.datatype,
+                        self.toLiteral(parameterUsage.datatype),
+                        self.graph,
+                    ),
+                    # add parameterUsage unit
+                    (
+                        parameterUsageURI,
+                        self.SOS.unit,
+                        self.toLiteral(parameterUsage.unit),
+                        self.graph,
+                    ),
                     # add parameter usage instance link
                     (parameterUsageURI, self.SOS.instanceOf, parameterURI, self.graph),
                 ]
