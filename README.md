@@ -21,7 +21,7 @@ The update process can be done through a Jenkins job by running `ontology\sos_on
 
 ### Prerequisite
 To be able to run correctly this script:
- - ALL repositories must be cloned on the local environment and present on the Python PATH otherwise the models / process of the repositories that are nos present will not appear on the updated ontology
+ - ALL repositories must be cloned on the local environment and present on the Python PATH otherwise the models / process of the repositories that are not present will not appear on the updated ontology
 
 ### Update process
 ![](Update_process.png)
