@@ -24,6 +24,133 @@ SoSOntology.instance()
 app = Flask(__name__)
 
 
+@app.route('/api/v1/ontology', methods=['POST'])
+def load_study_ontology_data():
+    """
+    Methods that retrieve disciplines and parameter usage ontology data
+
+    Request object is intended with the following data structure
+        {
+            study_ontology_request: {
+                disciplines: string[], // list of disciplines string identifier
+                parameter_usages: string[] // list of parameter_usage string identifier composed of <discipline_id>_<input OR output>_<parameter_id>
+            }
+        }
+
+    Returned response is with the following data structure
+        {
+            parameter_usages : {
+                <parameter_usage_identifier> : {
+                    parameter_uri: string
+                    parameter_id: string
+                    parameter_label: string
+                    parameter_definition: string
+                    parameter_definitionSource: string
+                    parameter_ACLTag: string
+
+                    visibility: string
+                    dataframeEditionLocked: string
+                    userLevel: string
+                    range: string
+                    dataframeDescriptor: string
+                    structuring: string
+                    optional: string
+                    namespace: string
+                    numerical: string
+                    coupling: string
+                    io_type: string
+                    datatype: string
+                    unit: string
+                    editable: string
+                }
+            }
+            disciplines {
+                <discipline_identifier>: {
+                    id: string
+                    delivered: string
+                    implemented: string
+                    label: string
+                    modelType: string
+                    originSource: string
+                    pythonClass: string
+                    uri: string
+                    validator: string
+                    validated: string
+                    icon:string
+                }
+            }
+        }
+
+    """
+
+    data_request = request.json.get('study_ontology_request', None)
+
+    missing_parameter = []
+    if data_request is None:
+        missing_parameter.append('Missing mandatory parameter: study_ontology_request')
+
+    if len(missing_parameter) > 0:
+        raise BadRequest('\n'.join(missing_parameter))
+
+    ontology = SoSOntology.instance()
+
+    resp = make_response(jsonify(ontology.get_study_ontology_data(data_request)), 200)
+
+    return resp
+
+
+@app.route('/api/v1/parameter_glossary', methods=['GET'])
+def get_all_parameters():
+    """
+    Methods that retrieve all parameters and associated information
+
+    Request object has no parameters
+
+    Returned response is with the following data structure
+        [
+            parameter_id:{
+                uri:string,
+                id:string,
+                label: string,
+                definition: string,
+                definition_source: string,
+                ACL_tag: string,
+                code_repositories: string list,
+                possible_datatypes:string list,
+                possible_units:string list,
+                quantity_models_using_parameter:int,
+                parameter_usage_details:[
+                    parameter_usage_id:{
+                        model_id: string,
+                        model_label: string,
+                        io_type: string,
+                        unit: string,
+                        datatype: string,
+                        numerical: boolean,
+                        optional: boolean,
+                        range: string,
+                        structuring: boolean,
+                        editable: boolean,
+                        possible_values: string,
+                        dataframe_descriptor: string,
+                        dataframe_edition_locked: boolean,
+                        namespace: string,
+                        user_level: string,
+                        visibility: string,
+                        structuring: boolean,
+                    }
+                ]
+            }
+        ]
+    """
+
+    ontology = SoSOntology.instance()
+
+    resp = make_response(jsonify(ontology.get_all_parameters()), 200)
+
+    return resp
+
+
 @app.route('/api/ontology', methods=['POST'])
 def load_ontology_request():
     """

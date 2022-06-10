@@ -345,6 +345,147 @@ class SoSOntology(Ontology):
 
         return result
 
+    def get_study_ontology_data(self, study_ontology_request: dict):
+        """methods that retrieves ontology data for a given input list of disciplines and parameter usages
+
+        Args:
+            study_ontology_request (dict): _description_
+
+        Returns:
+            {
+                parameter_usages : {
+                    <parameter_identifier> : {
+                        id: string
+                        datatype: string
+                        definition: string
+                        label: string
+                        quantityKind: string
+                        unit: string
+                        uri: string
+                        definitionSource: string
+                        ACLTag: string
+                    }
+                }
+                disciplines {
+                    <discipline_identifier>: {
+                        id: string
+                        delivered: string
+                        implemented: string
+                        label: string
+                        modelType: string
+                        originSource: string
+                        pythonClass: string
+                        uri: string
+                        validator: string
+                        validated: string
+                        icon:string
+                    }
+                }
+            }
+        """
+        result = {}
+
+        if 'disciplines' in study_ontology_request:
+            result['disciplines'] = {}
+            for requestDiscipline in study_ontology_request['disciplines']:
+                result['disciplines'][requestDiscipline] = self.get_discipline_metadata(
+                    requestDiscipline
+                )
+        if 'parameter_usages' in study_ontology_request:
+            result['parameter_usages'] = {}
+            for requestParameterUsage in study_ontology_request['parameter_usages']:
+                result['parameter_usages'][
+                    requestParameterUsage
+                ] = self.get_parameter_usage_metadata(requestParameterUsage)
+
+        return result
+
+    def get_parameter_usage_metadata(self, parameterUsageString: str):
+        """Retrieve parameter usage ontology data from an identifier
+
+        Args:
+            parameterUsageString (str): parameter usage identifier constructed as
+            <discipline_id>_<input OR output>_<parameter_id>
+
+        Returns:
+            dict: <parameter_identifier> : {
+                        id: string
+                        datatype: string
+                        definition: string
+                        label: string
+                        quantityKind: string
+                        unit: string
+                        uri: string
+                        definitionSource: string
+                        ACLTag: string
+                    }
+        """
+        metadata = dict({'id': parameterUsageString})
+
+        parameterUsageURI = self.value(
+            None, self.SOS.id, Literal(parameterUsageString, datatype=XSD.string), 'uri'
+        )
+
+        if parameterUsageURI is not None:
+            # get parameter usage attributes
+            parameterUsageAttributes = self.getSubjectAttributes(
+                parameterUsageURI,
+                {**self.datapropertyDict, **self.annotationPropertyDict},
+            )
+
+            parameterUsageAttributesList = [
+                'uri',
+                'unit',
+                'datatype',
+                'numerical',
+                'editable',
+                'optional',
+                'coupling',
+                'visibility',
+                'namespace',
+                'ioType',
+                'userLevel',
+            ]
+
+            for attr in parameterUsageAttributesList:
+                if parameterUsageAttributes.get(attr, None) is not None:
+                    metadata[attr] = parameterUsageAttributes.get(attr, None)
+
+            # retrieve associated parameter
+            parameterURI = list(
+                self.graph.objects(
+                    subject=parameterUsageURI, predicate=self.SOS.instanceOf
+                )
+            )[0]
+
+            if parameterURI is not None:
+                # get label
+                metadata['label'] = self.label(parameterURI)
+
+                # get attributes
+                parameterAttributes = self.getSubjectAttributes(
+                    parameterURI,
+                    {**self.datapropertyDict, **self.annotationPropertyDict},
+                )
+
+                parameterAttributesList = [
+                    'uri',
+                    'definition',
+                    'definitionSource',
+                    'ACLTag',
+                ]
+
+                for attr in parameterAttributesList:
+                    if parameterAttributes.get(attr, None) is not None:
+                        metadata[attr] = parameterAttributes.get(attr, None)
+
+        else:
+            # It means the value has not been found
+            self.logger.debug(
+                f'The parameter usage: {parameterUsageString} HAS NOT BEEN FOUND in the Ontology'
+            )
+        return metadata
+
     def get_treeview_nodes_and_links(
         self,
         treeviewDict,
@@ -1847,3 +1988,200 @@ class SoSOntology(Ontology):
             )
 
         return markdown_documentation
+
+    def get_all_parameters(self):
+        """Method that return a list of all ontology parameters and their related information
+        with this specific structure:
+        [
+            parameter_id:{
+                uri:string,
+                id:string,
+                label: string,
+                definition: string,
+                definition_source: string,
+                ACL_tag: string,
+                code_repositories: string list,
+                possible_datatypes:string list,
+                possible_units:string list,
+                quantity_models_using_parameter:int,
+                parameter_usage_details:[
+                    parameter_usage_id:{
+                        model_id: string,
+                        model_label: string,
+                        io_type: string,
+                        unit: string,
+                        datatype: string,
+                        numerical: boolean,
+                        optional: boolean,
+                        range: string,
+                        structuring: boolean,
+                        editable: boolean,
+                        possible_values: string,
+                        dataframe_descriptor: string,
+                        dataframe_edition_locked: boolean,
+                        namespace: string,
+                        user_level: string,
+                        visibility: string,
+                        structuring: boolean,
+                    }
+                ]
+            }
+        ]
+        """
+
+        parameterList = []
+        # retrive all parameter URI
+        for parameterURI in self.graph.subjects(
+            predicate=RDF.type, object=self.SOS.Parameter
+        ):
+            parameter_info = {
+                'id': None,
+                'uri': None,
+                'label': None,
+                'definition': None,
+                'definition_source': None,
+                'ACL_tag': None,
+                'code_repositories': [],
+                'possible_datatypes': [],
+                'possible_units': [],
+                'quantity_models_using_parameter': 0,
+                'parameter_usage_details': [],
+            }
+            # get parameter attributes
+            parameterAttributes = self.getSubjectAttributes(
+                parameterURI, {**self.datapropertyDict, **self.annotationPropertyDict}
+            )
+
+            parameter_info['id'] = parameterAttributes.get('id', '')
+            parameter_info['uri'] = parameterURI
+            parameter_info['label'] = self.label(parameterURI)
+            parameter_info['definition'] = parameterAttributes.get('definition', '')
+            parameter_info['definition_source'] = parameterAttributes.get(
+                'definitionSource', ''
+            )
+            parameter_info['ACL_tag'] = parameterAttributes.get('ACLTag', '')
+
+            # get all parameter usage
+            possible_datatypes = set()
+            possible_units = set()
+            models_using_parameter = set()
+            parameter_usage_details = []
+            for parameterUsageURI in self.graph.subjects(
+                predicate=self.SOS.instanceOf, object=parameterURI
+            ):
+                parameter_usage_info = {
+                    'model_id': None,
+                    'model_label': None,
+                    'io_type': None,
+                    'unit': None,
+                    'datatype': None,
+                    'numerical': None,
+                    'optional': None,
+                    'range': None,
+                    'structuring': None,
+                    'editable': None,
+                    'possible_values': None,
+                    'dataframe_descriptor': None,
+                    'dataframe_edition_locked': None,
+                    'namespace': None,
+                    'user_level': None,
+                    'visibility': None,
+                    'structuring': None,
+                }
+
+                # get parameterUsage attributes
+                parameterUsageAttributes = self.getSubjectAttributes(
+                    parameterUsageURI,
+                    {**self.datapropertyDict, **self.annotationPropertyDict},
+                )
+
+                parameter_usage_info['io_type'] = parameterUsageAttributes.get(
+                    'ioType', ''
+                )
+                parameter_usage_info['unit'] = parameterUsageAttributes.get('unit', '')
+                parameter_usage_info['datatype'] = parameterUsageAttributes.get(
+                    'datatype', ''
+                )
+                parameter_usage_info['numerical'] = parameterUsageAttributes.get(
+                    'numerical', ''
+                )
+                parameter_usage_info['optional'] = parameterUsageAttributes.get(
+                    'optional', ''
+                )
+                parameter_usage_info['range'] = parameterUsageAttributes.get(
+                    'range', ''
+                )
+                parameter_usage_info['structuring'] = parameterUsageAttributes.get(
+                    'structuring', ''
+                )
+                parameter_usage_info['editable'] = parameterUsageAttributes.get(
+                    'editable', ''
+                )
+                parameter_usage_info['possible_values'] = parameterUsageAttributes.get(
+                    'possible_values', ''
+                )
+                parameter_usage_info[
+                    'dataframe_descriptor'
+                ] = parameterUsageAttributes.get('dataframeDescriptor', '')
+                parameter_usage_info[
+                    'dataframe_edition_locked'
+                ] = parameterUsageAttributes.get('dataframeEditionLocked', '')
+                parameter_usage_info['namespace'] = parameterUsageAttributes.get(
+                    'namespace', ''
+                )
+                parameter_usage_info['user_level'] = parameterUsageAttributes.get(
+                    'userLevel', ''
+                )
+                parameter_usage_info['visibility'] = parameterUsageAttributes.get(
+                    'visibility', ''
+                )
+                parameter_usage_info['structuring'] = parameterUsageAttributes.get(
+                    'structuring', ''
+                )
+
+                if (
+                    parameter_usage_info['datatype'] is not None
+                    and parameter_usage_info['datatype'] != ''
+                ):
+                    possible_datatypes.add(parameter_usage_info['datatype'])
+                if (
+                    parameter_usage_info['unit'] is not None
+                    and parameter_usage_info['unit'] != ''
+                ):
+                    possible_units.add(parameter_usage_info['unit'])
+
+                modelURI = None
+                if parameter_usage_info['io_type'] == 'in':
+                    modelURI = self.value(
+                        s=None,
+                        p=self.SOS.hasInput,
+                        o=parameterUsageURI,
+                        returnType='uri',
+                    )
+                elif parameter_usage_info['io_type'] == 'out':
+                    modelURI = self.value(
+                        s=None,
+                        p=self.SOS.hasOutput,
+                        o=parameterUsageURI,
+                        returnType='uri',
+                    )
+
+                if modelURI is not None:
+                    parameter_usage_info['model_id'] = self.value(
+                        s=modelURI, p=self.SOS.id, o=None, returnType='value'
+                    )
+                    parameter_usage_info['model_label'] = self.label(modelURI)
+                    models_using_parameter.add(parameter_usage_info['model_id'])
+
+                parameter_usage_details.append(parameter_usage_info)
+
+            parameter_info['possible_datatypes'] = list(possible_datatypes)
+            parameter_info['possible_units'] = list(possible_units)
+            parameter_info['quantity_models_using_parameter'] = len(
+                models_using_parameter
+            )
+            parameter_info['parameter_usage_details'] = parameter_usage_details
+
+            parameterList.append(parameter_info)
+
+        return parameterList
