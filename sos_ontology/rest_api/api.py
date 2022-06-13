@@ -99,6 +99,30 @@ def load_study_ontology_data():
     return resp
 
 
+@app.route('/api/v1/parameter_label_list', methods=['GET'])
+def get_all_parameters_label_list():
+    """
+    Methods that retrieve all parameters label
+
+    Request object has no parameters
+
+    Returned response is with the following data structure
+        [
+            parameter_id:{
+                uri:string,
+                id:string,
+                label: string,
+            }
+        ]
+    """
+
+    ontology = SoSOntology.instance()
+
+    resp = make_response(jsonify(ontology.get_all_parameters_label_list()), 200)
+
+    return resp
+
+
 @app.route('/api/v1/parameter_glossary', methods=['GET'])
 def get_all_parameters():
     """
@@ -154,7 +178,7 @@ def get_all_parameters():
 @app.route('/api/ontology', methods=['POST'])
 def load_ontology_request():
     """
-    Methods that retrieve disciplines and parameters informations
+    Methods that retrieve disciplines and parameters information
 
     Request object is intended with the following data structure
         {
