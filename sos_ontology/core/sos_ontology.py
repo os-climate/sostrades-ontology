@@ -2185,3 +2185,35 @@ class SoSOntology(Ontology):
             parameterList.append(parameter_info)
 
         return parameterList
+
+    def get_all_parameters_label_list(self):
+        """Method that return a list of all ontology parameters and their related information
+        with this specific structure:
+        [
+            parameter_id:{
+                uri:string,
+                id:string,
+                label: string,
+            }
+        ]
+        """
+
+        parameterList = []
+        # retrieve all parameter URI
+        for parameterURI in self.graph.subjects(
+            predicate=RDF.type, object=self.SOS.Parameter
+        ):
+            parameter_info = {
+                'id': None,
+                'uri': None,
+                'label': None,
+            }
+            parameter_info['id'] = self.value(
+                s=parameterURI, p=self.SOS.id, o=None, returnType='value'
+            )
+            parameter_info['uri'] = parameterURI
+            parameter_info['label'] = self.label(parameterURI)
+
+            parameterList.append(parameter_info)
+
+        return parameterList
