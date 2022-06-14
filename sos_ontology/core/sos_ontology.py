@@ -1736,9 +1736,7 @@ class SoSOntology(Ontology):
                 (
                     parameterURI,
                     self.SOS.codeRepositoryList,
-                    self.toLiteral(
-                        [repo.id for repo in parameter.add_code_repository_attributes]
-                    ),
+                    self.toLiteral([repo.id for repo in parameter.code_repositories]),
                     self.graph,
                 ),
                 # add disciplines using parameter list
