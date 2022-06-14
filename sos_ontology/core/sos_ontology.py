@@ -2017,7 +2017,7 @@ class SoSOntology(Ontology):
 
         return markdown_documentation
 
-    def get_all_parameters(self):
+    def get_full_parameter_list(self):
         """Method that return a list of all ontology parameters and their related information
         with this specific structure:
         [
@@ -2151,7 +2151,7 @@ class SoSOntology(Ontology):
 
         return parameterList
 
-    def get_all_parameters_label_list(self):
+    def get_full_parameter_label_list(self):
         """Method that return a list of all ontology parameters and their related information
         with this specific structure:
         [
@@ -2183,7 +2183,7 @@ class SoSOntology(Ontology):
 
         return parameterList
 
-    def get_all_processes_list(self):
+    def get_full_process_list(self):
         """Method that return a list of all ontology processes and their related information
         with this specific structure:
         [
@@ -2235,3 +2235,6 @@ class SoSOntology(Ontology):
             processList.append(process_info)
 
         return processList
+
+    def get_full_discipline_list(self):
+        return []

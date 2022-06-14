@@ -24,7 +24,7 @@ SoSOntology.instance()
 app = Flask(__name__)
 
 
-@app.route('/api/v1/ontology', methods=['POST'])
+@app.route('/api/ontology/v1/study', methods=['POST'])
 def load_study_ontology_data():
     """
     Methods that retrieve disciplines and parameter usage ontology data
@@ -99,8 +99,8 @@ def load_study_ontology_data():
     return resp
 
 
-@app.route('/api/v1/parameter_label_list', methods=['GET'])
-def get_all_parameters_label_list():
+@app.route('/api/ontology/v1/full_parameter_label_list', methods=['GET'])
+def get_full_parameter_label_list():
     """
     Methods that retrieve all parameters label
 
@@ -118,13 +118,13 @@ def get_all_parameters_label_list():
 
     ontology = SoSOntology.instance()
 
-    resp = make_response(jsonify(ontology.get_all_parameters_label_list()), 200)
+    resp = make_response(jsonify(ontology.get_full_parameter_label_list()), 200)
 
     return resp
 
 
-@app.route('/api/v1/processes_list', methods=['GET'])
-def get_all_processes_list():
+@app.route('/api/ontology/v1/full_process_list', methods=['GET'])
+def get_full_process_list():
     """
     Methods that retrieve all processes and related information
 
@@ -148,13 +148,43 @@ def get_all_processes_list():
 
     ontology = SoSOntology.instance()
 
-    resp = make_response(jsonify(ontology.get_all_processes_list()), 200)
+    resp = make_response(jsonify(ontology.get_full_process_list()), 200)
 
     return resp
 
 
-@app.route('/api/v1/parameter_glossary', methods=['GET'])
-def get_all_parameters():
+@app.route('/api/ontology/v1/full_discipline_list', methods=['GET'])
+def get_full_discipline_list():
+    """
+    Methods that retrieve all processes and related information
+
+    Request object has no parameters
+
+    Returned response is with the following data structure
+            process_id:{
+                uri:string,
+                id:string,
+                label: string,
+                description: string,
+                category: string,
+                version: string,
+                process_repository: string,
+                quantity_disciplines_used:int,
+                discipline_list:string list,
+                associated_usecases: string list,
+            }
+        ]
+    """
+
+    ontology = SoSOntology.instance()
+
+    resp = make_response(jsonify(ontology.get_full_discipline_list()), 200)
+
+    return resp
+
+
+@app.route('/api/ontology/v1/full_parameter_list', methods=['GET'])
+def get_full_parameter_list():
     """
     Methods that retrieve all parameters and associated information
 
@@ -200,7 +230,7 @@ def get_all_parameters():
 
     ontology = SoSOntology.instance()
 
-    resp = make_response(jsonify(ontology.get_all_parameters()), 200)
+    resp = make_response(jsonify(ontology.get_full_parameter_list()), 200)
 
     return resp
 
