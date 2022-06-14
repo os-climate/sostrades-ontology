@@ -81,6 +81,7 @@ class ParameterUsage(SoSEntity):
             if key == 'unit':
                 self.unit = value
         parameter.add_usage(self)
+        parameter.add_disciplineUsingParameter(sos_discipline.id)
 
     def updateAttributes(self, attributesDict):
         for key, value in attributesDict.items():

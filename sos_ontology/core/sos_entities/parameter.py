@@ -21,6 +21,8 @@ class Parameter(SoSEntity):
     def __init__(self, id: str, label: str, attributesDict: dict) -> None:
         super().__init__(id, label)
         self.unit = None
+        self.unit_list = []
+        self.datatype_list = []
         self.definition = None
         self.definitionSource = None
         self.datatype = None
@@ -28,6 +30,7 @@ class Parameter(SoSEntity):
         self.instances_list = []
         self.code_repositories = []
         self.code_repositories_attributes = {}
+        self.disciplinesUsingParameterIDs = []
 
         for key, value in attributesDict.items():
             if key == 'unit':
@@ -44,6 +47,20 @@ class Parameter(SoSEntity):
     def add_usage(self, usage) -> None:
         if usage not in self.instances_list:
             self.instances_list.append(usage)
+
+    def add_unit(self, usage) -> None:
+        if usage.unit is not None:
+            if usage.unit not in self.unit_list:
+                self.unit_list.append(usage.unit)
+
+    def add_datatype(self, usage) -> None:
+        if usage.datatype is not None:
+            if usage.datatype not in self.datatype_list:
+                self.datatype_list.append(usage.datatype)
+
+    def add_disciplineUsingParameter(self, disciplineID) -> None:
+        if disciplineID not in self.instances_list:
+            self.disciplinesUsingParameterIDs.append(disciplineID)
 
     def add_code_repository(self, code_repository) -> None:
         if code_repository not in self.code_repositories:

@@ -123,6 +123,36 @@ def get_all_parameters_label_list():
     return resp
 
 
+@app.route('/api/v1/processes_list', methods=['GET'])
+def get_all_processes_list():
+    """
+    Methods that retrieve all processes and related information
+
+    Request object has no parameters
+
+    Returned response is with the following data structure
+            process_id:{
+                uri:string,
+                id:string,
+                label: string,
+                description: string,
+                category: string,
+                version: string,
+                process_repository: string,
+                quantity_disciplines_used:int,
+                discipline_list:string list,
+                associated_usecases: string list,
+            }
+        ]
+    """
+
+    ontology = SoSOntology.instance()
+
+    resp = make_response(jsonify(ontology.get_all_processes_list()), 200)
+
+    return resp
+
+
 @app.route('/api/v1/parameter_glossary', methods=['GET'])
 def get_all_parameters():
     """
