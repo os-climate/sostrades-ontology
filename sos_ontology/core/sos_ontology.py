@@ -1990,7 +1990,7 @@ class SoSOntology(Ontology):
 
             print(f'SoS Ontology saved with {len(self.graph)} triples !')
 
-    def get_markdow_documentation(self, identifier):
+    def get_markdown_documentation(self, identifier):
         """
         Method to retrive Markdown documentation as a string associated to a model or a process represented by the identifier
         """
@@ -2241,7 +2241,7 @@ class SoSOntology(Ontology):
             if process_info['discipline_list'] is not None:
                 if process_info['discipline_list'] != '':
                     process_info['quantity_disciplines_used'] = len(
-                        process_info['discipline_list'].split(',')
+                        process_info['discipline_list'].split(',\n')
                     )
 
             processList.append(process_info)
@@ -2249,4 +2249,108 @@ class SoSOntology(Ontology):
         return processList
 
     def get_full_discipline_list(self):
-        return []
+        """Method that return a list of all ontology disciplines and their related information
+        with this specific structure:
+        [
+            discipline_id:{
+                'id': string,
+                'uri': string,
+                'label': string,
+                'definition': string,
+                'category': string,
+                'version': string,
+                'last_modification_date': string,
+                'source': string,
+                'validated_by': string,
+                'python_class': string,
+                'validated': string,
+                'icon': string,
+                'output_parameter_usages_quantity': int,
+                'input_parameter_usages_quantity': int,
+                'class_inheritance': string list,
+                'code_repository': string,
+                'type': string,
+                'python_module_path': string,
+                'output_parameter_usages': string list,
+                'input_parameter_usages': string list,
+                'process_using_discipline': [
+                    {
+                        'id': string,
+                        'uri': string,
+                        'label': string,
+                    }
+                ,]
+            }
+        ]
+        """
+
+        disciplineList = []
+        # retrieve all discipline URI
+        for disciplineURI in self.graph.subjects(
+            predicate=RDF.type, object=self.SOS.SoSDiscipline
+        ):
+            discipline_info = {
+                'id': self.SOS.id,
+                'uri': None,
+                'label': None,
+                'definition': self.SOS.definition,
+                'category': self.SOS.category,
+                'version': self.SOS.version,
+                'last_modification_date': self.SOS.last_modification_date,
+                'source': self.SOS.source,
+                'validated_by': self.SOS.validated_by,
+                'python_class': self.SOS.pythonClass,
+                'validated': self.SOS.validated,
+                'icon': self.SOS.icon,
+                'output_parameter_usages_quantity': self.SOS.outputParameterUsagesQuantity,
+                'input_parameter_usages_quantity': self.SOS.inputParameterUsagesQuantity,
+                'class_inheritance': self.SOS.classInheritance,
+                'code_repository': self.SOS.codeRepository,
+                'type': self.SOS.type,
+                'python_module_path': self.SOS.pythonModulePath,
+                'output_parameter_usages': self.SOS.outputParameterUsages,
+                'input_parameter_usages': self.SOS.inputParameterUsages,
+                'process_using_discipline': None,
+            }
+            # get discipline attributes
+            discipline_info = self.get_object_values_dict(
+                subjectURI=disciplineURI, values_dict=discipline_info
+            )
+            discipline_info['uri'] = disciplineURI
+            discipline_info['label'] = self.label(disciplineURI)
+
+            if discipline_info['output_parameter_usages'] is not None:
+                discipline_info['output_parameter_usages'] = discipline_info[
+                    'output_parameter_usages'
+                ].split(',\n')
+            if discipline_info['input_parameter_usages'] is not None:
+                discipline_info['input_parameter_usages'] = discipline_info[
+                    'input_parameter_usages'
+                ].split(',\n')
+            if discipline_info['class_inheritance'] is not None:
+                discipline_info['class_inheritance'] = discipline_info[
+                    'class_inheritance'
+                ].split(',\n')
+
+            # get all processes using the discipline
+            process_using_discipline = []
+            for processURI in self.graph.subjects(
+                predicate=self.SOS.usedIn, object=disciplineURI
+            ):
+                process_info = {
+                    'id': self.SOS.id,
+                    'uri': None,
+                    'label': None,
+                }
+
+                process_info = self.get_object_values_dict(
+                    subjectURI=processURI, values_dict=process_info
+                )
+                process_info['uri'] = processURI
+                process_info['label'] = self.label(processURI)
+                process_using_discipline.append(process_info)
+            discipline_info['process_using_discipline'] = process_using_discipline
+
+            disciplineList.append(discipline_info)
+
+        return disciplineList

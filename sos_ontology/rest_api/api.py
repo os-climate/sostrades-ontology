@@ -156,22 +156,40 @@ def get_full_process_list():
 @app.route('/api/ontology/v1/full_discipline_list', methods=['GET'])
 def get_full_discipline_list():
     """
-    Methods that retrieve all processes and related information
+    Methods that retrieve all disciplines and related information
 
     Request object has no parameters
 
     Returned response is with the following data structure
-            process_id:{
-                uri:string,
-                id:string,
-                label: string,
-                description: string,
-                category: string,
-                version: string,
-                process_repository: string,
-                quantity_disciplines_used:int,
-                discipline_list:string list,
-                associated_usecases: string list,
+        [
+            discipline_id:{
+                'id': string,
+                'uri': string,
+                'label': string,
+                'definition': string,
+                'category': string,
+                'version': string,
+                'last_modification_date': string,
+                'source': string,
+                'validated_by': string,
+                'python_class': string,
+                'validated': string,
+                'icon': string,
+                'output_parameter_usages_quantity': int,
+                'input_parameter_usages_quantity': int,
+                'class_inheritance': string list,
+                'code_repository': string,
+                'type': string,
+                'python_module_path': string,
+                'output_parameter_usages': string list,
+                'input_parameter_usages': string list,
+                'process_using_discipline': [
+                    {
+                        'id': string,
+                        'uri': string,
+                        'label': string,
+                    }
+                ,]
             }
         ]
     """
