@@ -2059,7 +2059,7 @@ class SoSOntology(Ontology):
         """
 
         parameterList = []
-        # retrive all parameter URI
+        # retrieve all parameter URI
         for parameterURI in self.graph.subjects(
             predicate=RDF.type, object=self.SOS.Parameter
         ):
@@ -2068,9 +2068,9 @@ class SoSOntology(Ontology):
                 'uri': None,
                 'label': None,
                 'definition': self.SOS.definition,
-                'definition_source': self.SOS.definition_source,
+                'definition_source': self.SOS.definitionSource,
                 'ACL_tag': self.SOS.ACLTag,
-                'code_repositories': self.SOS.codeRepositoriesList,
+                'code_repositories': self.SOS.codeRepositoryList,
                 'possible_datatypes': self.SOS.datatypeList,
                 'possible_units': self.SOS.unitList,
                 'disciplines_using_parameter': self.SOS.disciplineUsingParameterList,
@@ -2082,8 +2082,23 @@ class SoSOntology(Ontology):
                 subjectURI=parameterURI, values_dict=parameter_info
             )
             parameter_info['uri'] = parameterURI
-            parameter_info['possible_datatypes'] = self.label(parameterURI)
+            parameter_info['label'] = self.label(parameterURI)
+            if parameter_info['code_repositories'] is not None:
+                parameter_info['code_repositories'] = parameter_info[
+                    'code_repositories'
+                ].split(',\n')
+            if parameter_info['possible_datatypes'] is not None:
+                parameter_info['possible_datatypes'] = parameter_info[
+                    'possible_datatypes'
+                ].split(',\n')
+            if parameter_info['possible_units'] is not None:
+                parameter_info['possible_units'] = parameter_info[
+                    'possible_units'
+                ].split(',\n')
             if parameter_info['disciplines_using_parameter'] is not None:
+                parameter_info['disciplines_using_parameter'] = parameter_info[
+                    'disciplines_using_parameter'
+                ].split(',\n')
                 parameter_info['nb_disciplines_using_parameter'] = len(
                     parameter_info['disciplines_using_parameter']
                 )
@@ -2105,7 +2120,7 @@ class SoSOntology(Ontology):
                     'range': self.SOS.range,
                     'structuring': self.SOS.structuring,
                     'editable': self.SOS.editable,
-                    'possible_values': self.SOS.possible_values,
+                    'possible_values': self.SOS.possibleValues,
                     'dataframe_descriptor': self.SOS.dataframeDescriptor,
                     'dataframe_edition_locked': self.SOS.dataframeEditionLocked,
                     'namespace': self.SOS.namespace,
@@ -2142,9 +2157,6 @@ class SoSOntology(Ontology):
 
                 parameter_usage_details.append(parameter_usage_info)
 
-            parameter_info['quantity_models_using_parameter'] = len(
-                models_using_parameter
-            )
             parameter_info['parameter_usage_details'] = parameter_usage_details
 
             parameterList.append(parameter_info)

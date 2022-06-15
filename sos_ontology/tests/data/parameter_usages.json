@@ -1,0 +1,22 @@
+{
+	"disciplines": [
+		"sos_trades_core.execution_engine.sos_coupling",
+		"sos_trades_core.execution_engine.sos_discipline_scatter",
+		"sos_trades_core.execution_engine.sos_discipline_gather",
+		"value_assessment.sos_wrapping.opex.opex_discipline",
+		"value_assessment.sos_wrapping.capex.capex_discipline",
+		"sos_trades_core.execution_engine.archi_builder",
+		"value_assessment.sos_wrapping.valueblock_disciplines.sum_actor_discipline",
+		"value_assessment.sos_wrapping.valueblock_disciplines.sum_discipline",
+		"value_assessment.sos_wrapping.valueblock_disciplines.manufacturer_vb_discipline"
+	],
+	"parameter_usages": [
+		"economics_manufacturer.v1.sos_wrapping.static_rc.static_rc_discipline_output_rc_total",
+		"economics_manufacturer.v1.sos_wrapping.static_rc.static_rc_discipline_output_rc",
+		"energy_models.core.ccus.ccus_disc_input_carbon_capture.energy_production",
+		"energy_models.core.investments.disciplines.energy_invest_disc_output_biogas.invest_level",
+		"energy_models.core.stream_type.energy_disciplines.bio_diesel_disc_input_exp_min",
+		"energy_models.core.stream_type.energy_disciplines.syngas_disc_input_CoElectrolysis.techno_prices",
+		"capex_dict"
+	]
+}
