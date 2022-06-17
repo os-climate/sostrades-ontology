@@ -216,7 +216,7 @@ def get_full_parameter_list():
                 label: string,
                 definition: string,
                 definition_source: string,
-                ACL_tag: string,
+                ACLTag: string,
                 code_repositories: string list,
                 possible_datatypes:string list,
                 possible_units:string list,
@@ -514,7 +514,7 @@ def load_ontology_markdown_documentation(element_identifier):
     ontology = SoSOntology.instance()
 
     return make_response(
-        jsonify(ontology.get_markdow_documentation(element_identifier)), 200
+        jsonify(ontology.get_markdown_documentation(element_identifier)), 200
     )
 
 
