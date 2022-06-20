@@ -14,14 +14,54 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from flask import Flask
+from flask import Flask, session
 from flask import request, jsonify, make_response
 from werkzeug.exceptions import BadRequest
+import logging
+import time
 
 from sos_ontology.core.sos_ontology import SoSOntology
 
+
+def random_string_for_secret_key():
+    '''
+    Generate a random string tu use at secret key
+    :return:
+    '''
+    import random
+    import string
+
+    lower = string.ascii_lowercase
+    upper = string.ascii_uppercase
+    num = string.digits
+    letters = string.ascii_letters
+    symbols = string.punctuation
+
+    # Put them in the same list
+    all_characters = lower + upper + num + symbols + letters
+
+    return random.sample(all_characters, 32)
+
+
 SoSOntology.instance()
+
 app = Flask(__name__)
+flask_config_dict = {'SECRET_KEY': random_string_for_secret_key()}
+app.config.update(flask_config_dict)
+app.logger.propagate = False
+
+for handler in app.logger.handlers:
+    handler.setFormatter(logging.Formatter("[%(asctime)s] %(levelname)s : %(message)s"))
+
+if app.config['ENV'] == 'production':
+    app.logger.setLevel(logging.INFO)
+else:
+    app.logger.setLevel(logging.DEBUG)
+logging._srcfile = None
+logging.logThreads = 0
+logging.logProcesses = 0
+
+START_TIME = 'start_time'
 
 
 @app.route('/api/ontology/v1/study', methods=['POST'])
@@ -516,6 +556,22 @@ def load_ontology_markdown_documentation(element_identifier):
     return make_response(
         jsonify(ontology.get_markdown_documentation(element_identifier)), 200
     )
+
+
+@app.before_request
+def before_request():
+    session[START_TIME] = time.time()
+
+
+@app.after_request
+def after_request(response):
+
+    duration = 0
+    if START_TIME in session:
+        duration = time.time() - session[START_TIME]
+
+    app.logger.info(f'{request.remote_addr}, {request.method}, {request.scheme}, {request.full_path}, {response.status}, {duration} sec.')
+    return response
 
 
 if __name__ == '__main__':
