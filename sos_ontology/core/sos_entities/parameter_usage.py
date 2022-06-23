@@ -88,7 +88,9 @@ class ParameterUsage(SoSEntity):
 
     def updateAttributes(self, attributesDict):
         for key, value in attributesDict.items():
-            if value is not None and value != '' and value != ' ':
+            if value is not None and (
+                isinstance(value, str) and value != '' and value != ' '
+            ):
                 if key == 'visibility' and self.visibility != value:
                     self.visibility = value
                 if (

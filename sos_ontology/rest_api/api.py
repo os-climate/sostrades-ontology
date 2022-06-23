@@ -81,12 +81,13 @@ def load_study_ontology_data():
         {
             parameter_usages : {
                 <parameter_usage_identifier> : {
-                    parameter_uri: string
-                    parameter_id: string
-                    parameter_label: string
-                    parameter_definition: string
-                    parameter_definitionSource: string
-                    parameter_ACLTag: string
+                    uri:string,
+                    id:string,
+                    label: string,
+                    definition: string,
+                    definition_source: string,
+                    ACLTag: string,
+
 
                     visibility: string
                     dataframeEditionLocked: string
@@ -179,6 +180,7 @@ def get_full_process_list():
                 category: string,
                 version: string,
                 process_repository: string,
+                process_repository_label: string,
                 quantity_disciplines_used:int,
                 discipline_list:string list,
                 associated_usecases: string list,
@@ -570,7 +572,9 @@ def after_request(response):
     if START_TIME in session:
         duration = time.time() - session[START_TIME]
 
-    app.logger.info(f'{request.remote_addr}, {request.method}, {request.scheme}, {request.full_path}, {response.status}, {duration} sec.')
+    app.logger.info(
+        f'{request.remote_addr}, {request.method}, {request.scheme}, {request.full_path}, {response.status}, {duration} sec.'
+    )
     return response
 
 
