@@ -1809,13 +1809,13 @@ class SoSOntology(Ontology):
                         self.toLiteral(parameterUsage.visibility),
                         self.graph,
                     ),
-                    # add parameterUsage defaultValue
-                    (
-                        parameterUsageURI,
-                        self.SOS.defaultValue,
-                        self.toLiteral(parameterUsage.defaultValue),
-                        self.graph,
-                    ),
+                    # # add parameterUsage defaultValue
+                    # (
+                    #     parameterUsageURI,
+                    #     self.SOS.defaultValue,
+                    #     self.toLiteral(parameterUsage.defaultValue),
+                    #     self.graph,
+                    # ),
                     # add parameterUsage dataframeEditionLocked
                     (
                         parameterUsageURI,
