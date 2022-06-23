@@ -45,22 +45,23 @@ class ParameterUsage(SoSEntity):
         self.datatype = None
         self.unit = None
         self.editable = None
+        self.subtypeDescriptor = None
         self.sos_discipline = sos_discipline
         self.instanceOf = parameter
         for key, value in attributesDict.items():
             if key == 'visibility':
                 self.visibility = value
-            if key == 'defaultValue':
+            if key == 'default':
                 self.defaultValue = value
-            if key == 'dataframeEditionLocked':
+            if key == 'dataframe_edition_locked':
                 self.dataframeEditionLocked = value
-            if key == 'userLevel':
+            if key == 'user_level':
                 self.userLevel = value
-            if key == 'possibleValues':
+            if key == 'possible_values':
                 self.possibleValues = value
             if key == 'range':
                 self.range = value
-            if key == 'dataframeDescriptor':
+            if key == 'dataframe_descriptor':
                 self.dataframeDescriptor = value
             if key == 'structuring':
                 self.structuring = value
@@ -80,16 +81,18 @@ class ParameterUsage(SoSEntity):
                 self.datatype = value
             if key == 'unit':
                 self.unit = value
+            if key == 'subtype_descriptor':
+                self.subtypeDescriptor = value
         parameter.add_usage(self)
         parameter.add_disciplineUsingParameter(sos_discipline.id)
 
     def updateAttributes(self, attributesDict):
         for key, value in attributesDict.items():
-            if value is not None:
+            if value is not None and value != '' and value != ' ':
                 if key == 'visibility' and self.visibility != value:
                     self.visibility = value
                 if (
-                    key == 'dataframeEditionLocked'
+                    key == 'dataframe_edition_locked'
                     and self.dataframeEditionLocked != value
                 ):
                     self.dataframeEditionLocked = value
@@ -101,7 +104,7 @@ class ParameterUsage(SoSEntity):
                     self.possibleValues = value
                 if key == 'range' and self.range != value:
                     self.range = value
-                if key == 'dataframeDescriptor' and self.dataframeDescriptor != value:
+                if key == 'dataframe_descriptor' and self.dataframeDescriptor != value:
                     self.dataframeDescriptor = value
                 if key == 'structuring' and self.structuring != value:
                     self.structuring = value
@@ -117,3 +120,5 @@ class ParameterUsage(SoSEntity):
                     self.editable = value
                 if key == 'io_type' and self.io_type != value:
                     self.io_type = value
+                if key == 'subtype_descriptor' and self.io_type != value:
+                    self.subtypeDescriptor = value

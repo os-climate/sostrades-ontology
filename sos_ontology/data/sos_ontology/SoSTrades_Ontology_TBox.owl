@@ -716,6 +716,14 @@
     
 
 
+    <!-- https://sostrades.eu.airbus.corp/ontology#subtypeDescriptor -->
+
+    <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#subtypeDescriptor">
+        <rdfs:subPropertyOf rdf:resource="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty -->
 
     <owl:DatatypeProperty rdf:about="https://sostrades.eu.airbus.corp/ontology#topCodeDataProperty"/>
