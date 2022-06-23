@@ -2207,6 +2207,7 @@ class SoSOntology(Ontology):
                 category: string,
                 version: string,
                 process_repository: string,
+                process_repository_label: string,
                 quantity_disciplines_used:int,
                 discipline_list:string list,
                 associated_usecases:string list,
@@ -2227,6 +2228,7 @@ class SoSOntology(Ontology):
                 'category': self.SOS.category,
                 'version': self.SOS.version,
                 'process_repository': self.SOS.repository,
+                'process_repository_label': None,
                 'quantity_disciplines_used': 0,
                 'discipline_list': self.SOS.disciplineList,
                 'associated_usecases': self.SOS.usecaseList,
@@ -2237,6 +2239,14 @@ class SoSOntology(Ontology):
             )
             process_info['uri'] = processURI
             process_info['label'] = self.label(processURI)
+
+            processRepositoryURI = self.value(
+                s=processURI, p=self.SOS.belongsTo, o=None, returnType='uri'
+            )
+            if processRepositoryURI is not None:
+                process_info['process_repository_label'] = self.label(
+                    processRepositoryURI
+                )
 
             if process_info['discipline_list'] is not None:
                 if process_info['discipline_list'] != '':
