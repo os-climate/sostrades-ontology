@@ -18,6 +18,10 @@ from sos_ontology.core.sos_ontology import SoSOntology
 from os.path import dirname, join
 import json
 
+parameter_usages_path = join(dirname(__file__), 'data', 'parameter_usages.json')
+with open(parameter_usages_path, 'r') as outfile:
+    parameter_usages = json.loads(outfile.read())
+
 repositories_name_path = join(dirname(__file__), 'data', 'repositories_name.json')
 with open(repositories_name_path, 'r') as outfile:
     repositories_name = json.loads(outfile.read())
@@ -38,6 +42,13 @@ onto = SoSOntology.instance()
 print(f'Ontology loaded with {len(onto.graph)} triples')
 
 result = {}
+print('Test get parameter glossary')
+result['parameter_glossary'] = onto.get_full_parameter_list()
+
+print('Test study ontology data')
+result['study_ontology_data'] = onto.get_study_ontology_data(parameter_usages)
+
+
 print('Test get_metadata')
 result['get_metadata'] = onto.get_metadata(data_request)
 
@@ -56,6 +67,7 @@ result['status_info'] = onto.get_models_status()
 
 print('Test get_models_list_filtered')
 result['models_filtered'] = onto.get_models_list_filtered(linked_process_dict)
+print(result['models_filtered'])
 
 print('Test get_models_nodes_and_links_filtered')
 result['link_filtered'] = onto.get_models_nodes_and_links_filtered(linked_process_dict)

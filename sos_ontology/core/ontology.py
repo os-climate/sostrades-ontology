@@ -25,6 +25,7 @@ End of documentation
 '''
 
 
+from copy import deepcopy
 import logging
 from os.path import basename
 from rdflib import ConjunctiveGraph, Namespace, Literal, URIRef
@@ -177,6 +178,15 @@ class Ontology:
             return valueUri.value
         else:
             return valueUri
+
+    def get_object_values_dict(self, subjectURI, values_dict):
+        result_dict = deepcopy(values_dict)
+        for key, predicate in values_dict.items():
+            if predicate is not None and isinstance(predicate, URIRef):
+                result_dict[key] = self.value(
+                    s=subjectURI, p=predicate, o=None, returnType='value'
+                )
+        return result_dict
 
     def create_new_URI(self, namespace, URIstring):
         # Create new URI by replacing spaces and putting it in lower and if the URI
