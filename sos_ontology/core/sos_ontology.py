@@ -185,40 +185,47 @@ class SoSOntology(Ontology):
         )
 
         if modelURI is not None:
-            # get label
-            metadata['label'] = self.label(modelURI)
-            if split_uri(modelURI)[-1] == metadata['label']:
-                metadata['label'] = disciplineString
-            # get attributes
-            modelAttribute = self.getSubjectAttributes(
-                modelURI, {**self.datapropertyDict, **self.annotationPropertyDict}
-            )
+            entityTypes = list(self.graph.objects(modelURI, RDF.type))
+            if self.SOS.SoSDiscipline in entityTypes:
+                # get label
+                metadata['label'] = self.label(modelURI)
+                if split_uri(modelURI)[-1] == metadata['label']:
+                    metadata['label'] = disciplineString
+                # get attributes
+                modelAttribute = self.getSubjectAttributes(
+                    modelURI, {**self.datapropertyDict, **self.annotationPropertyDict}
+                )
 
-            attributesList = [
-                'uri',
-                'description',
-                'pythonClass',
-                'outputParameterUsagesQuantity',
-                'inputParameterUsagesQuantity',
-                'modelType',
-                'type',
-                'validated',
-                'validated_by',
-                'last_modification_date',
-                'publicationDate',
-                'codeRepository',
-                'pythonModulePath',
-                'category',
-                'definition',
-                'version',
-                'source',
-                'icon',
-            ]
+                attributesList = [
+                    'uri',
+                    'description',
+                    'pythonClass',
+                    'outputParameterUsagesQuantity',
+                    'inputParameterUsagesQuantity',
+                    'modelType',
+                    'type',
+                    'validated',
+                    'validated_by',
+                    'last_modification_date',
+                    'publicationDate',
+                    'codeRepository',
+                    'pythonModulePath',
+                    'category',
+                    'definition',
+                    'version',
+                    'source',
+                    'icon',
+                ]
 
-            for attr in attributesList:
-                if modelAttribute.get(attr, None) is not None:
-                    metadata[attr] = modelAttribute.get(attr, None)
+                for attr in attributesList:
+                    if modelAttribute.get(attr, None) is not None:
+                        metadata[attr] = modelAttribute.get(attr, None)
 
+            else:
+                # It means the value has been found but is not a discipline
+                self.logger.debug(
+                    f'The entity: {disciplineString} HAS BEEN FOUND in the Ontology but is not of type Discipline. It is a {", ".join(entityTypes)}'
+                )
         else:
             # It means the value has not been found
             self.logger.debug(
@@ -427,58 +434,65 @@ class SoSOntology(Ontology):
         )
 
         if parameterUsageURI is not None:
-            # get parameter usage attributes
-            parameterUsageAttributes = self.getSubjectAttributes(
-                parameterUsageURI,
-                {**self.datapropertyDict, **self.annotationPropertyDict},
-            )
-
-            parameterUsageAttributesList = [
-                'uri',
-                'unit',
-                'datatype',
-                'numerical',
-                'editable',
-                'optional',
-                'coupling',
-                'visibility',
-                'namespace',
-                'ioType',
-                'userLevel',
-            ]
-
-            for attr in parameterUsageAttributesList:
-                if parameterUsageAttributes.get(attr, None) is not None:
-                    metadata[attr] = parameterUsageAttributes.get(attr, None)
-
-            # retrieve associated parameter
-            parameterURI = list(
-                self.graph.objects(
-                    subject=parameterUsageURI, predicate=self.SOS.instanceOf
-                )
-            )[0]
-
-            if parameterURI is not None:
-                # get label
-                metadata['label'] = self.label(parameterURI)
-
-                # get attributes
-                parameterAttributes = self.getSubjectAttributes(
-                    parameterURI,
+            entityTypes = list(self.graph.objects(parameterUsageURI, RDF.type))
+            if self.SOS.Parameter_Usage in entityTypes:
+                # get parameter usage attributes
+                parameterUsageAttributes = self.getSubjectAttributes(
+                    parameterUsageURI,
                     {**self.datapropertyDict, **self.annotationPropertyDict},
                 )
 
-                parameterAttributesList = [
+                parameterUsageAttributesList = [
                     'uri',
-                    'definition',
-                    'definitionSource',
-                    'ACLTag',
+                    'unit',
+                    'datatype',
+                    'numerical',
+                    'editable',
+                    'optional',
+                    'coupling',
+                    'visibility',
+                    'namespace',
+                    'ioType',
+                    'userLevel',
                 ]
 
-                for attr in parameterAttributesList:
-                    if parameterAttributes.get(attr, None) is not None:
-                        metadata[attr] = parameterAttributes.get(attr, None)
+                for attr in parameterUsageAttributesList:
+                    if parameterUsageAttributes.get(attr, None) is not None:
+                        metadata[attr] = parameterUsageAttributes.get(attr, None)
 
+                # retrieve associated parameter
+                parameterURI = list(
+                    self.graph.objects(
+                        subject=parameterUsageURI, predicate=self.SOS.instanceOf
+                    )
+                )[0]
+
+                if parameterURI is not None:
+                    # get label
+                    metadata['label'] = self.label(parameterURI)
+
+                    # get attributes
+                    parameterAttributes = self.getSubjectAttributes(
+                        parameterURI,
+                        {**self.datapropertyDict, **self.annotationPropertyDict},
+                    )
+
+                    parameterAttributesList = [
+                        'uri',
+                        'definition',
+                        'definitionSource',
+                        'ACLTag',
+                    ]
+
+                    for attr in parameterAttributesList:
+                        if parameterAttributes.get(attr, None) is not None:
+                            metadata[attr] = parameterAttributes.get(attr, None)
+
+            else:
+                # It means the value has been found but is not a parameter usage
+                self.logger.debug(
+                    f'The entity: {parameterUsageString} HAS BEEN FOUND in the Ontology but is not of type Parameter_Usage. It is a {", ".join(entityTypes)}'
+                )
         else:
             # It means the value has not been found
             self.logger.debug(
