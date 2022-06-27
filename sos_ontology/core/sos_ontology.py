@@ -2050,6 +2050,21 @@ class SoSOntology(Ontology):
 
         return markdown_documentation
 
+    def retrieve_documentations(self, identifier_list: list) -> dict:
+        """Methods that retrieve documentation from a list of identifier
+
+        Args:
+            identifier_list (list): list of Process or Discipline identifier
+
+        Returns:
+            dict: identifier: Markdown documentation as string
+        """
+        documentation_dict = {}
+
+        for identifier in identifier_list:
+            documentation_dict[identifier] = self.get_markdown_documentation(identifier)
+        return documentation_dict
+
     def get_full_parameter_list(self):
         """Method that return a list of all ontology parameters and their related information
         with this specific structure:

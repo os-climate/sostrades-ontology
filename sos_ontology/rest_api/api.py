@@ -294,6 +294,38 @@ def get_full_parameter_list():
     return resp
 
 
+@app.route('/api/ontology/v1/documentation', methods=['POST'])
+def retrieve_documentations():
+    """
+    Methods that retrieve documentation from a list of identifier
+
+    Request object is intended with the following data structure
+        {
+            identifier_list: string[], // list of disciplines or processes string identifier
+        }
+
+    Returned response is with the following data structure
+        {
+            identifier : documentation Markdown as string,
+        }
+
+    """
+    data_request = request.json.get('identifier_list', None)
+
+    missing_parameter = []
+    if data_request is None:
+        missing_parameter.append('Missing mandatory parameter: identifier_list')
+
+    if len(missing_parameter) > 0:
+        raise BadRequest('\n'.join(missing_parameter))
+
+    ontology = SoSOntology.instance()
+
+    resp = make_response(jsonify(ontology.retrieve_documentations(data_request)), 200)
+
+    return resp
+
+
 @app.route('/api/ontology', methods=['POST'])
 def load_ontology_request():
     """
