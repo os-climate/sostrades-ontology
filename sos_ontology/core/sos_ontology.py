@@ -361,16 +361,28 @@ class SoSOntology(Ontology):
         Returns:
             {
                 parameter_usages : {
-                    <parameter_identifier> : {
-                        id: string
-                        datatype: string
-                        definition: string
-                        label: string
-                        quantityKind: string
-                        unit: string
-                        uri: string
-                        definitionSource: string
-                        ACLTag: string
+                    <parameter_usage_identifier> : {
+                        uri:string,
+                        id:string,
+                        label: string,
+                        definition: string,
+                        definition_source: string,
+                        ACLTag: string,
+                        io_type: string,
+                        unit: string,
+                        datatype: string,
+                        numerical: boolean,
+                        optional: boolean,
+                        range: string,
+                        structuring: boolean,
+                        editable: boolean,
+                        possible_values: string,
+                        dataframe_descriptor: string,
+                        dataframe_edition_locked: boolean,
+                        namespace: string,
+                        user_level: string,
+                        visibility: string,
+                        structuring: boolean,
                     }
                 }
                 disciplines {
@@ -416,15 +428,27 @@ class SoSOntology(Ontology):
 
         Returns:
             dict: <parameter_identifier> : {
-                        id: string
-                        datatype: string
-                        definition: string
-                        label: string
-                        quantityKind: string
-                        unit: string
-                        uri: string
-                        definitionSource: string
-                        ACLTag: string
+                    uri:string,
+                    id:string,
+                    label: string,
+                    definition: string,
+                    definition_source: string,
+                    ACLTag: string,
+                    io_type: string,
+                    unit: string,
+                    datatype: string,
+                    numerical: boolean,
+                    optional: boolean,
+                    range: string,
+                    structuring: boolean,
+                    editable: boolean,
+                    possible_values: string,
+                    dataframe_descriptor: string,
+                    dataframe_edition_locked: boolean,
+                    namespace: string,
+                    user_level: string,
+                    visibility: string,
+                    structuring: boolean,
                     }
         """
         metadata = dict({'id': parameterUsageString})
@@ -437,28 +461,25 @@ class SoSOntology(Ontology):
             entityTypes = list(self.graph.objects(parameterUsageURI, RDF.type))
             if self.SOS.Parameter_Usage in entityTypes:
                 # get parameter usage attributes
-                parameterUsageAttributes = self.getSubjectAttributes(
-                    parameterUsageURI,
-                    {**self.datapropertyDict, **self.annotationPropertyDict},
+                parameter_usage_info = {
+                    'unit': self.SOS.unit,
+                    'datatype': self.SOS.datatype,
+                    'numerical': self.SOS.numerical,
+                    'optional': self.SOS.optional,
+                    'range': self.SOS.range,
+                    'structuring': self.SOS.structuring,
+                    'editable': self.SOS.editable,
+                    'possible_values': self.SOS.possibleValues,
+                    'dataframe_descriptor': self.SOS.dataframeDescriptor,
+                    'dataframe_edition_locked': self.SOS.dataframeEditionLocked,
+                    'namespace': self.SOS.namespace,
+                    'user_level': self.SOS.userLevel,
+                    'visibility': self.SOS.visibility,
+                }
+
+                parameter_usage_info = self.get_object_values_dict(
+                    subjectURI=parameterUsageURI, values_dict=parameter_usage_info
                 )
-
-                parameterUsageAttributesList = [
-                    'uri',
-                    'unit',
-                    'datatype',
-                    'numerical',
-                    'editable',
-                    'optional',
-                    'coupling',
-                    'visibility',
-                    'namespace',
-                    'ioType',
-                    'userLevel',
-                ]
-
-                for attr in parameterUsageAttributesList:
-                    if parameterUsageAttributes.get(attr, None) is not None:
-                        metadata[attr] = parameterUsageAttributes.get(attr, None)
 
                 # retrieve associated parameter
                 parameterURI = list(
@@ -468,26 +489,24 @@ class SoSOntology(Ontology):
                 )[0]
 
                 if parameterURI is not None:
-                    # get label
-                    metadata['label'] = self.label(parameterURI)
-
-                    # get attributes
-                    parameterAttributes = self.getSubjectAttributes(
-                        parameterURI,
-                        {**self.datapropertyDict, **self.annotationPropertyDict},
+                    parameter_info = {
+                        'id': self.SOS.id,
+                        'uri': None,
+                        'label': None,
+                        'definition': self.SOS.definition,
+                        'definition_source': self.SOS.definitionSource,
+                        'ACLTag': self.SOS.ACLTag,
+                    }
+                    # get parameter attributes
+                    parameter_info = self.get_object_values_dict(
+                        subjectURI=parameterURI, values_dict=parameter_info
                     )
+                    parameter_info['uri'] = parameterURI
+                    parameter_info['label'] = self.label(parameterURI)
 
-                    parameterAttributesList = [
-                        'uri',
-                        'definition',
-                        'definitionSource',
-                        'ACLTag',
-                    ]
+                    metadata.update(parameter_info)
 
-                    for attr in parameterAttributesList:
-                        if parameterAttributes.get(attr, None) is not None:
-                            metadata[attr] = parameterAttributes.get(attr, None)
-
+                metadata.update(parameter_usage_info)
             else:
                 # It means the value has been found but is not a parameter usage
                 self.logger.debug(

@@ -87,22 +87,21 @@ def load_study_ontology_data():
                     definition: string,
                     definition_source: string,
                     ACLTag: string,
-
-
-                    visibility: string
-                    dataframeEditionLocked: string
-                    userLevel: string
-                    range: string
-                    dataframeDescriptor: string
-                    structuring: string
-                    optional: string
-                    namespace: string
-                    numerical: string
-                    coupling: string
-                    io_type: string
-                    datatype: string
-                    unit: string
-                    editable: string
+                    io_type: string,
+                    unit: string,
+                    datatype: string,
+                    numerical: boolean,
+                    optional: boolean,
+                    range: string,
+                    structuring: boolean,
+                    editable: boolean,
+                    possible_values: string,
+                    dataframe_descriptor: string,
+                    dataframe_edition_locked: boolean,
+                    namespace: string,
+                    user_level: string,
+                    visibility: string,
+                    structuring: boolean,
                 }
             }
             disciplines {
