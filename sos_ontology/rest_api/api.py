@@ -591,6 +591,10 @@ def load_ontology_markdown_documentation(element_identifier):
     )
 
 
+@app.route('/api/ping', methods=['GET'])
+def ping():
+    return make_response(jsonify('pong'), 200)
+
 @app.before_request
 def before_request():
     session[START_TIME] = time.time()
