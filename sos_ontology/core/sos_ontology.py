@@ -14,8 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from rdflib.namespace import SKOS, XSD, OWL, RDF, RDFS, split_uri
-from rdflib import Namespace, Literal
+from rdflib.namespace import DC, SKOS, XSD, OWL, RDF, RDFS, split_uri
+from rdflib import Namespace, Literal, URIRef
 from os.path import dirname, join, exists, isfile
 from os import environ
 
@@ -2446,3 +2446,63 @@ class SoSOntology(Ontology):
             disciplineList.append(discipline_info)
 
         return disciplineList
+
+    def get_general_information(self) -> dict:
+        """
+        Methods returning generic information concerning the current ontology
+
+        Returned response is with the following data structure
+            {
+                description:string,
+                version:string,
+                iri: string,
+                last_updated:string
+                entity_count:{
+                    'Code Repositories':integer,
+                    'Process Repositories':integer,
+                    'Processes':integer,
+                    'Models':integer,
+                    'Parameters':integer,
+                    'Usecases':integer,
+                }
+            }
+        """
+        general_information = {
+            'description': '',
+            'version': '',
+            'iri': '',
+            'last_updated': '',
+            'entity_count': {},
+        }
+        ontoURI = self.value(None, RDF.type, OWL.Ontology, 'uri')
+        description = str(self.value(ontoURI, DC.description, None, 'uri'))
+        versionIRI = str(
+            self.graph.value(ontoURI, OWL.versionIRI, None, default=None, any=True)
+        )
+        last_updated = str(
+            self.graph.value(ontoURI, DC.modified, None, default=None, any=True)
+        )
+        general_information['description'] = description
+        general_information['iri'] = str(ontoURI)
+        general_information['version'] = versionIRI.split('/')[-1]
+
+        # calculate entitycount
+        entities_dict = {
+            'Code Repositories': self.SOS.CodeRepository,
+            'Process Repositories': self.SOS.CodeRepository,
+            'Processes': self.SOS.SoSProcessRepository,
+            'Models': self.SOS.SoSProcess,
+            'Parameters': self.SOS.Parameter,
+            'Usecases': self.SOS.Usecase,
+        }
+        entity_count = {}
+        for entityName, entityURI in entities_dict.items():
+            entity_count[entityName] = self.get_entity_count(entityURI=entityURI)
+        general_information['entity_count'] = entity_count
+
+        return general_information
+
+    def get_entity_count(self, entityURI: URIRef) -> int:
+        entityList = list(self.graph.subjects(RDF.type, entityURI))
+
+        return len(entityList)

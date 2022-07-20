@@ -64,6 +64,37 @@ logging.logProcesses = 0
 START_TIME = 'start_time'
 
 
+@app.route('/api/ontology/v1/general_information', methods=['GET'])
+def get_general_information():
+    """
+    Methods returning generic information concerning the current ontology
+
+    Request object has no parameters
+
+    Returned response is with the following data structure
+        {
+            description:string,
+            version:string,
+            iri: string,
+            last_updated:string
+            entity_count:{
+                'Code Repositories':integer,
+                'Process Repositories':integer,
+                'Processes':integer,
+                'Models':integer,
+                'Parameters':integer,
+                'Usecases':integer,
+            }
+        }
+    """
+
+    ontology = SoSOntology.instance()
+
+    resp = make_response(jsonify(ontology.get_general_information()), 200)
+
+    return resp
+
+
 @app.route('/api/ontology/v1/study', methods=['POST'])
 def load_study_ontology_data():
     """
