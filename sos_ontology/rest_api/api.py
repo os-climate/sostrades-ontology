@@ -181,7 +181,7 @@ def get_full_process_list():
                 process_repository: string,
                 process_repository_label: string,
                 quantity_disciplines_used:int,
-                discipline_list:string list,
+                discipline_list: {id: string, label: string, icon: string}
                 associated_usecases: string list,
             }
         ]
@@ -594,6 +594,7 @@ def load_ontology_markdown_documentation(element_identifier):
 @app.route('/api/ping', methods=['GET'])
 def ping():
     return make_response(jsonify('pong'), 200)
+
 
 @app.before_request
 def before_request():

@@ -2257,7 +2257,7 @@ class SoSOntology(Ontology):
                 process_repository: string,
                 process_repository_label: string,
                 quantity_disciplines_used:int,
-                discipline_list:string list,
+                discipline_list: {id: string, label: string,icon: string}
                 associated_usecases:string list,
             }
         ]
@@ -2278,7 +2278,7 @@ class SoSOntology(Ontology):
                 'process_repository': self.SOS.repository,
                 'process_repository_label': None,
                 'quantity_disciplines_used': 0,
-                'discipline_list': self.SOS.disciplineList,
+                'discipline_list': None,
                 'associated_usecases': self.SOS.usecaseList,
             }
             # get parameter attributes
@@ -2296,11 +2296,24 @@ class SoSOntology(Ontology):
                     processRepositoryURI
                 )
 
-            if process_info['discipline_list'] is not None:
-                if process_info['discipline_list'] != '':
-                    process_info['quantity_disciplines_used'] = len(
-                        process_info['discipline_list'].split(',\n')
-                    )
+            # get all disciplines used in the process
+            disciplines_used_in_process = []
+            for discURI in self.graph.subjects(
+                predicate=self.SOS.usedIn, object=processURI
+            ):
+                disc_info = {
+                    'id': self.SOS.id,
+                    'label': None,
+                    'icon': self.SOS.icon,
+                }
+
+                disc_info = self.get_object_values_dict(
+                    subjectURI=discURI, values_dict=disc_info
+                )
+                disc_info['label'] = self.label(discURI)
+                disciplines_used_in_process.append(disc_info)
+                process_info['quantity_disciplines_used'] += 1
+            process_info['discipline_list'] = disciplines_used_in_process
 
             processList.append(process_info)
 
