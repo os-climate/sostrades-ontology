@@ -2257,8 +2257,8 @@ class SoSOntology(Ontology):
                 process_repository: string,
                 process_repository_label: string,
                 quantity_disciplines_used:int,
-                discipline_list: {id: string, label: string,icon: string}
-                associated_usecases:string list,
+                discipline_list: [{id: string, label: string,icon: string}]
+                associated_usecases: [{id: string, name: string, process: string,repository: string,run_usecase: boolean}]
             }
         ]
         """
@@ -2279,7 +2279,7 @@ class SoSOntology(Ontology):
                 'process_repository_label': None,
                 'quantity_disciplines_used': 0,
                 'discipline_list': None,
-                'associated_usecases': self.SOS.usecaseList,
+                'associated_usecases': None,
             }
             # get parameter attributes
             process_info = self.get_object_values_dict(
@@ -2314,6 +2314,27 @@ class SoSOntology(Ontology):
                 disciplines_used_in_process.append(disc_info)
                 process_info['quantity_disciplines_used'] += 1
             process_info['discipline_list'] = disciplines_used_in_process
+
+            # get all usecases associated to the process
+            associated_usecases = []
+            for usecaseURI in self.graph.subjects(
+                predicate=self.SOS.implements, object=processURI
+            ):
+                usecase_info = {
+                    'id': self.SOS.id,
+                    'name': self.SOS.name,
+                    'process': None,
+                    'repository': None,
+                    'run_usecase': self.SOS.runUsecase,
+                }
+
+                usecase_info = self.get_object_values_dict(
+                    subjectURI=usecaseURI, values_dict=usecase_info
+                )
+                usecase_info['process'] = process_info['label']
+                usecase_info['repository'] = process_info['process_repository_label']
+                associated_usecases.append(usecase_info)
+            process_info['associated_usecases'] = associated_usecases
 
             processList.append(process_info)
 

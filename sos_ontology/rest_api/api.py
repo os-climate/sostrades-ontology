@@ -181,8 +181,8 @@ def get_full_process_list():
                 process_repository: string,
                 process_repository_label: string,
                 quantity_disciplines_used:int,
-                discipline_list: {id: string, label: string, icon: string}
-                associated_usecases: string list,
+                discipline_list: [{id: string, label: string, icon: string}]
+                associated_usecases: [{id: string, name: string, process: string,repository: string,run_usecase: boolean}]
             }
         ]
     """
