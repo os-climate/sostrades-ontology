@@ -2313,7 +2313,7 @@ class SoSOntology(Ontology):
                 disc_info['label'] = self.label(discURI)
                 disciplines_used_in_process.append(disc_info)
                 process_info['quantity_disciplines_used'] += 1
-            process_info['discipline_list'] = disciplines_used_in_process
+            process_info['discipline_list'] = sorted(disciplines_used_in_process, key=lambda x: x['label'].lower())
 
             # get all usecases associated to the process
             associated_usecases = []
@@ -2334,7 +2334,7 @@ class SoSOntology(Ontology):
                 usecase_info['process'] = process_info['label']
                 usecase_info['repository'] = process_info['process_repository_label']
                 associated_usecases.append(usecase_info)
-            process_info['associated_usecases'] = associated_usecases
+            process_info['associated_usecases'] = sorted(associated_usecases, key=lambda x: x['name'].lower())
 
             processList.append(process_info)
 
