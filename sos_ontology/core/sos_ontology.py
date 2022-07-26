@@ -2563,17 +2563,17 @@ class SoSOntology(Ontology):
             entity_count[entityName] = self.get_entity_count(entityURI=entityURI)
         general_information['entity_count'] = entity_count
 
-        source_code_traceability=[]
+        source_code_traceability = []
         for codeRepoURI in self.graph.subjects(
             predicate=RDF.type, object=self.SOS.CodeRepository
         ):
             codeRepo_info = {
-                    'name':self.SOS.name,
-                    'url': self.SOS.url,
-                    'branch': self.SOS.branch,
-                    'commit': self.SOS.commit,
-                    'committed_date': self.SOS.committedDate,
-                    }
+                'name': self.SOS.name,
+                'url': self.SOS.url,
+                'branch': self.SOS.branch,
+                'commit': self.SOS.commit,
+                'committed_date': self.SOS.committedDate,
+            }
             # get discipline attributes
             codeRepo_info = self.get_object_values_dict(
                 subjectURI=codeRepoURI, values_dict=codeRepo_info
@@ -2587,5 +2587,3 @@ class SoSOntology(Ontology):
         entityList = list(self.graph.subjects(RDF.type, entityURI))
 
         return len(entityList)
-
-    def get_source_code_traceability(self):
