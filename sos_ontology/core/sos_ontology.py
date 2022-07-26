@@ -2516,7 +2516,16 @@ class SoSOntology(Ontology):
                     'Models':integer,
                     'Parameters':integer,
                     'Usecases':integer,
-                }
+                },
+                source_code_traceability:[
+                    {
+                        name:string
+                        url: string
+                        branch: string,
+                        commit: string,
+                        committed_date: string
+                    },
+                ]
             }
         """
         general_information = {
@@ -2525,6 +2534,7 @@ class SoSOntology(Ontology):
             'iri': '',
             'last_updated': '',
             'entity_count': {},
+            'source_code_traceability': {},
         }
         ontoURI = self.value(None, RDF.type, OWL.Ontology, 'uri')
         description = str(self.value(ontoURI, DC.description, None, 'uri'))
@@ -2553,9 +2563,29 @@ class SoSOntology(Ontology):
             entity_count[entityName] = self.get_entity_count(entityURI=entityURI)
         general_information['entity_count'] = entity_count
 
+        source_code_traceability=[]
+        for codeRepoURI in self.graph.subjects(
+            predicate=RDF.type, object=self.SOS.CodeRepository
+        ):
+            codeRepo_info = {
+                    'name':self.SOS.name,
+                    'url': self.SOS.url,
+                    'branch': self.SOS.branch,
+                    'commit': self.SOS.commit,
+                    'committed_date': self.SOS.committedDate,
+                    }
+            # get discipline attributes
+            codeRepo_info = self.get_object_values_dict(
+                subjectURI=codeRepoURI, values_dict=codeRepo_info
+            )
+            source_code_traceability.append(codeRepo_info)
+        general_information['source_code_traceability'] = source_code_traceability
+
         return general_information
 
     def get_entity_count(self, entityURI: URIRef) -> int:
         entityList = list(self.graph.subjects(RDF.type, entityURI))
 
         return len(entityList)
+
+    def get_source_code_traceability(self):

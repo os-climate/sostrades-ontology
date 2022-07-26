@@ -85,7 +85,15 @@ def get_general_information():
                 'Parameters':integer,
                 'Usecases':integer,
             },
-            source_code_traceability:[(repo_id:SHA)]
+            source_code_traceability:[
+                {
+                    name:string
+                    url: string
+                    branch: string,
+                    commit: string,
+                    committed_date: string
+                },
+            ]
         }
     """
 
