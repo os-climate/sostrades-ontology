@@ -37,6 +37,8 @@ from sos_ontology.core.sos_entities.sos_process import SoSProcess
 from sos_ontology.core.sos_entities.sos_process_repository import SoSProcessRepository
 from sos_ontology.core.sos_entities.sos_usecase import SoSUsecase
 from sos_ontology.core.sos_toolbox import SoSToolbox
+from sos_trades_api_main import trace_source_code
+import logging
 
 
 class SoSCodeDataExtractor:
@@ -93,6 +95,7 @@ class SoSCodeDataExtractor:
         self.current_code_repo = None
         self.current_sos_discipline = None
         self.current_process_repository = None
+        self.logger = logging.getLogger("Ontology")
 
         self.ontology_data_keys = {
             'sos_discipline': [
@@ -737,12 +740,18 @@ class SoSCodeDataExtractor:
         print(
             "#####################    LOOKING FOR SOS DISCIPLINES AND PARAMETERS    #########################"
         )
+        # retrieve traceability info concerning code repositories
+        traceability_dict = trace_source_code(
+            traceability_folder=None, logger=self.logger, write_file=False
+        )
         for path in self.code_repositories_paths:
             if all([exclude not in path for exclude in self.path_exclusion_list]):
                 # each path is a code repository
                 repo_name = path.split(sep)[-1]
                 print(f"Scan {path}")
                 new_code_repo = CodeRepository(repo_name, repo_name)
+                if repo_name in traceability_dict:
+                    new_code_repo.update_info(traceability_dict[repo_name])
                 self.code_repositories.add(new_code_repo)
                 self.current_code_repo = new_code_repo
                 self.generate_sos_disciplines_and_parameters(path, 0, path)

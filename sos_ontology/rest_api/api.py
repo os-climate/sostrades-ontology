@@ -84,7 +84,8 @@ def get_general_information():
                 'Models':integer,
                 'Parameters':integer,
                 'Usecases':integer,
-            }
+            },
+            source_code_traceability:[(repo_id:SHA)]
         }
     """
 

@@ -17,19 +17,20 @@ limitations under the License.
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
-from sos_ontology.core.functions.sendGChatNotifications import sendGChatNotification
-from sos_ontology.core.functions.ontology_to_terminology import ontology_to_terminology
-from os.path import dirname, join
-from os import environ, pathsep, system
-import sos_ontology
-import sys
 import logging
+import sys
+from os import environ, pathsep, system
+from os.path import dirname, join
+
+import sos_ontology
 from rdflib.namespace import Namespace
+from sos_ontology.core.functions.ontology_to_terminology import ontology_to_terminology
+from sos_ontology.core.functions.sendGChatNotifications import sendGChatNotification
 from sos_ontology.core.ontology import Ontology
 from sos_ontology.core.sos_decentralized_codedataextractor import SoSCodeDataExtractor
 from sos_ontology.core.sos_ontology import SoSOntology
-from sos_ontology.core.sos_toolbox import SoSToolbox
 from sos_ontology.core.sos_terminology import SoSTerminology
+from sos_ontology.core.sos_toolbox import SoSToolbox
 
 webhookURL = None
 if len(sys.argv) > 1:
@@ -50,7 +51,15 @@ except Exception as ex:
     PYTHONPATH_list = []
     print('Impossible to retrieve Python Path. Stopping script')
 
-
+PYTHONPATH_list = [
+    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\sostrades-value-assessment',
+    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\economics_manufacturer',
+    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\economics_operator',
+    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\market',
+    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\sostrades-core',
+    'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\witness-energy',
+    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\business_case',
+]
 # retrieve path to current SoSOntology
 ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
 if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':

@@ -22,8 +22,18 @@ class CodeRepository(SoSEntity):
         super().__init__(id, label)
         self.process_repositories_list = []
         self.process_repositories_ids = []
+        self.branch = None
+        self.commit = None
+        self.committed_date = None
+        self.url = None
 
     def add_process_repository(self, process_repository) -> None:
         if process_repository not in self.process_repositories_list:
             self.process_repositories_list.append(process_repository)
             self.process_repositories_ids.append(process_repository.id)
+
+    def update_info(self, traceability_dict):
+        self.branch = traceability_dict.get('branch', None)
+        self.commit = traceability_dict.get('commit', None)
+        self.url = traceability_dict.get('url', None)
+        self.committed_date = traceability_dict.get('committed_date', None)

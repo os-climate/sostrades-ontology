@@ -14,16 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from rdflib.namespace import DC, SKOS, XSD, OWL, RDF, RDFS, split_uri
-from rdflib import Namespace, Literal, URIRef
-from os.path import dirname, join, exists, isfile
-from os import environ
-
-from simplejson import load
-from sos_ontology.core.ontology import Ontology
-import pandas as pd
-import sos_ontology
 import logging
+from datetime import datetime
+from os import environ
+from os.path import dirname, exists, isfile, join
+
+from rdflib import Literal, Namespace, URIRef
+from rdflib.namespace import DC, OWL, RDF, RDFS, SKOS, XSD, split_uri
+
+import sos_ontology
+from sos_ontology.core.ontology import Ontology
 from sos_ontology.rest_api.models.model_status import ModelStatus
 
 '''
@@ -1108,6 +1108,24 @@ class SoSOntology(Ontology):
 
         return modelsStatusNodesAndLinks
 
+    def addOntologyCreationDate(self):
+        # get ontology URI
+        ontoURI = self.value(None, RDF.type, OWL.Ontology, 'uri')
+
+        # update time
+        update_date = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+
+        creationDateTriple = [
+            (
+                ontoURI,
+                DC.modified,
+                Literal(update_date, datatype=XSD.string),
+                self.graph,
+            ),
+        ]
+
+        self.add_triples_list(creationDateTriple)
+
     def createCodeRepositoriesTriples(self, code_repositories):
         for code_repository in code_repositories.sos_entity_list:
 
@@ -1147,7 +1165,35 @@ class SoSOntology(Ontology):
                     Literal(code_repository.id, datatype=XSD.string),
                     self.graph,
                 ),
-                # add process_repositories list
+                # add code repo url
+                (
+                    codeRepoURI,
+                    self.SOS.url,
+                    self.toLiteral(code_repository.url),
+                    self.graph,
+                ),
+                # add code repo commit
+                (
+                    codeRepoURI,
+                    self.SOS.commit,
+                    self.toLiteral(code_repository.commit),
+                    self.graph,
+                ),
+                # add code repo committed_date
+                (
+                    codeRepoURI,
+                    self.SOS.committedDate,
+                    self.toLiteral(code_repository.committed_date),
+                    self.graph,
+                ),
+                # add code repo branch
+                (
+                    codeRepoURI,
+                    self.SOS.branch,
+                    self.toLiteral(code_repository.branch),
+                    self.graph,
+                ),
+                # add code repo process_repositories list
                 (
                     codeRepoURI,
                     self.SOS.processRepositoriesList,
@@ -1965,6 +2011,8 @@ class SoSOntology(Ontology):
         couplings,
         logs_dict=None,
     ):
+        # add update time
+        self.addOntologyCreationDate()
 
         if code_repositories is not None:
             # we will add all triples for the code_repositories
@@ -2313,7 +2361,9 @@ class SoSOntology(Ontology):
                 disc_info['label'] = self.label(discURI)
                 disciplines_used_in_process.append(disc_info)
                 process_info['quantity_disciplines_used'] += 1
-            process_info['discipline_list'] = sorted(disciplines_used_in_process, key=lambda x: x['label'].lower())
+            process_info['discipline_list'] = sorted(
+                disciplines_used_in_process, key=lambda x: x['label'].lower()
+            )
 
             # get all usecases associated to the process
             associated_usecases = []
@@ -2334,7 +2384,9 @@ class SoSOntology(Ontology):
                 usecase_info['process'] = process_info['label']
                 usecase_info['repository'] = process_info['process_repository_label']
                 associated_usecases.append(usecase_info)
-            process_info['associated_usecases'] = sorted(associated_usecases, key=lambda x: x['name'].lower())
+            process_info['associated_usecases'] = sorted(
+                associated_usecases, key=lambda x: x['name'].lower()
+            )
 
             processList.append(process_info)
 
@@ -2485,6 +2537,7 @@ class SoSOntology(Ontology):
         general_information['description'] = description
         general_information['iri'] = str(ontoURI)
         general_information['version'] = versionIRI.split('/')[-1]
+        general_information['last_updated'] = last_updated
 
         # calculate entitycount
         entities_dict = {
