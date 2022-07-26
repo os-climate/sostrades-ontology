@@ -51,15 +51,6 @@ except Exception as ex:
     PYTHONPATH_list = []
     print('Impossible to retrieve Python Path. Stopping script')
 
-PYTHONPATH_list = [
-    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\sostrades-value-assessment',
-    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\economics_manufacturer',
-    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\economics_operator',
-    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\market',
-    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\sostrades-core',
-    'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\witness-energy',
-    # 'C:\\Users\\NG8B878\\Documents\\SoSTrades\\Eclipse Workspace\\business_case',
-]
 # retrieve path to current SoSOntology
 ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
 if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
