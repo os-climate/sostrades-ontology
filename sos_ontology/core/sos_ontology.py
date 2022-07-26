@@ -2551,12 +2551,12 @@ class SoSOntology(Ontology):
 
         # calculate entitycount
         entities_dict = {
-            'Code Repositories': self.SOS.CodeRepository,
-            'Process Repositories': self.SOS.CodeRepository,
-            'Processes': self.SOS.SoSProcessRepository,
-            'Models': self.SOS.SoSProcess,
-            'Parameters': self.SOS.Parameter,
-            'Usecases': self.SOS.Usecase,
+            'code_repositories': self.SOS.CodeRepository,
+            'process_repositories': self.SOS.CodeRepository,
+            'processes': self.SOS.SoSProcessRepository,
+            'models': self.SOS.SoSProcess,
+            'parameters': self.SOS.Parameter,
+            'usecases': self.SOS.Usecase,
         }
         entity_count = {}
         for entityName, entityURI in entities_dict.items():
