@@ -65,27 +65,35 @@ class SoSOntology(Ontology):
 
         Ontology.__init__(self)
 
-        self.DEFAULT_PATH = join(
-            dirname(sos_ontology.__file__),
-            'data',
-            'sos_ontology',
-            'SoSTrades_Ontology_ABox_Decentralized.owl',
-        )
+        environ_dict = dict(environ)
+        ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
+        if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
+            self.ontology_owl_file_path = join(
+                ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl'
+            )
+            self.ontology_excel_file_path = join(
+                ONTOLOGY_FOLDER, 'SoS_Trades_Terminology_ABox.xlsx'
+            )
+        else:
+            self.ontology_owl_file_path = join(
+                dirname(sos_ontology.__file__),
+                'data',
+                'sos_ontology',
+                'SoSTrades_Ontology_ABox_Decentralized.owl',
+            )
+            self.ontology_excel_file_path = join(
+                dirname(sos_ontology.__file__),
+                'data',
+                'terminology',
+                'SoS_Trades_Terminology_ABox.xlsx',
+            )
 
         # Load the SoS ontology
         if source == 'file':
             if self.ontologyVersion == 1.1:
                 self.SOS = Namespace('https://sostrades.eu.airbus.corp/ontology#')
 
-                environ_dict = dict(environ)
-                ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
-                load_path = ''
-                if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
-                    load_path = join(
-                        ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl'
-                    )
-                else:
-                    load_path = self.DEFAULT_PATH
+                load_path = self.ontology_owl_file_path
 
                 if isfile(load_path):
                     self.load(path=load_path, onto_format='xml')

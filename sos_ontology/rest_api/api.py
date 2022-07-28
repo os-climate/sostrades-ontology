@@ -14,13 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from flask import Flask, session
+from flask import Flask, session, send_file
 from flask import request, jsonify, make_response
 from werkzeug.exceptions import BadRequest
 import logging
 import time
-
+from os.path import join, dirname, exists
 from sos_ontology.core.sos_ontology import SoSOntology
+import sos_ontology
 
 
 def random_string_for_secret_key():
@@ -364,6 +365,34 @@ def retrieve_documentations():
     resp = make_response(jsonify(ontology.retrieve_documentations(data_request)), 200)
 
     return resp
+
+
+@app.route('/api/ontology/v1/download', methods=['GET'])
+def download_ontology_owl():
+    """
+    Methods that return the ontology owl to be downloaded
+    """
+    args = request.args
+    if args is not None:
+        filetype = args.get("filetype", None)
+        if filetype is not None:
+            ontology = SoSOntology.instance()
+            if filetype == 'owl':
+                path = ontology.ontology_owl_file_path
+            elif filetype == 'xlsx':
+                path = ontology.ontology_excel_file_path
+            else:
+                return str(
+                    f'Filetype {filetype} does not exists. Possible options are filetype == owl or filetype == xlsx'
+                )
+
+            try:
+                return send_file(path, as_attachment=True)
+            except Exception as e:
+                return str(e)
+    return str(
+        'No correct parameter were given. Possible options are filetype == owl or filetype == xlsx'
+    )
 
 
 @app.route('/api/ontology', methods=['POST'])
