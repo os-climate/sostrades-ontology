@@ -500,60 +500,6 @@ def load_ontology_models_status_filtered():
     return make_response(jsonify(result), 200)
 
 
-@app.route('/api/ontology/models/links', methods=['GET'])
-def load_ontology_models_links():
-    """
-    Method that retrieve the whole sos_trades models links diagram
-    Object returned is a form of d3 js data structure
-
-    Returned response is with the following data structure
-        {
-            nodes : array of {
-                id: string,
-                group: integer
-            }
-            links: array of {
-                source: string,
-                target: string,
-                value: integer
-            }
-
-        }
-    """
-
-    ontology = SoSOntology.instance()
-
-    return make_response(jsonify(ontology.get_models_nodes_and_links()), 200)
-
-
-@app.route('/api/ontology/models/links-filtered', methods=['POST'])
-def load_ontology_models_links_filtered():
-    """
-    Method that retrieve the whole sos_trades models links diagram
-    Object returned is a form of d3 js data structure
-
-    Returned response is with the following data structure
-        {
-            nodes : array of {
-                id: string,
-                group: integer
-            }
-            links: array of {
-                source: string,
-                target: string,
-                value: integer
-            }
-
-        }
-    """
-    linked_process_dict = request.json.get('linked_process_dict', None)
-    ontology = SoSOntology.instance()
-
-    return make_response(
-        jsonify(ontology.get_models_nodes_and_links_filtered(linked_process_dict)), 200
-    )
-
-
 @app.route('/api/ontology/process/<string:process_identifier>', methods=['GET'])
 def load_ontology_process_metadata(process_identifier):
     """Given a process identifier, return the associated metadata"""
