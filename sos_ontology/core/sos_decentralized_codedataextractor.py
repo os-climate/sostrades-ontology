@@ -742,19 +742,26 @@ class SoSCodeDataExtractor:
         )
         # retrieve traceability info concerning code repositories
         traceability_dict = trace_source_code(
-            traceability_folder=None, logger=self.logger, write_file=False
+            traceability_folder=None,
+            logger=self.logger,
+            write_file=False,
+            add_library_path=True,
         )
-        for path in self.code_repositories_paths:
-            if all([exclude not in path for exclude in self.path_exclusion_list]):
-                # each path is a code repository
-                repo_name = path.split(sep)[-1]
-                print(f"Scan {path}")
-                new_code_repo = CodeRepository(repo_name, repo_name)
-                if repo_name in traceability_dict:
-                    new_code_repo.update_info(traceability_dict[repo_name])
-                self.code_repositories.add(new_code_repo)
-                self.current_code_repo = new_code_repo
-                self.generate_sos_disciplines_and_parameters(path, 0, path)
+        # only code repositories listed in traceability dict will be explored. All code repo must be Git repositories
+        for repo_name, repo_dict in traceability_dict.items():
+            path = repo_dict.get('path', None)
+            if path is not None:
+                if (
+                    all([exclude not in path for exclude in self.path_exclusion_list])
+                    and path in self.code_repositories_paths
+                ):
+                    # each path is a code repository
+                    print(f"Scan {path}")
+                    new_code_repo = CodeRepository(repo_name, repo_name)
+                    new_code_repo.update_info(repo_dict)
+                    self.code_repositories.add(new_code_repo)
+                    self.current_code_repo = new_code_repo
+                    self.generate_sos_disciplines_and_parameters(path, 0, path)
 
         # retrieve list of process repository
         print(
