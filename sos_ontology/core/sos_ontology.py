@@ -74,6 +74,9 @@ class SoSOntology(Ontology):
             self.ontology_excel_file_path = join(
                 ONTOLOGY_FOLDER, 'SoS_Trades_Terminology_ABox.xlsx'
             )
+            self.ontology_log_file_path = join(
+                ONTOLOGY_FOLDER, 'ontologyCreationLogs.json'
+            )
         else:
             self.ontology_owl_file_path = join(
                 dirname(sos_ontology.__file__),
@@ -86,6 +89,12 @@ class SoSOntology(Ontology):
                 'data',
                 'terminology',
                 'SoS_Trades_Terminology_ABox.xlsx',
+            )
+            self.ontology_log_file_path = join(
+                dirname(sos_ontology.__file__),
+                'data',
+                'logs',
+                'ontologyCreationLogs.json',
             )
 
         # Load the SoS ontology
@@ -920,7 +929,6 @@ class SoSOntology(Ontology):
             modelsStatusTable.append(modelStatusRow)
 
         return modelsStatusTable
-
 
     def addOntologyCreationDate(self):
         # get ontology URI
@@ -2394,8 +2402,8 @@ class SoSOntology(Ontology):
             )
             source_code_traceability.append(codeRepo_info)
         general_information['source_code_traceability'] = sorted(
-                source_code_traceability, key=lambda x: x['name'].lower()
-            )
+            source_code_traceability, key=lambda x: x['name'].lower()
+        )
 
         return general_information
 

@@ -395,6 +395,20 @@ def download_ontology_owl():
     )
 
 
+@app.route('/api/ontology/v1/download_logs', methods=['GET'])
+def download_ontology_logs():
+    """
+    Methods that return the ontology creation logs to be downloaded
+    """
+    ontology = SoSOntology.instance()
+    path = ontology.ontology_log_file_path
+
+    try:
+        return send_file(path, as_attachment=True)
+    except Exception as e:
+        return str(e)
+
+
 @app.route('/api/ontology', methods=['POST'])
 def load_ontology_request():
     """
