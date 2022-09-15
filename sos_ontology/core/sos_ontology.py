@@ -2371,7 +2371,8 @@ class SoSOntology(Ontology):
             print(discipline_info)
             disciplineList.append(discipline_info)
 
-        return disciplineList
+        discipline_list_sorted = sorted(disciplineList, key=lambda x: x['label'].lower().strip())
+        return discipline_list_sorted
 
     def get_general_information(self) -> dict:
         """
