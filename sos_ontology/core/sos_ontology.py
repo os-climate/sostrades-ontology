@@ -2231,21 +2231,15 @@ class SoSOntology(Ontology):
                 'python_class': string,
                 'validated': string,
                 'icon': string,
-                'output_parameter_usages_quantity': int,
-                'input_parameter_usages_quantity': int,
+                'output_parameters_quantity': int,
+                'input_parameters_quantity': int,
                 'class_inheritance': string list,
                 'code_repository': string,
                 'type': string,
                 'python_module_path': string,
-                'output_parameter_usages': string list,
-                'input_parameter_usages': string list,
-                'process_using_discipline': [
-                    {
-                        'id': string,
-                        'uri': string,
-                        'label': string,
-                    }
-                ,]
+                'output_parameters': [{parameter_usage_id: string, parameter_id: string, parameter_label: string}],
+                'input_parameters': [{parameter_usage_id: string, parameter_id: string, parameter_label: string}],
+                'process_using_discipline': [{process_id: string, process_label: string, repository_id: string, repository_label: string}],
             }
         ]
         """
@@ -2268,14 +2262,16 @@ class SoSOntology(Ontology):
                 'python_class': self.SOS.pythonClass,
                 'validated': self.SOS.validated,
                 'icon': self.SOS.icon,
-                'output_parameter_usages_quantity': self.SOS.outputParameterUsagesQuantity,
-                'input_parameter_usages_quantity': self.SOS.inputParameterUsagesQuantity,
+                'output_parameters_quantity': self.SOS.outputParameterUsagesQuantity,
+                'input_parameters_quantity': self.SOS.inputParameterUsagesQuantity,
                 'class_inheritance': self.SOS.classInheritance,
                 'code_repository': self.SOS.codeRepository,
                 'type': self.SOS.type,
                 'python_module_path': self.SOS.pythonModulePath,
-                'output_parameter_usages': self.SOS.outputParameterUsages,
-                'input_parameter_usages': self.SOS.inputParameterUsages,
+                # 'output_parameters': self.SOS.outputParameterUsages,
+                # 'input_parameters': self.SOS.inputParameterUsages,
+                'output_parameters': None,
+                'input_parameters': None,
                 'process_using_discipline': None,
             }
             # get discipline attributes
@@ -2285,14 +2281,6 @@ class SoSOntology(Ontology):
             discipline_info['uri'] = disciplineURI
             discipline_info['label'] = self.label(disciplineURI)
 
-            if discipline_info['output_parameter_usages'] is not None:
-                discipline_info['output_parameter_usages'] = discipline_info[
-                    'output_parameter_usages'
-                ].split(',\n')
-            if discipline_info['input_parameter_usages'] is not None:
-                discipline_info['input_parameter_usages'] = discipline_info[
-                    'input_parameter_usages'
-                ].split(',\n')
             if discipline_info['class_inheritance'] is not None:
                 discipline_info['class_inheritance'] = discipline_info[
                     'class_inheritance'
@@ -2300,23 +2288,87 @@ class SoSOntology(Ontology):
 
             # get all processes using the discipline
             process_using_discipline = []
-            for processURI in self.graph.subjects(
-                predicate=self.SOS.usedIn, object=disciplineURI
+            for processURI in self.graph.objects(
+                predicate=self.SOS.usedIn, subject=disciplineURI
             ):
+                # {process_id: string, process_label: string, repository_id: string, repository_label: string}
                 process_info = {
-                    'id': self.SOS.id,
-                    'uri': None,
-                    'label': None,
+                    'process_id': self.SOS.id,
+                    'process_label': None,
+                    'repository_id': self.SOS.repository,
+                    'repository_label': None,
                 }
 
                 process_info = self.get_object_values_dict(
                     subjectURI=processURI, values_dict=process_info
                 )
-                process_info['uri'] = processURI
-                process_info['label'] = self.label(processURI)
+                process_info['process_label'] = self.label(processURI)
+
+                processRepositoryURI = self.value(
+                    s=processURI, p=self.SOS.belongsTo, o=None, returnType='uri'
+                )
+                if processRepositoryURI is not None:
+                    process_info['repository_label'] = self.label(processRepositoryURI)
+
                 process_using_discipline.append(process_info)
             discipline_info['process_using_discipline'] = process_using_discipline
 
+            # get all output parameters od the discipline
+            output_parameters = []
+            for parameterUsageURI in self.graph.objects(
+                predicate=self.SOS.hasOutput, subject=disciplineURI
+            ):
+                # {parameter_usage_id: string, parameter_id: string, parameter_label: string}
+                parameter_info = {
+                    'parameter_usage_id': self.SOS.id,
+                    'parameter_id': None,
+                    'parameter_label': None,
+                }
+
+                parameter_info = self.get_object_values_dict(
+                    subjectURI=parameterUsageURI, values_dict=parameter_info
+                )
+
+                parameterURI = self.value(
+                    s=parameterUsageURI, p=self.SOS.instanceOf, o=None, returnType='uri'
+                )
+                if parameterURI is not None:
+                    parameter_info['parameter_id'] = self.value(
+                        s=parameterURI, p=self.SOS.id, o=None, returnType='value'
+                    )
+                    parameter_info['parameter_label'] = self.label(parameterURI)
+
+                output_parameters.append(parameter_info)
+            discipline_info['output_parameters'] = output_parameters
+
+            # get all input parameters od the discipline
+            input_parameters = []
+            for parameterUsageURI in self.graph.objects(
+                predicate=self.SOS.hasInput, subject=disciplineURI
+            ):
+                # {parameter_usage_id: string, parameter_id: string, parameter_label: string}
+                parameter_info = {
+                    'parameter_usage_id': self.SOS.id,
+                    'parameter_id': None,
+                    'parameter_label': None,
+                }
+
+                parameter_info = self.get_object_values_dict(
+                    subjectURI=parameterUsageURI, values_dict=parameter_info
+                )
+
+                parameterURI = self.value(
+                    s=parameterUsageURI, p=self.SOS.instanceOf, o=None, returnType='uri'
+                )
+                if parameterURI is not None:
+                    parameter_info['parameter_id'] = self.value(
+                        s=parameterURI, p=self.SOS.id, o=None, returnType='value'
+                    )
+                    parameter_info['parameter_label'] = self.label(parameterURI)
+
+                input_parameters.append(parameter_info)
+            discipline_info['input_parameters'] = input_parameters
+            print(discipline_info)
             disciplineList.append(discipline_info)
 
         return disciplineList
@@ -2380,7 +2432,7 @@ class SoSOntology(Ontology):
             'parameters': self.SOS.Parameter,
             'usecases': self.SOS.Usecase,
         }
-        
+
         entity_count = {}
         for entityName, entityURI in entities_dict.items():
             entity_count[entityName] = self.get_entity_count(entityURI=entityURI)

@@ -257,21 +257,15 @@ def get_full_discipline_list():
                 'python_class': string,
                 'validated': string,
                 'icon': string,
-                'output_parameter_usages_quantity': int,
-                'input_parameter_usages_quantity': int,
+                'output_parameters_quantity': int,
+                'input_parameters_quantity': int,
                 'class_inheritance': string list,
                 'code_repository': string,
                 'type': string,
                 'python_module_path': string,
-                'output_parameter_usages': string list,
-                'input_parameter_usages': string list,
-                'process_using_discipline': [
-                    {
-                        'id': string,
-                        'uri': string,
-                        'label': string,
-                    }
-                ,]
+                'output_parameters': [{parameter_usage_id: string, parameter_id: string, parameter_label: string}],
+                'input_parameters': [{parameter_usage_id: string, parameter_id: string, parameter_label: string}],
+                'process_using_discipline': [{process_id: string, process_label: string, repository_id: string, repository_label: string}],
             }
         ]
     """
