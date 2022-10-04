@@ -33,8 +33,11 @@ from sos_ontology.core.sos_terminology import SoSTerminology
 from sos_ontology.core.sos_toolbox import SoSToolbox
 
 webhookURL = None
+platform = None
 if len(sys.argv) > 1:
     webhookURL = str(sys.argv[1])
+if len(sys.argv) >= 2:
+    platform = str(sys.argv[2])
 
 BUILD_URL = None
 environ_dict = dict(environ)
@@ -184,10 +187,15 @@ if webhookURL is not None and BUILD_URL is not None:
     with open('short_log.txt', 'r') as short_log_file:
         shortLog = short_log_file.read()
 
+    if platform is None:
+        platform = ''
+    else:
+        platform = ' on platform ' + platform
+
     cards = [
         {
             "header": {
-                "title": "Decentralized Ontology Update",
+                "title": "Decentralized Ontology Update" + platform,
                 "subtitle": "Mister Jenkins",
                 "imageUrl": "https://www.coolcatcollars.co.uk/user/products/large/Leopold.jpg",
                 "imageStyle": "IMAGE",
