@@ -90,10 +90,9 @@ if len(PYTHONPATH_list) > 0:
     # initialise elements
     oldOnto = Ontology()
     toolbox = SoSToolbox()
-    codeData = SoSCodeDataExtractor(basepath=dirname(sos_ontology.__file__))
-
-    # configure paths
-    codeData.configure_data_extractor(logs_dict=logs_dict)
+    codeData = SoSCodeDataExtractor(
+        basepath=dirname(sos_ontology.__file__), pathsDict=pathsDict
+    )
 
     # retrieve code data on all repositories
     codeData.generate_entities_from_code_repositories()

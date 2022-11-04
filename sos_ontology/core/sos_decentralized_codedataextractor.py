@@ -47,7 +47,7 @@ class SoSCodeDataExtractor:
     Class to read and parse Python code to look for entities and links for the ontology
     """
 
-    def __init__(self, basepath="."):
+    def __init__(self, basepath: str = ".", pathsDict: dict = None):
         """
         Constructor
         """
@@ -80,10 +80,13 @@ class SoSCodeDataExtractor:
             ".gitignore",
             "LICENSES",
         ]
-        self.path_exclusion_list = [join("AppData", "Local", "Continuum", "anaconda3")]
-        self.logs_dict = None
-        self.iconsDict = {}
-        self.code_repositories_dict = {}
+        self.path_exclusion_list = [
+            join("AppData", "Local", "Continuum", "anaconda3"),
+            'sostrades-webgui',
+            'sostrades-webapi',
+            'sostrades-ontology',
+        ]
+        self.logs_dict = {}
 
         self.code_repositories = SoSEntityList()
         self.sos_process_repositories = SoSEntityList()
@@ -114,16 +117,17 @@ class SoSCodeDataExtractor:
             'process': ['label', 'description', 'category', 'version'],
         }
 
-    def configure_data_extractor(
-        self,
-        logs_dict=None,
-    ):
-        if logs_dict is not None:
-            self.logs_dict = logs_dict
+        previous_extraction_logs_path = pathsDict.get('ontologyCreationLogs', None)
+        self.previous_extraction_logs = self.toolbox.load_json(
+            json_file_path=previous_extraction_logs_path, entity='Previous Logs'
+        )
 
         # retrieve traceability info concerning code repositories
         self.code_repositories_dict = self.retrieve_code_repositories(
             logger=self.logger,
+            previous_extraction_traceability=self.previous_extraction_logs.get(
+                'code_repositories_traceability', {}
+            ),
         )
         print(
             f'Ready to extract info from {len(self.code_repositories_dict.keys())} code repositories'
@@ -1035,13 +1039,17 @@ class SoSCodeDataExtractor:
                     message=f"{entity} - {id}: {k} is not a valid ontology key",
                 )
 
-    def retrieve_code_repositories(self, logger: Logger) -> dict:
+    def retrieve_code_repositories(
+        self, logger: Logger, previous_code_repo_dict: dict
+    ) -> dict:
         """
-        Regarding python path module information, extract and save all commit sha of
-        repositories used to compute the study
+        Extract all git code repository with name, path and latest commit SHA
+        It excludes repository that are in the list self.path_exclusion_list
+        It also excludes repository which have not been modified since last update (SHA is the same)
         :param logger: logger for messages
         :type logger: Logger
-
+        :param previous_code_repo_dict: code_repo_dict from previous extraction
+        :type previous_code_repo_dict: dict
         """
 
         # Regular expression to remove connection info from url when token is used
@@ -1093,6 +1101,15 @@ class SoSCodeDataExtractor:
                             commited_date = datetime.fromtimestamp(
                                 commit.committed_date, timezone.utc
                             )
+
+                            if previous_code_repo_dict.get(repo_name, {}) != {}:
+                                previous_commit_hexsha = previous_code_repo_dict[
+                                    repo_name
+                                ].get(COMMIT, '')
+                                if previous_commit_hexsha == commit.hexsha:
+                                    print(
+                                        f'Code Repository {repo_name} has not been updated since last Ontology update.'
+                                    )
 
                             code_repo_dict[repo_name] = {
                                 URL: url,
@@ -1307,3 +1324,6 @@ class SoSCodeDataExtractor:
             sub_category="parameters",
             message=self.parameters.len(),
         )
+
+        # add code_repository traceability to log
+        self.logs_dict['code_repositories_traceability'] = self.code_repositories_dict
