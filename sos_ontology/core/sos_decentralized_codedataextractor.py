@@ -17,28 +17,29 @@ limitations under the License.
 import ast
 import base64
 import copy
+import logging
 import re
+from datetime import datetime, timezone
 from importlib import import_module
-from os import listdir, scandir, sep
+from logging import Logger
+from os import environ, listdir, pathsep, scandir, sep
 from os.path import abspath, basename, dirname, isdir, isfile, join, splitext
-from datetime import datetime
 
+import git
 import pandas as pd
 from sos_trades_core.execution_engine.execution_engine import ExecutionEngine
-from sos_trades_core.execution_engine.sos_factory import SosFactory
 from sos_trades_core.sos_processes.processes_factory import SoSProcessFactory
+
 from sos_ontology.core.sos_entities.code_repository import CodeRepository
 from sos_ontology.core.sos_entities.parameter import Parameter
 from sos_ontology.core.sos_entities.parameter_usage import ParameterUsage
 from sos_ontology.core.sos_entities.sos_coupling import SoSCoupling
 from sos_ontology.core.sos_entities.sos_discipline import SoSDiscipline
-from sos_ontology.core.sos_entities.sos_entity import SoSEntity, SoSEntityList
+from sos_ontology.core.sos_entities.sos_entity import SoSEntityList
 from sos_ontology.core.sos_entities.sos_process import SoSProcess
 from sos_ontology.core.sos_entities.sos_process_repository import SoSProcessRepository
 from sos_ontology.core.sos_entities.sos_usecase import SoSUsecase
 from sos_ontology.core.sos_toolbox import SoSToolbox
-from sos_trades_api_main import trace_source_code
-import logging
 
 
 class SoSCodeDataExtractor:
@@ -82,7 +83,7 @@ class SoSCodeDataExtractor:
         self.path_exclusion_list = [join("AppData", "Local", "Continuum", "anaconda3")]
         self.logs_dict = None
         self.iconsDict = {}
-        self.code_repositories_paths = []
+        self.code_repositories_dict = {}
 
         self.code_repositories = SoSEntityList()
         self.sos_process_repositories = SoSEntityList()
@@ -115,23 +116,29 @@ class SoSCodeDataExtractor:
 
     def configure_data_extractor(
         self,
-        code_repositories_paths=None,
         logs_dict=None,
     ):
         if logs_dict is not None:
             self.logs_dict = logs_dict
-        if code_repositories_paths is not None:
-            self.code_repositories_paths = code_repositories_paths
+
+        # retrieve traceability info concerning code repositories
+        self.code_repositories_dict = self.retrieve_code_repositories(
+            logger=self.logger,
+        )
+        print(
+            f'Ready to extract info from {len(self.code_repositories_dict.keys())} code repositories'
+        )
+        print(list(self.code_repositories_dict.keys()))
 
     def add_to_log(self, category, sub_category=None, message=None, exception=None):
         if self.logs_dict is not None:
-            if not category in self.logs_dict:
+            if category not in self.logs_dict:
                 if sub_category is None:
                     self.logs_dict[category] = []
                 else:
                     self.logs_dict[category] = {}
             if sub_category is not None:
-                if not sub_category in self.logs_dict[category]:
+                if sub_category not in self.logs_dict[category]:
                     self.logs_dict[category][sub_category] = []
 
             if category == "date":
@@ -740,28 +747,18 @@ class SoSCodeDataExtractor:
         print(
             "#####################    LOOKING FOR SOS DISCIPLINES AND PARAMETERS    #########################"
         )
-        # retrieve traceability info concerning code repositories
-        traceability_dict = trace_source_code(
-            traceability_folder=None,
-            logger=self.logger,
-            write_file=False,
-            add_library_path=True,
-        )
+
         # only code repositories listed in traceability dict will be explored. All code repo must be Git repositories
-        for repo_name, repo_dict in traceability_dict.items():
+        for repo_name, repo_dict in self.code_repositories_dict.items():
             path = repo_dict.get('path', None)
             if path is not None:
-                if (
-                    all([exclude not in path for exclude in self.path_exclusion_list])
-                    and path in self.code_repositories_paths
-                ):
-                    # each path is a code repository
-                    print(f"Scan {path}")
-                    new_code_repo = CodeRepository(repo_name, repo_name)
-                    new_code_repo.update_info(repo_dict)
-                    self.code_repositories.add(new_code_repo)
-                    self.current_code_repo = new_code_repo
-                    self.generate_sos_disciplines_and_parameters(path, 0, path)
+                # each path is a code repository
+                print(f"Scan code repository {path}")
+                new_code_repo = CodeRepository(repo_name, repo_name)
+                new_code_repo.update_info(repo_dict)
+                self.code_repositories.add(new_code_repo)
+                self.current_code_repo = new_code_repo
+                self.generate_sos_disciplines_and_parameters(path, 0, path)
 
         # retrieve list of process repository
         print(
@@ -775,26 +772,12 @@ class SoSCodeDataExtractor:
 
         # retrieve list of processes, reference and couplings
         for process_repo_id, processIdList in processes_dict.items():
-            code_repo_entity = None
-            print('Process Repository', process_repo_id)
-            try:
-                process_repo_path = dirname(import_module(process_repo_id).__file__)
-                code_repo_path = None
-                for path in self.code_repositories_paths:
-                    if path in process_repo_path:
-                        code_repo_path = path
-                        break
-                repo_name = code_repo_path.split(sep)[-1]
-                code_repo_entity = self.code_repositories.get(repo_name)
-            except:
-                print(f"Impossible to retrieve process repository {process_repo_id}")
-                self.add_to_log(
-                    category="errors",
-                    sub_category="processRepository",
-                    message=f"Impossible to retrieve process repository {process_repo_id}",
-                )
+            code_repo_entity = self.get_code_repository_entity(
+                from_process_repo_id=process_repo_id
+            )
 
             if code_repo_entity is not None:
+                print('Process Repository', process_repo_id)
                 # create process repository
                 self.generate_process_repository(process_repo_id, code_repo_entity)
 
@@ -835,186 +818,12 @@ class SoSCodeDataExtractor:
         print(
             "#####################    LOOKING FOR PARAMETERS GLOSSARY    #########################"
         )
-        for path in self.code_repositories_paths:
-            if all([exclude not in path for exclude in self.path_exclusion_list]):
-                repo_id = path.split(sep)[-1]
-                try:
-                    parameter_glossary_path = join(path, "parameters_glossary.csv")
-                    if isfile(parameter_glossary_path):
-                        parameters_glossary_df = pd.read_csv(
-                            parameter_glossary_path,
-                            na_filter=False,
-                            encoding="utf-8",
-                            encoding_errors="ignore",
-                            keep_default_na=False,
-                        )
-                        duplicated = parameters_glossary_df.duplicated(
-                            subset=['id'], keep='first'
-                        )
-                        if any(duplicated.values.tolist()):
-                            duplicated_list = parameters_glossary_df.loc[
-                                duplicated, 'id'
-                            ].values.tolist()
-                            print(
-                                f'There are {len(duplicated_list)} duplicated parameters in the glossary: {", ".join(duplicated_list)}, they will be ignored'
-                            )
-                            self.add_to_log(
-                                category="errors",
-                                sub_category="duplicateParametersGlossary",
-                                message={repo_id: duplicated_list},
-                            )
-                            parameters_glossary_df = (
-                                parameters_glossary_df.drop_duplicates(
-                                    subset=['id'], keep='first'
-                                )
-                            )
-
-                        parameters_glossary_df = parameters_glossary_df.set_index('id')
-                        parameters_glossary_dict = parameters_glossary_df.to_dict(
-                            "index"
-                        )
-
-                        code_repo_entity = self.code_repositories.get(repo_id)
-                        self.add_ontology_data_to_parameters(
-                            parameters_glossary_dict, code_repo_entity
-                        )
-                    else:
-                        print(f"Parameters glossary does not exist for repo {repo_id}")
-                        self.add_to_log(
-                            category="errors",
-                            sub_category="parameterGlossary",
-                            message=f"Parameters glossary does not exist for repo {repo_id}",
-                            exception=None,
-                        )
-                except Exception as ex:
-                    print(
-                        f"Impossible to retrieve parameter glossary for repo {repo_id}"
-                    )
-                    self.add_to_log(
-                        category="errors",
-                        sub_category="parameterGlossary",
-                        message=f"Impossible to retrieve parameter glossary for repo {repo_id}",
-                        exception=ex,
-                    )
+        for repo_dict in self.code_repositories_dict.values():
+            path = repo_dict.get('path', None)
+            self.retrieve_parameter_glossary_for_code_repository(repository_path=path)
 
         # write log of multiple info for a parameter, no info for parameter and inconsistencies for multiple info
-        no_parameter_info = {}
-        for parameter in self.parameters.sos_entity_list:
-            if len(parameter.code_repositories) > 1:
-                self.add_to_log(
-                    category="multiple_parameters_info",
-                    sub_category=parameter.id,
-                    message=[repo.id for repo in parameter.code_repositories],
-                )
-
-            elif len(parameter.code_repositories) == 0:
-                parameter_code_repositories = []
-                for instance in parameter.instances_list:
-                    parameter_code_repositories.append(
-                        instance.sos_discipline.repository.label
-                    )
-                parameter_code_repositories = list(set(parameter_code_repositories))
-                no_parameter_info[parameter.id] = parameter_code_repositories
-
-            datatypeDict = {}
-            unitDict = {}
-            for parameter_usage in parameter.instances_list:
-                unitDict.setdefault(parameter_usage.unit, [])
-                unitDict[parameter_usage.unit].append(
-                    ('discipline', parameter_usage.sos_discipline.id)
-                )
-
-                datatypeDict.setdefault(parameter_usage.datatype, [])
-                datatypeDict[parameter_usage.datatype].append(
-                    ('discipline', parameter_usage.sos_discipline.id)
-                )
-
-            if len(parameter.code_repositories) > 1:
-                for repo, attributes in parameter.code_repositories_attributes.items():
-                    unitDict.setdefault(attributes['unit'], [])
-                    unitDict[attributes['unit']].append(('glossary', repo))
-
-                    datatypeDict.setdefault(attributes['datatype'], [])
-                    datatypeDict[attributes['datatype']].append(('glossary', repo))
-
-            message = {}
-            if len(unitDict.keys()) > 1:
-                message['unit'] = unitDict
-            if len(datatypeDict.keys()) > 1:
-                message['datatype'] = datatypeDict
-
-            if message != {}:
-                self.add_to_log(
-                    category="inconsistencies",
-                    sub_category=parameter.id,
-                    message=message,
-                )
-
-        if no_parameter_info != {}:
-            # transform dictionnary from
-            # {parameter:[code_repository_list]} to
-            # {code_repository:[parameter_list]}
-
-            code_repo_list = list(
-                set(
-                    [
-                        repo_name
-                        for repo_list in no_parameter_info.values()
-                        for repo_name in repo_list
-                    ]
-                )
-            )
-            param_by_code_repo_dict = {
-                code_repo: [
-                    p
-                    for p, repo_list in no_parameter_info.items()
-                    if code_repo in repo_list
-                ]
-                for code_repo in code_repo_list
-            }
-            if len(param_by_code_repo_dict.keys()) > 0:
-                for code_repo, param_list in param_by_code_repo_dict.items():
-                    self.add_to_log(
-                        category="no_parameter_info",
-                        sub_category=code_repo,
-                        message=param_list,
-                    )
-
-        self.add_to_log(
-            category="synthesis",
-            sub_category="code_repositories",
-            message=self.code_repositories.len(),
-        )
-        self.add_to_log(
-            category="synthesis",
-            sub_category="sos_disciplines",
-            message=self.sos_disciplines.len(),
-        )
-        self.add_to_log(
-            category="synthesis",
-            sub_category="process_repositories",
-            message=self.sos_process_repositories.len(),
-        )
-        self.add_to_log(
-            category="synthesis",
-            sub_category="sos_processes",
-            message=self.sos_processes.len(),
-        )
-        self.add_to_log(
-            category="synthesis",
-            sub_category="usecases",
-            message=self.usecases.len(),
-        )
-        self.add_to_log(
-            category="synthesis",
-            sub_category="couplings",
-            message=self.couplings.len(),
-        )
-        self.add_to_log(
-            category="synthesis",
-            sub_category="parameters",
-            message=self.parameters.len(),
-        )
+        self.generate_full_extraction_logs()
 
     def add_ontology_data_to_parameters(
         self, parameters_glossary_dict, code_repository
@@ -1225,3 +1034,276 @@ class SoSCodeDataExtractor:
                     sub_category="ontologyKeys",
                     message=f"{entity} - {id}: {k} is not a valid ontology key",
                 )
+
+    def retrieve_code_repositories(self, logger: Logger) -> dict:
+        """
+        Regarding python path module information, extract and save all commit sha of
+        repositories used to compute the study
+        :param logger: logger for messages
+        :type logger: Logger
+
+        """
+
+        # Regular expression to remove connection info from url when token is used
+        INFO_REGEXP = ':\/\/.*@'
+        INFO_REPLACE = '://'
+
+        BRANCH = 'branch'
+        COMMIT = 'commit'
+        URL = 'url'
+        COMMITTED_DATE = 'committed_date'
+        REPO_PATH = 'path'
+
+        code_repo_dict = {}
+
+        # check for PYTHONPATH environment variable
+        python_path_libraries = environ.get('PYTHONPATH')
+
+        if python_path_libraries is not None and len(python_path_libraries) > 0:
+
+            # Set to list each library of the PYTHONPATH
+            libraries = python_path_libraries.split(pathsep)
+
+            for library_path in libraries:
+                if isdir(library_path):
+                    if all(
+                        [
+                            exclude not in library_path
+                            for exclude in self.path_exclusion_list
+                        ]
+                    ):
+                        try:
+                            repo = git.Repo(
+                                path=library_path, search_parent_directories=True
+                            )
+
+                            # Retrieve url and remove connection info from it
+                            raw_url = repo.remotes.origin.url
+                            url = re.sub(INFO_REGEXP, INFO_REPLACE, raw_url)
+                            try:
+                                repo_name = url.split('.git')[0].split('/')[-1]
+                            except:
+                                print(
+                                    f'Impossible to retrieve repo name from url {url}'
+                                )
+                                repo_name = url
+
+                            branch = repo.active_branch
+                            commit = branch.commit
+                            commited_date = datetime.fromtimestamp(
+                                commit.committed_date, timezone.utc
+                            )
+
+                            code_repo_dict[repo_name] = {
+                                URL: url,
+                                BRANCH: branch.name,
+                                COMMIT: commit.hexsha,
+                                COMMITTED_DATE: commited_date.strftime(
+                                    "%d/%m/%Y %H:%M:%S"
+                                ),
+                                REPO_PATH: library_path,
+                            }
+
+                        except git.exc.InvalidGitRepositoryError:  # type: ignore
+                            logger.debug(f'{library_path} folder is not a git folder')
+                        except Exception as error:
+                            logger.debug(
+                                f'{library_path} folder generates the following error while accessing with git:\n {str(error)}'
+                            )
+
+        return code_repo_dict
+
+    def get_code_repository_entity(self, from_process_repo_id: str) -> CodeRepository:
+        code_repo_entity = None
+        try:
+            process_repo_path = dirname(import_module(from_process_repo_id).__file__)
+            code_repo_path = None
+            for repo_dict in self.code_repositories_dict.values():
+                path = repo_dict.get('path', None)
+                if path in process_repo_path:
+                    code_repo_path = path
+                    break
+            repo_name = code_repo_path.split(sep)[-1]
+            code_repo_entity = self.code_repositories.get(repo_name)
+        except:
+            print(f"Impossible to retrieve process repository {from_process_repo_id}")
+            self.add_to_log(
+                category="errors",
+                sub_category="processRepository",
+                message=f"Impossible to retrieve process repository {from_process_repo_id}",
+            )
+        return code_repo_entity
+
+    def retrieve_parameter_glossary_for_code_repository(self, repository_path: str):
+        repo_id = repository_path.split(sep)[-1]
+        try:
+            parameter_glossary_path = join(repository_path, "parameters_glossary.csv")
+            if isfile(parameter_glossary_path):
+                parameters_glossary_df = pd.read_csv(
+                    parameter_glossary_path,
+                    na_filter=False,
+                    encoding="utf-8",
+                    encoding_errors="ignore",
+                    keep_default_na=False,
+                )
+                duplicated = parameters_glossary_df.duplicated(
+                    subset=['id'], keep='first'
+                )
+                if any(duplicated.values.tolist()):
+                    duplicated_list = parameters_glossary_df.loc[
+                        duplicated, 'id'
+                    ].values.tolist()
+                    print(
+                        f'There are {len(duplicated_list)} duplicated parameters in the glossary: {", ".join(duplicated_list)}, they will be ignored'
+                    )
+                    self.add_to_log(
+                        category="errors",
+                        sub_category="duplicateParametersGlossary",
+                        message={repo_id: duplicated_list},
+                    )
+                    parameters_glossary_df = parameters_glossary_df.drop_duplicates(
+                        subset=['id'], keep='first'
+                    )
+
+                parameters_glossary_df = parameters_glossary_df.set_index('id')
+                parameters_glossary_dict = parameters_glossary_df.to_dict("index")
+
+                code_repo_entity = self.code_repositories.get(repo_id)
+                self.add_ontology_data_to_parameters(
+                    parameters_glossary_dict, code_repo_entity
+                )
+            else:
+                print(f"Parameters glossary does not exist for repo {repo_id}")
+                self.add_to_log(
+                    category="errors",
+                    sub_category="parameterGlossary",
+                    message=f"Parameters glossary does not exist for repo {repo_id}",
+                    exception=None,
+                )
+        except Exception as ex:
+            print(f"Impossible to retrieve parameter glossary for repo {repo_id}")
+            self.add_to_log(
+                category="errors",
+                sub_category="parameterGlossary",
+                message=f"Impossible to retrieve parameter glossary for repo {repo_id}",
+                exception=ex,
+            )
+
+    def generate_full_extraction_logs(self):
+        no_parameter_info = {}
+        for parameter in self.parameters.sos_entity_list:
+            if len(parameter.code_repositories) > 1:
+                self.add_to_log(
+                    category="multiple_parameters_info",
+                    sub_category=parameter.id,
+                    message=[repo.id for repo in parameter.code_repositories],
+                )
+
+            elif len(parameter.code_repositories) == 0:
+                parameter_code_repositories = []
+                for instance in parameter.instances_list:
+                    parameter_code_repositories.append(
+                        instance.sos_discipline.repository.label
+                    )
+                parameter_code_repositories = list(set(parameter_code_repositories))
+                no_parameter_info[parameter.id] = parameter_code_repositories
+
+            datatypeDict = {}
+            unitDict = {}
+            for parameter_usage in parameter.instances_list:
+                unitDict.setdefault(parameter_usage.unit, [])
+                unitDict[parameter_usage.unit].append(
+                    ('discipline', parameter_usage.sos_discipline.id)
+                )
+
+                datatypeDict.setdefault(parameter_usage.datatype, [])
+                datatypeDict[parameter_usage.datatype].append(
+                    ('discipline', parameter_usage.sos_discipline.id)
+                )
+
+            if len(parameter.code_repositories) > 1:
+                for repo, attributes in parameter.code_repositories_attributes.items():
+                    unitDict.setdefault(attributes['unit'], [])
+                    unitDict[attributes['unit']].append(('glossary', repo))
+
+                    datatypeDict.setdefault(attributes['datatype'], [])
+                    datatypeDict[attributes['datatype']].append(('glossary', repo))
+
+            message = {}
+            if len(unitDict.keys()) > 1:
+                message['unit'] = unitDict
+            if len(datatypeDict.keys()) > 1:
+                message['datatype'] = datatypeDict
+
+            if message != {}:
+                self.add_to_log(
+                    category="inconsistencies",
+                    sub_category=parameter.id,
+                    message=message,
+                )
+
+        if no_parameter_info != {}:
+            # transform dictionnary from
+            # {parameter:[code_repository_list]} to
+            # {code_repository:[parameter_list]}
+
+            code_repo_list = list(
+                set(
+                    [
+                        repo_name
+                        for repo_list in no_parameter_info.values()
+                        for repo_name in repo_list
+                    ]
+                )
+            )
+            param_by_code_repo_dict = {
+                code_repo: [
+                    p
+                    for p, repo_list in no_parameter_info.items()
+                    if code_repo in repo_list
+                ]
+                for code_repo in code_repo_list
+            }
+            if len(param_by_code_repo_dict.keys()) > 0:
+                for code_repo, param_list in param_by_code_repo_dict.items():
+                    self.add_to_log(
+                        category="no_parameter_info",
+                        sub_category=code_repo,
+                        message=param_list,
+                    )
+
+        self.add_to_log(
+            category="synthesis",
+            sub_category="code_repositories",
+            message=self.code_repositories.len(),
+        )
+        self.add_to_log(
+            category="synthesis",
+            sub_category="sos_disciplines",
+            message=self.sos_disciplines.len(),
+        )
+        self.add_to_log(
+            category="synthesis",
+            sub_category="process_repositories",
+            message=self.sos_process_repositories.len(),
+        )
+        self.add_to_log(
+            category="synthesis",
+            sub_category="sos_processes",
+            message=self.sos_processes.len(),
+        )
+        self.add_to_log(
+            category="synthesis",
+            sub_category="usecases",
+            message=self.usecases.len(),
+        )
+        self.add_to_log(
+            category="synthesis",
+            sub_category="couplings",
+            message=self.couplings.len(),
+        )
+        self.add_to_log(
+            category="synthesis",
+            sub_category="parameters",
+            message=self.parameters.len(),
+        )

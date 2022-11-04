@@ -14,13 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from sos_ontology.core.sos_terminology import SoSTerminology
-from shutil import copy, SameFileError
-from os import path
-from filecmp import cmp
 import jsonpickle
 from table_logger import TableLogger
-import pandas as pd
 
 
 class SoSToolbox:
@@ -196,7 +191,7 @@ class SoSToolbox:
                         [len(p) for p in diffDict["removed_list"]] + [7]
                     )
                     tbl_log = TableLogger(
-                        columns=f'Added,Removed',
+                        columns='Added,Removed',
                         file=log_file,
                         colwidth={
                             "Added": added_col_width,
@@ -231,7 +226,7 @@ class SoSToolbox:
                     )
 
                     tbl_log = TableLogger(
-                        columns=f'Process,Error', file=log_file, default_colwidth=70
+                        columns='Process,Error', file=log_file, default_colwidth=70
                     )
                     for process_error_dict in logs_dict["errors"]["loadProcess"]:
                         tbl_log(
@@ -253,7 +248,7 @@ class SoSToolbox:
                     )
 
                     tbl_log = TableLogger(
-                        columns=f'Usecase,Error', file=log_file, default_colwidth=70
+                        columns='Usecase,Error', file=log_file, default_colwidth=70
                     )
                     for process_error_dict in logs_dict["errors"]["loadUsecase"]:
                         tbl_log(
@@ -286,7 +281,7 @@ class SoSToolbox:
                     + [len('Error')]
                 )
                 tbl_log = TableLogger(
-                    columns=f'Entity,Error',
+                    columns='Entity,Error',
                     file=log_file,
                     colwidth={'Entity': entity_width, 'Error': error_width},
                 )

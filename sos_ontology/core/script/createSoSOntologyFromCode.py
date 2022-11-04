@@ -48,9 +48,7 @@ dataOntologyPath = join(dirname(sos_ontology.__file__), 'data')
 # retrieve PYTHONPATH
 try:
     PYTHONPATH_list = environ_dict['PYTHONPATH'].split(pathsep)
-    if '' in PYTHONPATH_list:
-        PYTHONPATH_list.remove('')
-except Exception as ex:
+except Exception:
     PYTHONPATH_list = []
     print('Impossible to retrieve Python Path. Stopping script')
 
@@ -67,10 +65,8 @@ else:
         'SoSTrades_Ontology_ABox_Decentralized.owl',
     )
 
-print('PYTHON Path to scan', PYTHONPATH_list)
 if len(PYTHONPATH_list) > 0:
     pathsDict = {
-        'pythonPathList': PYTHONPATH_list,
         'SoStBox': join(
             dataOntologyPath, 'sos_ontology', 'SoSTrades_Ontology_TBox.owl'
         ),
@@ -94,13 +90,10 @@ if len(PYTHONPATH_list) > 0:
     # initialise elements
     oldOnto = Ontology()
     toolbox = SoSToolbox()
-    codeData = SoSCodeDataExtractor(basepath=pathsDict["pythonPathList"][0])
+    codeData = SoSCodeDataExtractor(basepath=dirname(sos_ontology.__file__))
 
     # configure paths
-    codeData.configure_data_extractor(
-        code_repositories_paths=pathsDict["pythonPathList"],
-        logs_dict=logs_dict,
-    )
+    codeData.configure_data_extractor(logs_dict=logs_dict)
 
     # retrieve code data on all repositories
     codeData.generate_entities_from_code_repositories()
