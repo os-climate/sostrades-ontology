@@ -125,7 +125,7 @@ class SoSCodeDataExtractor:
         # retrieve traceability info concerning code repositories
         self.code_repositories_dict = self.retrieve_code_repositories(
             logger=self.logger,
-            previous_extraction_traceability=self.previous_extraction_logs.get(
+            previous_code_repo_dict=self.previous_extraction_logs.get(
                 'code_repositories_traceability', {}
             ),
         )
