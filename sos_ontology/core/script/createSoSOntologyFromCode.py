@@ -85,17 +85,30 @@ if len(PYTHONPATH_list) > 0:
     }
 
     logging.disable(logging.CRITICAL)
-    logs_dict = {}
-
     # initialise elements
     oldOnto = Ontology()
     toolbox = SoSToolbox()
+    logs_dict = {}
+
+    # retrieve previous traceability
+    previous_extraction_logs_path = pathsDict.get('ontologyCreationLogs', None)
+    previous_extraction_logs = toolbox.load_json(
+        json_file_path=previous_extraction_logs_path, entity='Previous Logs'
+    )
+    previous_code_repositories_traceability = {}
+    if previous_extraction_logs is not None:
+        previous_code_repositories_traceability = previous_extraction_logs.get(
+            'code_repositories_traceability', {}
+        )
+
     codeData = SoSCodeDataExtractor(
-        basepath=dirname(sos_ontology.__file__), pathsDict=pathsDict
+        basepath=dirname(sos_ontology.__file__),
+        logs_dict=logs_dict,
+        previous_code_repositories_traceability=previous_code_repositories_traceability,
     )
 
     # retrieve code data on all repositories
-    codeData.generate_entities_from_code_repositories()
+    logs_dict = codeData.generate_entities_from_code_repositories()
 
     print(
         "#####################    CREATE ONTOLOGY ABOX FROM CODE  #########################"
@@ -104,7 +117,7 @@ if len(PYTHONPATH_list) > 0:
     # Load SoS Tbox
     sosOnto = SoSOntology(version=0, source="empty")
     sosOnto.load(pathsDict["SoStBox"], "xml")
-    sosOnto.SOS = Namespace("https://sostrades.eu.airbus.corp/ontology#")
+    sosOnto.SOS = Namespace("https://sostrades.org/ontology#")
 
     # Create instances of updated ontology from extracted code data
     sosOnto.createDecentralizedSoSOntologyABox(

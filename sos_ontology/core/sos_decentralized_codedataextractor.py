@@ -47,7 +47,12 @@ class SoSCodeDataExtractor:
     Class to read and parse Python code to look for entities and links for the ontology
     """
 
-    def __init__(self, basepath: str = ".", pathsDict: dict = None):
+    def __init__(
+        self,
+        basepath: str = ".",
+        logs_dict: dict = {},
+        previous_code_repositories_traceability: dict = {},
+    ):
         """
         Constructor
         """
@@ -86,7 +91,7 @@ class SoSCodeDataExtractor:
             'sostrades-webapi',
             'sostrades-ontology',
         ]
-        self.logs_dict = {}
+        self.logs_dict = logs_dict
 
         self.code_repositories = SoSEntityList()
         self.sos_process_repositories = SoSEntityList()
@@ -117,18 +122,15 @@ class SoSCodeDataExtractor:
             'process': ['label', 'description', 'category', 'version'],
         }
 
-        previous_extraction_logs_path = pathsDict.get('ontologyCreationLogs', None)
-        self.previous_extraction_logs = self.toolbox.load_json(
-            json_file_path=previous_extraction_logs_path, entity='Previous Logs'
-        )
-
         # retrieve traceability info concerning code repositories
         self.code_repositories_dict = self.retrieve_code_repositories(
             logger=self.logger,
-            previous_code_repo_dict=self.previous_extraction_logs.get(
-                'code_repositories_traceability', {}
-            ),
+            previous_code_repo_dict=previous_code_repositories_traceability,
         )
+
+        # self.code_repositories_dict = {
+        #     'sostrades-core': self.code_repositories_dict['sostrades-core']
+        # }
         print(
             f'Ready to extract info from {len(self.code_repositories_dict.keys())} code repositories'
         )
@@ -744,7 +746,7 @@ class SoSCodeDataExtractor:
 
         return new_process, process_path
 
-    def generate_entities_from_code_repositories(self):
+    def generate_entities_from_code_repositories(self) -> dict:
 
         # retrieve recursively models and parameters into self.models_with_params_dict
         # iterate over all paths folders
@@ -828,6 +830,8 @@ class SoSCodeDataExtractor:
 
         # write log of multiple info for a parameter, no info for parameter and inconsistencies for multiple info
         self.generate_full_extraction_logs()
+
+        return self.logs_dict
 
     def add_ontology_data_to_parameters(
         self, parameters_glossary_dict, code_repository
