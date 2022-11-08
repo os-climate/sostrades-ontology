@@ -117,7 +117,7 @@ if len(PYTHONPATH_list) > 0:
     # Load SoS Tbox
     sosOnto = SoSOntology(version=0, source="empty")
     sosOnto.load(pathsDict["SoStBox"], "xml")
-    sosOnto.SOS = Namespace("https://sostrades.org/ontology#")
+    sosOnto.SOS = Namespace(SoSOntology.BASE_URI)
 
     # Create instances of updated ontology from extracted code data
     sosOnto.createDecentralizedSoSOntologyABox(

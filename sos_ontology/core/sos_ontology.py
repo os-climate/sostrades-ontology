@@ -42,6 +42,7 @@ class SoSOntology(Ontology):
     """
 
     __instance = None
+    BASE_URI = 'https://www.sostrades.org/ontology#'
 
     @staticmethod
     def instance(version=1.1):
@@ -100,7 +101,7 @@ class SoSOntology(Ontology):
         # Load the SoS ontology
         if source == 'file':
             if self.ontologyVersion == 1.1:
-                self.SOS = Namespace('https://sostrades.eu.airbus.corp/ontology#')
+                self.SOS = Namespace(SoSOntology.BASE_URI)
 
                 load_path = self.ontology_owl_file_path
 
@@ -953,7 +954,7 @@ class SoSOntology(Ontology):
 
             # Create the discipline URI
             codeRepoURI = self.create_new_URI(
-                'https://sostrades.eu.airbus.corp/ontology#code_repository_',
+                f'{SoSOntology.BASE_URI}code_repository_',
                 code_repository.id,
             )
 
@@ -1031,7 +1032,7 @@ class SoSOntology(Ontology):
 
             # Create the discipline URI
             processRepoURI = self.create_new_URI(
-                'https://sostrades.eu.airbus.corp/ontology#sos_process_repository_',
+                f'{SoSOntology.BASE_URI}sos_process_repository_',
                 sos_process_repository.id,
             )
 
@@ -1102,7 +1103,7 @@ class SoSOntology(Ontology):
 
             # Create the sosDiscipline URI
             sosDisciplineURI = self.create_new_URI(
-                'https://sostrades.eu.airbus.corp/ontology#sosDiscipline_',
+                f'{SoSOntology.BASE_URI}sosDiscipline_',
                 sos_discipline.id,
             )
 
@@ -1337,7 +1338,7 @@ class SoSOntology(Ontology):
 
             # Create the usecase URI
             usecaseURI = self.create_new_URI(
-                'https://sostrades.eu.airbus.corp/ontology#usecase_', usecase.id
+                f'{SoSOntology.BASE_URI}usecase_', usecase.id
             )
 
             usecaseTriples = [
@@ -1376,7 +1377,7 @@ class SoSOntology(Ontology):
 
             # Create the usecase URI
             couplingURI = self.create_new_URI(
-                'https://sostrades.eu.airbus.corp/ontology#usecase_', usecase.id
+                f'{SoSOntology.BASE_URI}usecase_', usecase.id
             )
 
             usecaseTriples = [
@@ -1452,7 +1453,7 @@ class SoSOntology(Ontology):
         for sos_process in sos_processes.sos_entity_list:
             # Create the process URI
             processURI = self.create_new_URI(
-                'https://sostrades.eu.airbus.corp/ontology#sos_process_', sos_process.id
+                f'{SoSOntology.BASE_URI}sos_process_', sos_process.id
             )
 
             processTriples = [
@@ -1575,7 +1576,7 @@ class SoSOntology(Ontology):
         for parameter in parameters.sos_entity_list:
             # Create the parameter URI
             parameterURI = self.create_new_URI(
-                'https://sostrades.eu.airbus.corp/ontology#parameter_', parameter.id
+                f'{SoSOntology.BASE_URI}parameter_', parameter.id
             )
 
             parameterTriples = [
@@ -1669,7 +1670,7 @@ class SoSOntology(Ontology):
             for parameterUsage in parameter.instances_list:
                 # Create the param usage URI
                 parameterUsageURI = self.create_new_URI(
-                    'https://sostrades.eu.airbus.corp/ontology#parameterUsage_',
+                    f'{SoSOntology.BASE_URI}parameterUsage_',
                     parameterUsage.id,
                 )
 
@@ -2371,7 +2372,9 @@ class SoSOntology(Ontology):
             print(discipline_info)
             disciplineList.append(discipline_info)
 
-        discipline_list_sorted = sorted(disciplineList, key=lambda x: x['label'].lower().strip())
+        discipline_list_sorted = sorted(
+            disciplineList, key=lambda x: x['label'].lower().strip()
+        )
         return discipline_list_sorted
 
     def get_general_information(self) -> dict:
