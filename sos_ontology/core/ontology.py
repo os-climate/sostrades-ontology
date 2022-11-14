@@ -197,6 +197,7 @@ class Ontology:
             URIstring.replace('-', ' ')
             .replace('(', ' ')
             .replace(')', ' ')
+            .replace('|', ' ')
             .strip()
             .lower()
             .replace(' ', '_')
