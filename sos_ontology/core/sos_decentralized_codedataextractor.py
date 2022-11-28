@@ -27,8 +27,14 @@ from os.path import abspath, basename, dirname, isdir, isfile, join, splitext
 
 import git
 import pandas as pd
-from sos_trades_core.execution_engine.execution_engine import ExecutionEngine
-from sos_trades_core.sos_processes.processes_factory import SoSProcessFactory
+
+try:
+    from sos_trades_core.execution_engine.execution_engine import ExecutionEngine
+    from sos_trades_core.sos_processes.processes_factory import SoSProcessFactory
+except Exception as e:
+    from sostrades_core.execution_engine.execution_engine import ExecutionEngine
+    from sostrades_core.sos_processes.processes_factory import SoSProcessFactory
+
 
 from sos_ontology.core.sos_entities.code_repository import CodeRepository
 from sos_ontology.core.sos_entities.parameter import Parameter
