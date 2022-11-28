@@ -455,9 +455,14 @@ class SoSCodeDataExtractor:
                         )
                         # we retrieve the inheritance_tree
                         inheritance_tree = type.mro(classInstance)
-                        # we check if the SoSDiscipline is present in the
+                        # we check if the SoSDiscipline or SoSWrapp (for Execution Engine v4) is present in the
                         # inheritance
-                        if "SoSDiscipline" in [i.__name__ for i in inheritance_tree]:
+                        if any(
+                            [
+                                disc_class in [i.__name__ for i in inheritance_tree]
+                                for disc_class in ['SoSDiscipline', 'SoSWrapp']
+                            ]
+                        ):
                             # it is a model !! (an SoSDIscipline)
                             # print(f'{entry.name} is a model !')
                             info = {
