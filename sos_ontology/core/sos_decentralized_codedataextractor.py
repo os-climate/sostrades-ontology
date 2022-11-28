@@ -546,33 +546,38 @@ class SoSCodeDataExtractor:
         # add input parameters
         for param, attributes in param_dict.items():
             # sometimes the parameter name is containing part of a namespace, we need to extract only the final name
-            param_name = param.split('.')[-1]
-            parameter_entity = self.parameters.get(param_name)
-            if parameter_entity is None:
-                parameter_entity = Parameter(
-                    id=param_name, label=param_name, attributesDict=attributes
+            if not isinstance(param, str):
+                print(
+                    f'Parameter {param} from discipline {discipline_entity.id} is not a string: {isinstance(param,str)}'
                 )
-                self.parameters.add(parameter_entity)
-
-            param_usage_id = f"{discipline_entity.id}_{io}_{param}"
-            parameter_usage_entity = self.parameters_usages.get(param_usage_id)
-            if parameter_usage_entity is None:
-                new_param_usage = ParameterUsage(
-                    id=param_usage_id,
-                    label=param_usage_id,
-                    attributesDict=attributes,
-                    parameter=parameter_entity,
-                    sos_discipline=discipline_entity,
-                )
-                self.parameters_usages.add(new_param_usage)
-                parameter_entity.add_usage(new_param_usage)
-                parameter_usage_entity = new_param_usage
             else:
-                parameter_usage_entity.updateAttributes(attributesDict=attributes)
-            if io == "input":
-                discipline_entity.add_input_parameter_usage(parameter_usage_entity)
-            elif io == "output":
-                discipline_entity.add_output_parameter_usage(parameter_usage_entity)
+                param_name = param.split('.')[-1]
+                parameter_entity = self.parameters.get(param_name)
+                if parameter_entity is None:
+                    parameter_entity = Parameter(
+                        id=param_name, label=param_name, attributesDict=attributes
+                    )
+                    self.parameters.add(parameter_entity)
+
+                param_usage_id = f"{discipline_entity.id}_{io}_{param}"
+                parameter_usage_entity = self.parameters_usages.get(param_usage_id)
+                if parameter_usage_entity is None:
+                    new_param_usage = ParameterUsage(
+                        id=param_usage_id,
+                        label=param_usage_id,
+                        attributesDict=attributes,
+                        parameter=parameter_entity,
+                        sos_discipline=discipline_entity,
+                    )
+                    self.parameters_usages.add(new_param_usage)
+                    parameter_entity.add_usage(new_param_usage)
+                    parameter_usage_entity = new_param_usage
+                else:
+                    parameter_usage_entity.updateAttributes(attributesDict=attributes)
+                if io == "input":
+                    discipline_entity.add_input_parameter_usage(parameter_usage_entity)
+                elif io == "output":
+                    discipline_entity.add_output_parameter_usage(parameter_usage_entity)
 
     def generate_sos_disciplines_and_parameters(self, basepath, level, rootpath):
         """This function looks for sos_discipline and associated parameters in all files in directory"""
