@@ -154,7 +154,8 @@ class SoSCodeDataExtractor:
                     self.logs_dict[category][sub_category] = []
 
             if category == "date":
-                self.logs_dict[category] = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+                self.logs_dict[category] = datetime.now(
+                ).strftime("%d/%m/%Y %H:%M:%S")
             elif category == "errors":
                 error_info = {
                     "message": message,
@@ -243,7 +244,8 @@ class SoSCodeDataExtractor:
                                             # statements where DESC_IN is updated via a
                                             # function
                                             try:
-                                                desc_in = ast.literal_eval(assign.value)
+                                                desc_in = ast.literal_eval(
+                                                    assign.value)
                                             except Exception as ex:
                                                 self.add_to_log(
                                                     category="errors",
@@ -267,7 +269,8 @@ class SoSCodeDataExtractor:
                                                     exception=ex,
                                                 )
                                     if assign.targets[0].id == "_maturity":
-                                        maturity = ast.literal_eval(assign.value)
+                                        maturity = ast.literal_eval(
+                                            assign.value)
 
         except Exception as ex:
             self.add_to_log(
@@ -291,7 +294,8 @@ class SoSCodeDataExtractor:
                         if isinstance(node, ast.ImportFrom):
                             module = node.module
                         for n in node.names:
-                            imports[n.name] = {"module": module, "name": n.name}
+                            imports[n.name] = {
+                                "module": module, "name": n.name}
                 return imports
 
         except Exception as ex:
@@ -321,17 +325,20 @@ class SoSCodeDataExtractor:
                 hasattr(loaded_discipline, "DESC_IN")
                 and loaded_discipline.DESC_IN is not None
             ):
-                attributes["DESC_IN"] = copy.deepcopy(loaded_discipline.DESC_IN)
+                attributes["DESC_IN"] = copy.deepcopy(
+                    loaded_discipline.DESC_IN)
             if (
                 hasattr(loaded_discipline, "_data_in")
-                and loaded_discipline._data_in is not None
+                and loaded_discipline.get_data_in() is not None
             ):
-                attributes["DESC_IN"].update(copy.deepcopy(loaded_discipline._data_in))
+                attributes["DESC_IN"].update(
+                    copy.deepcopy(loaded_discipline.get_data_in()))
             if (
                 hasattr(loaded_discipline, "DESC_OUT")
                 and loaded_discipline.DESC_OUT is not None
             ):
-                attributes["DESC_OUT"] = copy.deepcopy(loaded_discipline.DESC_OUT)
+                attributes["DESC_OUT"] = copy.deepcopy(
+                    loaded_discipline.DESC_OUT)
             if (
                 hasattr(loaded_discipline, "_data_out")
                 and loaded_discipline._data_out is not None
@@ -343,7 +350,8 @@ class SoSCodeDataExtractor:
                 hasattr(loaded_discipline, "_maturity")
                 and loaded_discipline._maturity is not None
             ):
-                attributes["maturity"] = copy.deepcopy(loaded_discipline._maturity)
+                attributes["maturity"] = copy.deepcopy(
+                    loaded_discipline._maturity)
             if (
                 hasattr(loaded_discipline, "_ontology_data")
                 and loaded_discipline._ontology_data is not None
@@ -382,13 +390,13 @@ class SoSCodeDataExtractor:
                 ee.factory.set_builders_to_coupling_builder(builder)
                 ee.configure()
                 loaded_discipline = ee.factory.sos_disciplines[0]
-                if loaded_discipline._data_in is not None:
+                if loaded_discipline.get_data_in() is not None:
                     attributes["DESC_IN"].update(
-                        copy.deepcopy(loaded_discipline._data_in)
+                        copy.deepcopy(loaded_discipline.get_data_in())
                     )
-                if loaded_discipline._data_out is not None:
+                if loaded_discipline.get_data_out() is not None:
                     attributes["DESC_OUT"].update(
-                        copy.deepcopy(loaded_discipline._data_out)
+                        copy.deepcopy(loaded_discipline.get_data_out())
                     )
             except Exception as ex:
                 self.add_to_log(
@@ -451,7 +459,8 @@ class SoSCodeDataExtractor:
                     # we load the imported class
                     try:
                         classInstance = getattr(
-                            import_module(imports[t]["module"]), imports[t]["name"]
+                            import_module(
+                                imports[t]["module"]), imports[t]["name"]
                         )
                         # we retrieve the inheritance_tree
                         inheritance_tree = type.mro(classInstance)
@@ -459,7 +468,8 @@ class SoSCodeDataExtractor:
                         # inheritance
                         if any(
                             [
-                                disc_class in [i.__name__ for i in inheritance_tree]
+                                disc_class in [
+                                    i.__name__ for i in inheritance_tree]
                                 for disc_class in ['SoSDiscipline', 'SoSWrapp']
                             ]
                         ):
@@ -487,7 +497,8 @@ class SoSCodeDataExtractor:
         fullpath = abspath(entry).replace(abspath(rootpath) + sep, "")
 
         loadingPath = (
-            fullpath.replace(".py", "").replace(sep, ".") + "." + class_info["name"]
+            fullpath.replace(".py", "").replace(
+                sep, ".") + "." + class_info["name"]
         )
 
         model_id = fullpath.replace(".py", "").replace(sep, ".")
@@ -512,7 +523,8 @@ class SoSCodeDataExtractor:
             last_modification_date=modelAttributes['_ontology_data'].get(
                 'last_modification_date', ''
             ),
-            validated_by=modelAttributes['_ontology_data'].get('validated_by', ''),
+            validated_by=modelAttributes['_ontology_data'].get(
+                'validated_by', ''),
             pythonClassInheritance=class_info["inheritance_tree"],
             pythonClass=class_info["name"],
             source=modelAttributes['_ontology_data'].get('source', ''),
@@ -545,7 +557,8 @@ class SoSCodeDataExtractor:
     def generate_parameters(self, param_dict, io, discipline_entity):
         # add input parameters
         for param, attributes in param_dict.items():
-            # sometimes the parameter name is containing part of a namespace, we need to extract only the final name
+            # sometimes the parameter name is containing part of a namespace,
+            # we need to extract only the final name
             if not isinstance(param, str):
                 print(
                     f'Parameter {param} from discipline {discipline_entity.id} is not a string: {isinstance(param,str)}'
@@ -560,7 +573,8 @@ class SoSCodeDataExtractor:
                     self.parameters.add(parameter_entity)
 
                 param_usage_id = f"{discipline_entity.id}_{io}_{param}"
-                parameter_usage_entity = self.parameters_usages.get(param_usage_id)
+                parameter_usage_entity = self.parameters_usages.get(
+                    param_usage_id)
                 if parameter_usage_entity is None:
                     new_param_usage = ParameterUsage(
                         id=param_usage_id,
@@ -573,11 +587,14 @@ class SoSCodeDataExtractor:
                     parameter_entity.add_usage(new_param_usage)
                     parameter_usage_entity = new_param_usage
                 else:
-                    parameter_usage_entity.updateAttributes(attributesDict=attributes)
+                    parameter_usage_entity.updateAttributes(
+                        attributesDict=attributes)
                 if io == "input":
-                    discipline_entity.add_input_parameter_usage(parameter_usage_entity)
+                    discipline_entity.add_input_parameter_usage(
+                        parameter_usage_entity)
                 elif io == "output":
-                    discipline_entity.add_output_parameter_usage(parameter_usage_entity)
+                    discipline_entity.add_output_parameter_usage(
+                        parameter_usage_entity)
 
     def generate_sos_disciplines_and_parameters(self, basepath, level, rootpath):
         """This function looks for sos_discipline and associated parameters in all files in directory"""
@@ -587,7 +604,8 @@ class SoSCodeDataExtractor:
                 if entry.name not in self.exclusions_list:
                     if entry.is_file():
                         if splitext(entry)[1] == ".py":
-                            is_sos_disc, class_info = self.is_sos_discipline(entry)
+                            is_sos_disc, class_info = self.is_sos_discipline(
+                                entry)
                             if is_sos_disc:
                                 self.add_sos_discipline_and_associated_parameters(
                                     entry=entry,
@@ -600,7 +618,8 @@ class SoSCodeDataExtractor:
                             self.add_to_log(
                                 category="details",
                                 sub_category="scannedDirectories",
-                                message=abspath(entry).replace(self.basepath, ""),
+                                message=abspath(entry).replace(
+                                    self.basepath, ""),
                             )
                         self.generate_sos_disciplines_and_parameters(
                             abspath(entry), level + 1, rootpath
@@ -742,13 +761,13 @@ class SoSCodeDataExtractor:
                         # add parameters
                         # IN
                         self.generate_parameters(
-                            param_dict=discipline["reference"]._data_in,
+                            param_dict=discipline["reference"].get_data_in(),
                             io="input",
                             discipline_entity=disc_entity,
                         )
                         # OUT
                         self.generate_parameters(
-                            param_dict=discipline["reference"]._data_out,
+                            param_dict=discipline["reference"].get_data_out(),
                             io="output",
                             discipline_entity=disc_entity,
                         )
@@ -770,7 +789,8 @@ class SoSCodeDataExtractor:
             "#####################    LOOKING FOR SOS DISCIPLINES AND PARAMETERS    #########################"
         )
 
-        # only code repositories listed in traceability dict will be explored. All code repo must be Git repositories
+        # only code repositories listed in traceability dict will be explored.
+        # All code repo must be Git repositories
         for repo_name, repo_dict in self.code_repositories_dict.items():
             path = repo_dict.get('path', None)
             if path is not None:
@@ -801,7 +821,8 @@ class SoSCodeDataExtractor:
             if code_repo_entity is not None:
                 print('Process Repository', process_repo_id)
                 # create process repository
-                self.generate_process_repository(process_repo_id, code_repo_entity)
+                self.generate_process_repository(
+                    process_repo_id, code_repo_entity)
 
                 for process in processIdList:
                     # retrieve disciplines list via processes_treeviews generated by the run of usecases
@@ -842,9 +863,11 @@ class SoSCodeDataExtractor:
         )
         for repo_dict in self.code_repositories_dict.values():
             path = repo_dict.get('path', None)
-            self.retrieve_parameter_glossary_for_code_repository(repository_path=path)
+            self.retrieve_parameter_glossary_for_code_repository(
+                repository_path=path)
 
-        # write log of multiple info for a parameter, no info for parameter and inconsistencies for multiple info
+        # write log of multiple info for a parameter, no info for parameter and
+        # inconsistencies for multiple info
         self.generate_full_extraction_logs()
 
         return self.logs_dict
@@ -915,12 +938,14 @@ class SoSCodeDataExtractor:
 
                             image_name = matche.group(2)
 
-                            # Convert markdown image link to link to base64 image
+                            # Convert markdown image link to link to base64
+                            # image
                             image_filepath = join(doc_folder_path, image_name)
 
                             if isfile(image_filepath):
                                 image_data = open(image_filepath, "r+b").read()
-                                encoded = base64.b64encode(image_data).decode("utf-8")
+                                encoded = base64.b64encode(
+                                    image_data).decode("utf-8")
 
                                 images_base_64.update({image_name: encoded})
 
@@ -991,13 +1016,15 @@ class SoSCodeDataExtractor:
                             # add parameters
                             # IN
                             self.generate_parameters(
-                                param_dict=discipline["reference"]._data_in,
+                                param_dict=discipline["reference"].get_data_in(
+                                ),
                                 io="input",
                                 discipline_entity=disc_entity,
                             )
                             # OUT
                             self.generate_parameters(
-                                param_dict=discipline["reference"]._data_out,
+                                param_dict=discipline["reference"].get_data_out(
+                                ),
                                 io="output",
                                 discipline_entity=disc_entity,
                             )
@@ -1034,9 +1061,11 @@ class SoSCodeDataExtractor:
                         f"from_{disc_from.id}_to_{disc_to.id}_param_{param_name}"
                     )
                     param_usage_out_id = f"{disc_from.id}_output_{param_name}"
-                    param_usage_out = self.parameters_usages.get(param_usage_out_id)
+                    param_usage_out = self.parameters_usages.get(
+                        param_usage_out_id)
                     param_usage_in_id = f"{disc_to.id}_input_{param_name}"
-                    param_usage_in = self.parameters_usages.get(param_usage_in_id)
+                    param_usage_in = self.parameters_usages.get(
+                        param_usage_in_id)
 
                     new_coupling = SoSCoupling(
                         id=coupling_id,
@@ -1072,7 +1101,8 @@ class SoSCodeDataExtractor:
         :type previous_code_repo_dict: dict
         """
 
-        # Regular expression to remove connection info from url when token is used
+        # Regular expression to remove connection info from url when token is
+        # used
         INFO_REGEXP = ':\/\/.*@'
         INFO_REPLACE = '://'
 
@@ -1142,7 +1172,8 @@ class SoSCodeDataExtractor:
                             }
 
                         except git.exc.InvalidGitRepositoryError:  # type: ignore
-                            logger.debug(f'{library_path} folder is not a git folder')
+                            logger.debug(
+                                f'{library_path} folder is not a git folder')
                         except Exception as error:
                             logger.debug(
                                 f'{library_path} folder generates the following error while accessing with git:\n {str(error)}'
@@ -1153,7 +1184,8 @@ class SoSCodeDataExtractor:
     def get_code_repository_entity(self, from_process_repo_id: str) -> CodeRepository:
         code_repo_entity = None
         try:
-            process_repo_path = dirname(import_module(from_process_repo_id).__file__)
+            process_repo_path = dirname(
+                import_module(from_process_repo_id).__file__)
             code_repo_path = None
             for repo_dict in self.code_repositories_dict.values():
                 path = repo_dict.get('path', None)
@@ -1163,7 +1195,8 @@ class SoSCodeDataExtractor:
             repo_name = code_repo_path.split(sep)[-1]
             code_repo_entity = self.code_repositories.get(repo_name)
         except:
-            print(f"Impossible to retrieve process repository {from_process_repo_id}")
+            print(
+                f"Impossible to retrieve process repository {from_process_repo_id}")
             self.add_to_log(
                 category="errors",
                 sub_category="processRepository",
@@ -1174,7 +1207,8 @@ class SoSCodeDataExtractor:
     def retrieve_parameter_glossary_for_code_repository(self, repository_path: str):
         repo_id = repository_path.split(sep)[-1]
         try:
-            parameter_glossary_path = join(repository_path, "parameters_glossary.csv")
+            parameter_glossary_path = join(
+                repository_path, "parameters_glossary.csv")
             if isfile(parameter_glossary_path):
                 parameters_glossary_df = pd.read_csv(
                     parameter_glossary_path,
@@ -1203,7 +1237,8 @@ class SoSCodeDataExtractor:
                     )
 
                 parameters_glossary_df = parameters_glossary_df.set_index('id')
-                parameters_glossary_dict = parameters_glossary_df.to_dict("index")
+                parameters_glossary_dict = parameters_glossary_df.to_dict(
+                    "index")
 
                 code_repo_entity = self.code_repositories.get(repo_id)
                 self.add_ontology_data_to_parameters(
@@ -1218,7 +1253,8 @@ class SoSCodeDataExtractor:
                     exception=None,
                 )
         except Exception as ex:
-            print(f"Impossible to retrieve parameter glossary for repo {repo_id}")
+            print(
+                f"Impossible to retrieve parameter glossary for repo {repo_id}")
             self.add_to_log(
                 category="errors",
                 sub_category="parameterGlossary",
@@ -1242,7 +1278,8 @@ class SoSCodeDataExtractor:
                     parameter_code_repositories.append(
                         instance.sos_discipline.repository.label
                     )
-                parameter_code_repositories = list(set(parameter_code_repositories))
+                parameter_code_repositories = list(
+                    set(parameter_code_repositories))
                 no_parameter_info[parameter.id] = parameter_code_repositories
 
             datatypeDict = {}
@@ -1264,7 +1301,8 @@ class SoSCodeDataExtractor:
                     unitDict[attributes['unit']].append(('glossary', repo))
 
                     datatypeDict.setdefault(attributes['datatype'], [])
-                    datatypeDict[attributes['datatype']].append(('glossary', repo))
+                    datatypeDict[attributes['datatype']].append(
+                        ('glossary', repo))
 
             message = {}
             if len(unitDict.keys()) > 1:
