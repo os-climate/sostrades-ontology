@@ -1,12 +1,10 @@
+
 """
 Copyright 2022 Airbus SAS
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -96,6 +94,8 @@ class SoSCodeDataExtractor:
             'sostrades-webgui',
             'sostrades-webapi',
             'sostrades-ontology',
+            'sostrades-authapi',
+            'gemseo',
         ]
         self.logs_dict = logs_dict
 
@@ -559,12 +559,16 @@ class SoSCodeDataExtractor:
         for param, attributes in param_dict.items():
             # sometimes the parameter name is containing part of a namespace,
             # we need to extract only the final name
+            param_id=param
             if not isinstance(param, str):
-                print(
-                    f'Parameter {param} from discipline {discipline_entity.id} is not a string: {isinstance(param,str)}'
-                )
+                if isinstance(param, tuple):
+                    param_id = f'{param[0]}.{param[1]}'
+                else:
+                    print(
+                        f'Parameter {param} from discipline {discipline_entity.id} is not a string: {isinstance(param,str)}'
+                    )
             else:
-                param_name = param.split('.')[-1]
+                param_name = param_id.split('.')[-1]
                 parameter_entity = self.parameters.get(param_name)
                 if parameter_entity is None:
                     parameter_entity = Parameter(
@@ -572,7 +576,7 @@ class SoSCodeDataExtractor:
                     )
                     self.parameters.add(parameter_entity)
 
-                param_usage_id = f"{discipline_entity.id}_{io}_{param}"
+                param_usage_id = f"{discipline_entity.id}_{io}_{param_id}"
                 parameter_usage_entity = self.parameters_usages.get(
                     param_usage_id)
                 if parameter_usage_entity is None:
@@ -1145,9 +1149,12 @@ class SoSCodeDataExtractor:
                                     f'Impossible to retrieve repo name from url {url}'
                                 )
                                 repo_name = url
-
-                            branch = repo.active_branch
-                            commit = branch.commit
+                            if repo.head.is_detached:
+                                branch_name='detached'
+                                commit=repo.head.commit
+                            else:
+                                branch_name = repo.active_branch.name
+                                commit = repo.active_branch.commit
                             commited_date = datetime.fromtimestamp(
                                 commit.committed_date, timezone.utc
                             )
@@ -1163,7 +1170,7 @@ class SoSCodeDataExtractor:
 
                             code_repo_dict[repo_name] = {
                                 URL: url,
-                                BRANCH: branch.name,
+                                BRANCH: branch_name,
                                 COMMIT: commit.hexsha,
                                 COMMITTED_DATE: commited_date.strftime(
                                     "%d/%m/%Y %H:%M:%S"

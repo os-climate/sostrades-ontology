@@ -144,7 +144,10 @@ def write_to_sheet(xl, elementsDict, headers, sheetName, isClasses=False):
     for rowDict in elementsDict.values():
         for columnId, columnValue in rowDict.items():
             col = headers.index(columnId) + 1
-            cell = sheet.cell(column=col, row=rowCount, value=columnValue)
+            try:
+                cell = sheet.cell(column=col, row=rowCount, value=columnValue)
+            except:
+                print(f'Impossible to write value {columnValue}, it will be ignored')
         rowCount += 1
         if isClasses:
             if rowDict.get('instances_quantity', 0) > 0:
