@@ -10,14 +10,14 @@ It contains:
 ## SoSTrades Ontology install
 `pip install -r requirements.txt --trusted-host pypi.org --trusted-host files.pythonhosted.org`
 
+## Update Ontology
+
+The update process can be done through a Jenkins job by running `python ontology\sos_ontology\core\script\createSoSOntologyFromCode.py`
+
 ## API Start
 If you want to run the ontology API locally:
 
-`python \rest_api\api.py`
-
-## Update Ontology
-
-The update process can be done through a Jenkins job by running `ontology\sos_ontology\core\script\createSoSOntologyFromCode.py`
+`python sos_ontology\rest_api\api.py`
 
 ### Prerequisite
 To be able to run correctly this script:
