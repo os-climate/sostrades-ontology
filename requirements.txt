@@ -12,7 +12,7 @@ numpy==1.24.3
 datetime==4.3
 werkzeug==2.0.3
 itsdangerous==2.0.1
-table-logger==0.3.6
+git+https://github.com/AleksTk/table-logger.git@refs/pull/11/head  # table-logger==0.3.6
 uvicorn==0.15.0
 fastapi==0.70.0
 simplejson>=3.17.5
