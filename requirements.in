@@ -3,7 +3,7 @@
 # sostrades_core
 
 # External libraries
-Flask==1.1.1
+Flask==2.1.0
 gitpython==3.1.31
 itsdangerous==2.0.1
 jsonpickle==1.4.1
