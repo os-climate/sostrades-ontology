@@ -12,7 +12,7 @@ It contains:
 
 ## Update Ontology
 
-The update process can be done through a Jenkins job by running `python ontology\sos_ontology\core\script\createSoSOntologyFromCode.py`
+The update process can be done through a Jenkins job or locally by running `python ontology\sos_ontology\core\script\createSoSOntologyFromCode.py`
 
 ## API Start
 If you want to run the ontology API locally:
