@@ -6,11 +6,11 @@
 #
 certifi==2023.7.22
     # via requests
-charset-normalizer==3.2.0
+charset-normalizer==3.3.0
     # via requests
 click==8.1.7
     # via flask
-coverage==7.3.0
+coverage==7.3.2
     # via nose2
 et-xmlfile==1.1.0
     # via openpyxl
@@ -53,7 +53,7 @@ pyparsing==3.1.1
     # via rdflib
 python-dateutil==2.8.2
     # via pandas
-pytz==2023.3
+pytz==2023.3.post1
     # via pandas
 rdflib==5.0.0
     # via -r ./sostrades-ontology/requirements.in
@@ -65,17 +65,17 @@ six==1.16.0
     #   nose2
     #   python-dateutil
     #   rdflib
-smmap==5.0.0
+smmap==5.0.1
     # via gitdb
 table-logger @ git+https://github.com/AleksTk/table-logger.git@refs/pull/11/head
     # via -r ./sostrades-ontology/requirements.in
 textdistance==4.2.0
     # via -r ./sostrades-ontology/requirements.in
-urllib3==2.0.4
+urllib3==2.0.6
     # via requests
 werkzeug==2.0.3
     # via
     #   -r ./sostrades-ontology/requirements.in
     #   flask
-zipp==3.16.2
+zipp==3.17.0
     # via importlib-metadata
