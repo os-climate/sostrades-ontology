@@ -16,7 +16,7 @@ et-xmlfile==1.1.0
     # via openpyxl
 flask==1.1.1
     # via -r ./sostrades-ontology/requirements.in
-gitdb==4.0.10
+gitdb==4.0.11
     # via gitpython
 gitpython==3.1.31
     # via -r ./sostrades-ontology/requirements.in
@@ -71,7 +71,7 @@ table-logger @ git+https://github.com/AleksTk/table-logger.git@refs/pull/11/head
     # via -r ./sostrades-ontology/requirements.in
 textdistance==4.2.0
     # via -r ./sostrades-ontology/requirements.in
-urllib3==2.0.6
+urllib3==2.0.7
     # via requests
 werkzeug==2.0.3
     # via
