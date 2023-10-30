@@ -1,5 +1,6 @@
 # SoS Ontology
 
+
 This is SoSTrades Ontology project.
 It contains:
  - the SoSTrades TBox (the ontology classes) used to create the SoSTrades ontology
