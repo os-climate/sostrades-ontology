@@ -28,10 +28,8 @@ from os.path import abspath, basename, dirname, isdir, isfile, join, splitext
 import git
 import pandas as pd
 
-
 from sostrades_core.execution_engine.execution_engine import ExecutionEngine
 from sostrades_core.sos_processes.processes_factory import SoSProcessFactory
-
 
 from sos_ontology.core.sos_entities.code_repository import CodeRepository
 from sos_ontology.core.sos_entities.parameter import Parameter
@@ -51,10 +49,10 @@ class SoSCodeDataExtractor:
     """
 
     def __init__(
-        self,
-        basepath: str = ".",
-        logs_dict: dict = {},
-        previous_code_repositories_traceability: dict = {},
+            self,
+            basepath: str = ".",
+            logs_dict: dict = {},
+            previous_code_repositories_traceability: dict = {},
     ):
         """
         Constructor
@@ -170,12 +168,12 @@ class SoSCodeDataExtractor:
                     {"id": message, "error": exception}
                 )
             elif (
-                category == "multiple_parameters_info"
-                or category == "no_parameter_info"
-                or category == "parameter_does_not_exist"
-                or category == "synthesis"
-                or category == "inconsistencies"
-                or category == "duplicateParametersGlossary"
+                    category == "multiple_parameters_info"
+                    or category == "no_parameter_info"
+                    or category == "parameter_does_not_exist"
+                    or category == "synthesis"
+                    or category == "inconsistencies"
+                    or category == "duplicateParametersGlossary"
             ):
                 self.logs_dict[category][sub_category] = message
 
@@ -321,39 +319,39 @@ class SoSCodeDataExtractor:
             loaded_discipline = getattr(mod, path.split(".")[-1])
 
             if (
-                hasattr(loaded_discipline, "DESC_IN")
-                and loaded_discipline.DESC_IN is not None
+                    hasattr(loaded_discipline, "DESC_IN")
+                    and loaded_discipline.DESC_IN is not None
             ):
                 attributes["DESC_IN"] = copy.deepcopy(
                     loaded_discipline.DESC_IN)
             if (
-                hasattr(loaded_discipline, "_data_in")
-                and loaded_discipline.get_data_in() is not None
+                    hasattr(loaded_discipline, "_data_in")
+                    and loaded_discipline.get_data_in() is not None
             ):
                 attributes["DESC_IN"].update(
                     copy.deepcopy(loaded_discipline.get_data_in()))
             if (
-                hasattr(loaded_discipline, "DESC_OUT")
-                and loaded_discipline.DESC_OUT is not None
+                    hasattr(loaded_discipline, "DESC_OUT")
+                    and loaded_discipline.DESC_OUT is not None
             ):
                 attributes["DESC_OUT"] = copy.deepcopy(
                     loaded_discipline.DESC_OUT)
             if (
-                hasattr(loaded_discipline, "_data_out")
-                and loaded_discipline._data_out is not None
+                    hasattr(loaded_discipline, "_data_out")
+                    and loaded_discipline._data_out is not None
             ):
                 attributes["DESC_OUT"].update(
                     copy.deepcopy(loaded_discipline._data_out)
                 )
             if (
-                hasattr(loaded_discipline, "_maturity")
-                and loaded_discipline._maturity is not None
+                    hasattr(loaded_discipline, "_maturity")
+                    and loaded_discipline._maturity is not None
             ):
                 attributes["maturity"] = copy.deepcopy(
                     loaded_discipline._maturity)
             if (
-                hasattr(loaded_discipline, "_ontology_data")
-                and loaded_discipline._ontology_data is not None
+                    hasattr(loaded_discipline, "_ontology_data")
+                    and loaded_discipline._ontology_data is not None
             ):
                 attributes["_ontology_data"] = copy.deepcopy(
                     loaded_discipline._ontology_data
@@ -466,11 +464,11 @@ class SoSCodeDataExtractor:
                         # we check if the SoSDiscipline or SoSWrapp (for Execution Engine v4) is present in the
                         # inheritance
                         if any(
-                            [
-                                disc_class in [
-                                    i.__name__ for i in inheritance_tree]
-                                for disc_class in ['SoSDiscipline', 'SoSWrapp']
-                            ]
+                                [
+                                    disc_class in [
+                                        i.__name__ for i in inheritance_tree]
+                                    for disc_class in ['SoSDiscipline', 'SoSWrapp']
+                                ]
                         ):
                             # it is a model !! (an SoSDIscipline)
                             # print(f'{entry.name} is a model !')
@@ -496,8 +494,8 @@ class SoSCodeDataExtractor:
         fullpath = abspath(entry).replace(abspath(rootpath) + sep, "")
 
         loadingPath = (
-            fullpath.replace(".py", "").replace(
-                sep, ".") + "." + class_info["name"]
+                fullpath.replace(".py", "").replace(
+                    sep, ".") + "." + class_info["name"]
         )
 
         model_id = fullpath.replace(".py", "").replace(sep, ".")
@@ -558,13 +556,13 @@ class SoSCodeDataExtractor:
         for param, attributes in param_dict.items():
             # sometimes the parameter name is containing part of a namespace,
             # we need to extract only the final name
-            param_id=param
+            param_id = param
             if not isinstance(param, str):
                 if isinstance(param, tuple):
                     param_id = f'{param[0]}.{param[1]}'
                 else:
                     print(
-                        f'Parameter {param} from discipline {discipline_entity.id} is not a string: {isinstance(param,str)}'
+                        f'Parameter {param} from discipline {discipline_entity.id} is not a string: {isinstance(param, str)}'
                     )
             else:
                 param_name = param_id.split('.')[-1]
@@ -637,8 +635,8 @@ class SoSCodeDataExtractor:
 
             if hasattr(repository_module, "label"):
                 if (
-                    repository_module.label is not None
-                    and repository_module.label != ""
+                        repository_module.label is not None
+                        and repository_module.label != ""
                 ):
                     label = repository_module.label
             else:
@@ -650,8 +648,8 @@ class SoSCodeDataExtractor:
                 )
             if hasattr(repository_module, "description"):
                 if (
-                    repository_module.description is not None
-                    and repository_module.description != ""
+                        repository_module.description is not None
+                        and repository_module.description != ""
                 ):
                     description = repository_module.description
             else:
@@ -843,9 +841,9 @@ class SoSCodeDataExtractor:
                         pattern = re.compile(r"^usecase.*\.py")
                         for f in listdir(folder_path):
                             if (
-                                f != "__init__.py"
-                                and f != "process.py"
-                                and f != "__pycache__"
+                                    f != "__init__.py"
+                                    and f != "process.py"
+                                    and f != "__pycache__"
                             ):
                                 if pattern.match(f):
                                     usecase_id = f"{process_repo_id}.{process}.{f}"
@@ -876,7 +874,7 @@ class SoSCodeDataExtractor:
         return self.logs_dict
 
     def add_ontology_data_to_parameters(
-        self, parameters_glossary_dict, code_repository
+            self, parameters_glossary_dict, code_repository
     ):
         not_existing_parameters = []
         for parameter_id, ontology_data in parameters_glossary_dict.items():
@@ -910,8 +908,8 @@ class SoSCodeDataExtractor:
                 join(doc_folder_path, md_file)
                 for md_file in listdir(doc_folder_path)
                 if (
-                    (md_file.endswith(r".markdown") or md_file.endswith(r".md"))
-                    and md_file.startswith(filename)
+                        (md_file.endswith(r".markdown") or md_file.endswith(r".md"))
+                        and md_file.startswith(filename)
                 )
             ]
 
@@ -995,7 +993,7 @@ class SoSCodeDataExtractor:
                 label=usecase_name,
                 description="",
                 process=process_entity,
-                run_usecase=loaded_ref._BaseStudyManager__run_usecase,
+                run_usecase=loaded_ref.run_usecase,
             )
             self.usecases.add(new_usecase)
             process_entity.add_usecase(new_usecase)
@@ -1092,7 +1090,7 @@ class SoSCodeDataExtractor:
                 )
 
     def retrieve_code_repositories(
-        self, logger: Logger, previous_code_repo_dict: dict
+            self, logger: Logger, previous_code_repo_dict: dict
     ) -> dict:
         """
         Extract all git code repository with name, path and latest commit SHA
@@ -1128,10 +1126,10 @@ class SoSCodeDataExtractor:
             for library_path in libraries:
                 if isdir(library_path):
                     if all(
-                        [
-                            exclude not in library_path
-                            for exclude in self.path_exclusion_list
-                        ]
+                            [
+                                exclude not in library_path
+                                for exclude in self.path_exclusion_list
+                            ]
                     ):
                         try:
                             repo = git.Repo(
@@ -1149,8 +1147,8 @@ class SoSCodeDataExtractor:
                                 )
                                 repo_name = url
                             if repo.head.is_detached:
-                                branch_name='detached'
-                                commit=repo.head.commit
+                                branch_name = 'detached'
+                                commit = repo.head.commit
                             else:
                                 branch_name = repo.active_branch.name
                                 commit = repo.active_branch.commit
