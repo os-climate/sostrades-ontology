@@ -3,42 +3,44 @@ External Dependencies
 
 sostrades-ontology depends on software with compatible licenses that are listed below.
 
-`nose2 <https://docs.nose2.io/>`_
-    BSD 3-Clause
+`Flask (1.1.1) <https://flask.palletsprojects.com/>`_
+    BSD License
 
-`rdflib <https://github.com/RDFLib/rdflib/>`_
-	BSD 3-Clause
+`jinja2 (3.0.1) <https://palletsprojects.com/p/jinja/>`_
+    BSD-3-Clause
 
-`openpyxl <https://openpyxl.readthedocs.io/>`_
-	MIT license
+`gitpython (3.1.31) <https://github.com/gitpython-developers/GitPython>`_
+    BSD
 
-`textdistance <https://github.com/orsinium/textdistance/>`_
-	MIT license
+`itsdangerous (2.0.1) <https://palletsprojects.com/p/itsdangerous/>`_
+    BSD-3-Clause
 
-`python-gitlab <https://github.com/python-gitlab/python-gitlab/>`_
-    GNU LGPL v3.0
+`jsonpickle (1.4.1) <https://github.com/jsonpickle/jsonpickle>`_
+    BSD License
 
-`flask <https://palletsprojects.com/p/flask//>`_
-    BSD 3-Clause
+`numpy (1.24.3) <https://numpy.org>`_
+    BSD License
 
-`jsonpickle <https://github.com/jsonpickle/jsonpickle/>`_
-    BSD 3-Clause
+`openpyxl (3.0.7) <https://openpyxl.readthedocs.io>`_
+    MIT
 
-`requests <https://requests.readthedocs.io/>`_
-	Apache v2.0
+`pandas (1.3.0) <https://pandas.pydata.org>`_
+    BSD License
 
-`PyYAML <https://pyyaml.org/>`_
-	MIT license
-    
-`Pandas <https://pandas.pydata.org/>`_
-    BSD 3-Clause
-    
-`numpy <https://numpy.org/>`_
-    BSD 3-Clause
+`rdflib (5.0.0) <https://github.com/RDFLib/rdflib>`_
+    BSD-3-Clause
 
-`datetime <https://github.com/zopefoundation/DateTime>`_
-    ZPL 2.1
+`requests (2.31.0) <https://requests.readthedocs.io>`_
+    Apache 2.0
 
-`werkzeug <https://palletsprojects.com/p/werkzeug/>`_
-    BSD 3-Clause
+`table-logger (0.3.6) <https://github.com/AleksTk/table-logger>`_
+    MIT
 
+`textdistance (4.2.0) <https://github.com/orsinium/textdistance>`_
+    MIT
+
+`werkzeug (2.0.3) <https://werkzeug.palletsprojects.com/>`_
+    BSD License
+
+`nose2 (0.9.1) <https://docs.nose2.io/>`_
+    BSD-2-Clause
