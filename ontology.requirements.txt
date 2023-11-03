@@ -22,8 +22,6 @@ gitpython==3.1.31
     # via -r ./sostrades-ontology/requirements.in
 idna==3.4
     # via requests
-importlib-metadata==6.8.0
-    # via jsonpickle
 isodate==0.6.1
     # via rdflib
 itsdangerous==2.0.1
@@ -34,7 +32,7 @@ jinja2==3.0.1
     # via
     #   -r ./sostrades-ontology/requirements.in
     #   flask
-jsonpickle==1.4.1
+jsonpickle==3.0.2
     # via -r ./sostrades-ontology/requirements.in
 markupsafe==2.1.3
     # via jinja2
@@ -77,5 +75,3 @@ werkzeug==2.0.3
     # via
     #   -r ./sostrades-ontology/requirements.in
     #   flask
-zipp==3.17.0
-    # via importlib-metadata
