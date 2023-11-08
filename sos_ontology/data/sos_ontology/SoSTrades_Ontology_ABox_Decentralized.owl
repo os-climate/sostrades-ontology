@@ -1,0 +1,821 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://www.sostrades.org/ontology#"
+     xml:base="https://www.sostrades.org/ontology"
+     xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:sos="https://sostrades.eu.airbus.corp/ontology#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:foaf="http://xmlns.com/foaf/0.1/"
+     xmlns:qudt="http://qudt.org/schema/qudt/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+    <owl:Ontology rdf:about="https://www.sostrades.org/ontology">
+        <owl:versionIRI rdf:resource="https://www.sostrades.org/ontology/1.1.0"/>
+        <dc:contributor rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">Etienne Tomiak</dc:contributor>
+        <dc:description rdf:datatype="http://www.w3.org/2000/01/rdf-schema#Literal">The SoSTrades Ontology is composed of all entities and relationships between concepts used in the Systems of Systems Trades project.
+
+The main concepts modeled are Code Repositories, Process Repositories, Processes, Models, Usecases and Parameters.
+There are represented as OWL Classes and their instances are OWL Individuals.
+
+For each instance, the ontology store metadata (label, description, documentation, ...) that are extracted from the Python code stored in the code repositories of the project in Gitlab.
+
+This ontology primary purpose is to complement the Web Interface of SoSTrades with these metadata to have a better lisibility and understandability.
+
+It is also a good way to explore the available concepts in the SoSTrades platform.
+
+This ontology is automatically updated daily using the latest code base through a Jenkins job.</dc:description>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Annotation properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/contributor -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/contributor"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/description -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/description"/>
+    
+
+
+    <!-- http://purl.org/dc/elements/1.1/title -->
+
+    <owl:AnnotationProperty rdf:about="http://purl.org/dc/elements/1.1/title"/>
+    
+
+
+    <!-- http://qudt.org/schema/qudt/Datatype -->
+
+    <owl:AnnotationProperty rdf:about="http://qudt.org/schema/qudt/Datatype"/>
+    
+
+
+    <!-- http://qudt.org/schema/qudt/expression -->
+
+    <owl:AnnotationProperty rdf:about="http://qudt.org/schema/qudt/expression"/>
+    
+
+
+    <!-- http://qudt.org/schema/qudt/symbol -->
+
+    <owl:AnnotationProperty rdf:about="http://qudt.org/schema/qudt/symbol"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#altLabel -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#altLabel">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#definition -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#definition"/>
+    
+
+
+    <!-- http://www.w3.org/2004/02/skos/core#prefLabel -->
+
+    <owl:AnnotationProperty rdf:about="http://www.w3.org/2004/02/skos/core#prefLabel">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2000/01/rdf-schema#label"/>
+    </owl:AnnotationProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://www.sostrades.org/ontology#belongsTo -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#belongsTo">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#composedOf -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#composedOf"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#couplingIn -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#couplingIn">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#couplingOut -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#couplingOut">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#createdFrom -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#createdFrom">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#generatedBy -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#generatedBy">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#hasInput -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#hasInput">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#hasOutput -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#hasOutput">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#hasValue -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#hasValue">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#implements -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#implements">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#instanceOf -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#instanceOf"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#reference -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#reference"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#represents -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#represents">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#usedIn -->
+
+    <owl:ObjectProperty rdf:about="https://www.sostrades.org/ontology#usedIn">
+        <rdfs:subPropertyOf rdf:resource="https://www.sostrades.org/ontology#reference"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://www.sostrades.org/ontology#ACLTag -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#ACLTag"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#branch -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#branch">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#category -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#category">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#classInheritance -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#classInheritance">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#codeRepository -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#codeRepository">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#codeRepositoryList -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#codeRepositoryList">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#commit -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#commit">
+        <rdfs:subPropertyOf rdf:resource="http://www.w3.org/2002/07/owl#topDataProperty"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#committedDate -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#committedDate"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#composedOf -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#composedOf"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#coupling -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#coupling"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#dataframeDescriptor -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#dataframeDescriptor"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#dataframeEditionLocked -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#dataframeEditionLocked"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#datatype -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#datatype"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#datatypeList -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#datatypeList"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#defaultValue -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#defaultValue"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#definition -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#definition"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#definitionSource -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#definitionSource"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#delivered -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#delivered"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#description -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#description"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#disciplineList -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#disciplineList"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#disciplineName -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#disciplineName"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#disciplineUsingParameterList -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#disciplineUsingParameterList"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#documentation -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#documentation">
+        <rdfs:comment xml:lang="en">Contains Markdown documentation</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#editable -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#editable"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#folderName -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#folderName"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#folderPath -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#folderPath"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#headers -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#headers"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#icon -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#icon"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#id -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#id"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#implemented -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#implemented"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#inputOf -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#inputOf"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#inputParameterUsages -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#inputParameterUsages"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#inputParameterUsagesQuantity -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#inputParameterUsagesQuantity"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#inputParameters -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#inputParameters"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#inputParametersQuantity -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#inputParametersQuantity"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#ioType -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#ioType"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#last_modification_date -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#last_modification_date"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#level -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#level"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#maturity -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#maturity"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#modelList -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#modelList"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#modelType -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#modelType"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#name -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#name"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#namespace -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#namespace"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#numerical -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#numerical"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#optional -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#optional"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#originSource -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#originSource"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#outputOf -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#outputOf"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#outputParameterUsages -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#outputParameterUsages"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#outputParameterUsagesQuantity -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#outputParameterUsagesQuantity"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#outputParameters -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#outputParameters"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#outputParametersQuantity -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#outputParametersQuantity"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#possibleValues -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#possibleValues"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#processList -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#processList"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#processRepositoriesList -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#processRepositoriesList"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#processUsingModel -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#processUsingModel"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#processUsingModelQuantity -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#processUsingModelQuantity"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#publicationDate -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#publicationDate"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#pythonClass -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#pythonClass"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#pythonModule -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#pythonModule"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#pythonModulePath -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#pythonModulePath"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#range -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#range"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#repository -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#repository"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#runUsecase -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#runUsecase"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#source -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#source"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#structuring -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#structuring"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#subtypeDescriptor -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#subtypeDescriptor"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#treenodeType -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#treenodeType"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#type -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#type"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#unit -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#unit"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#unitList -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#unitList"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#url -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#url"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#usecaseList -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#usecaseList"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#userLevel -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#userLevel"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#validated -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#validated"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#validated_by -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#validated_by"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#validator -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#validator"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#version -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#version"/>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#visibility -->
+
+    <owl:DatatypeProperty rdf:about="https://www.sostrades.org/ontology#visibility"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://www.sostrades.org/ontology#CodeRepository -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#CodeRepository">
+        <rdfs:subClassOf rdf:resource="https://www.sostrades.org/ontology#SoSConcept"/>
+        <rdfs:label>Code Repository</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#Coupling -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#Coupling">
+        <rdfs:subClassOf rdf:resource="https://www.sostrades.org/ontology#SoSConcept"/>
+    </owl:Class>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#Parameter -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#Parameter">
+        <rdfs:subClassOf rdf:resource="https://www.sostrades.org/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">Parameter</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#Parameter_Usage -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#Parameter_Usage">
+        <rdfs:subClassOf rdf:resource="https://www.sostrades.org/ontology#Parameter"/>
+        <rdfs:label xml:lang="en">Parameter Usage</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#SoSConcept -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#SoSConcept">
+        <rdfs:label xml:lang="en">SoS Concept</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#SoSDiscipline -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#SoSDiscipline">
+        <rdfs:subClassOf rdf:resource="https://www.sostrades.org/ontology#SoSConcept"/>
+        <dc:description xml:lang="en">Concept used within SoSTrades project to represent a model which include the execution code and the list of necessary parameter input and output</dc:description>
+        <rdfs:label xml:lang="en">SoS Discipline</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#SoSPostProcessingChart -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#SoSPostProcessingChart">
+        <rdfs:subClassOf rdf:resource="https://www.sostrades.org/ontology#SoSConcept"/>
+    </owl:Class>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#SoSProcess -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#SoSProcess">
+        <rdfs:subClassOf rdf:resource="https://www.sostrades.org/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">SoS Process</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#SoSProcessRepository -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#SoSProcessRepository">
+        <rdfs:subClassOf rdf:resource="https://www.sostrades.org/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">SoS Process Repository</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#SoSStudy -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#SoSStudy">
+        <rdfs:subClassOf rdf:resource="https://www.sostrades.org/ontology#SoSConcept"/>
+        <rdfs:label xml:lang="en">SoS Study</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://www.sostrades.org/ontology#Usecase -->
+
+    <owl:Class rdf:about="https://www.sostrades.org/ontology#Usecase">
+        <rdfs:subClassOf rdf:resource="https://www.sostrades.org/ontology#SoSConcept"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+
