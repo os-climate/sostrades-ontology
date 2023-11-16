@@ -69,7 +69,7 @@ table-logger @ git+https://github.com/AleksTk/table-logger.git@refs/pull/11/head
     # via -r ./sostrades-ontology/requirements.in
 textdistance==4.2.0
     # via -r ./sostrades-ontology/requirements.in
-urllib3==2.0.7
+urllib3==2.1.0
     # via requests
 werkzeug==2.0.3
     # via
