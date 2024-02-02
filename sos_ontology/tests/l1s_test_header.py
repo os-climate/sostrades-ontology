@@ -19,7 +19,6 @@ mode: python; py-indent-offset: 4; tab-width: 8; coding:utf-8
 import unittest
 import pprint
 from sostrades_core.tools.check_headers import check_headers
-from sostrades_core.sos_processes.script_test_all_usecases import test_all_usecases
 
 
 class Testheader(unittest.TestCase):
@@ -33,7 +32,7 @@ class Testheader(unittest.TestCase):
         '''
         self.pp = pprint.PrettyPrinter(indent=4, compact=True)
         self.ExtensionToIgnore = ["xlsx","owl","pkl", "png", "jpg", "csv", "md", "markdown", "avif", "json", "in", "gitignore", "cfg", "puml", "pdf", "txt", "ipynb", "zip", "rst"]
-        #Add here the files to ignore       
+        #Add here the files to ignore    
         self.FilesToIgnore = []
         #commit from where to compare added, modeified deleted ...
         self.airbus_rev_commit = "9ce0e11f2dfcef0a8b6b5079932249b363ea3d5b"
