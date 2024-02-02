@@ -18,7 +18,8 @@
         "txt",
         "ipynb",
         "zip",
-        "rst"
+        "rst",
+        "ini"
     ],
     "files_to_ignore": [],
     "airbus_rev_commit": "9ce0e11f2dfcef0a8b6b5079932249b363ea3d5b"
