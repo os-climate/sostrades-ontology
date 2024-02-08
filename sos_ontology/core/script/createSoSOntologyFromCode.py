@@ -1,5 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
+Modifications on 2024/02/08 Copyright 2024 Capgemini
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -84,7 +85,7 @@ if len(PYTHONPATH_list) > 0:
         ),
     }
 
-    logging.disable(logging.CRITICAL)
+    logging.disable(logging.WARNING)
     # initialise elements
     oldOnto = Ontology()
     toolbox = SoSToolbox()
@@ -174,7 +175,7 @@ if len(PYTHONPATH_list) > 0:
 
     system('cat output_log.txt')
 
-    logging.disable(logging.NOTSET)
+    logging.disable(logging.INFO)
 
     print(
         "###################################    CODE DATA EXTRACTION DONE    ##################################"
