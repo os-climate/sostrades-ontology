@@ -467,7 +467,7 @@ class SoSCodeDataExtractor:
                                 [
                                     disc_class in [
                                         i.__name__ for i in inheritance_tree]
-                                    for disc_class in ['SoSDiscipline', 'SoSWrapp']
+                                    for disc_class in ['ProxyDiscipline', 'SoSWrapp']
                                 ]
                         ):
                             # it is a model !! (an SoSDIscipline)
