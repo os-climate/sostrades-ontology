@@ -10,7 +10,7 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via flask
-coverage[toml]==7.4.3
+coverage[toml]==7.4.4
     # via pytest-cov
 et-xmlfile==1.1.0
     # via openpyxl
