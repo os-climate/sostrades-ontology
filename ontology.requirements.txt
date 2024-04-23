@@ -100,3 +100,5 @@ werkzeug==2.0.3
     # via
     #   -r ./sostrades-ontology/requirements.in
     #   flask
+memory-profiler==0.61.0
+memray==1.12.0
