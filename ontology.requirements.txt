@@ -10,13 +10,13 @@ charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via flask
-coverage[toml]==7.4.4
+coverage[toml]==7.5.0
     # via pytest-cov
 et-xmlfile==1.1.0
     # via openpyxl
-exceptiongroup==1.2.0
+exceptiongroup==1.2.1
     # via pytest
-execnet==2.0.2
+execnet==2.1.1
     # via pytest-xdist
 flask==1.1.1
     # via -r ./sostrades-ontology/requirements.in
@@ -24,7 +24,7 @@ gitdb==4.0.11
     # via gitpython
 gitpython==3.1.31
     # via -r ./sostrades-ontology/requirements.in
-idna==3.6
+idna==3.7
     # via requests
 iniconfig==2.0.0
     # via pytest
@@ -53,7 +53,7 @@ packaging==24.0
     # via pytest
 pandas==2.2.1
     # via -r ./sostrades-ontology/requirements.in
-pluggy==1.4.0
+pluggy==1.5.0
     # via pytest
 pyparsing==3.1.2
     # via rdflib
