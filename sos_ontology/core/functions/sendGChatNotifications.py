@@ -1,5 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
+Modifications on 2024/05/16 Copyright 2024 Capgemini
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -26,6 +27,8 @@ def sendGChatNotification(webhook_url=None, textMessage=None, cards=None):
         elif cards is not None and cards != '':
             bot_message = {
                 'cards': cards}
+        else:
+            raise Exception(f"Nothing to send")
 
         response = requests.request(
             method='POST',

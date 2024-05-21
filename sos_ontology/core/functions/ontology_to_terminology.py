@@ -1,6 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
-Modifications on 2023/03/13-2023/11/02 Copyright 2023 Capgemini
+Modifications on 2023/03/13-2024/05/16 Copyright 2023 Capgemini
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,6 +30,8 @@ def ontology_to_terminology(
     terminology_file_path=None,
 ):
     onto = None
+    xl = None
+
     if loaded_ontology is None and ontology_file_path is not None:
         # Load the ontology
         onto = Ontology()

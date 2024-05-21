@@ -1,5 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
+Modifications on 2024/05/16 Copyright 2024 Capgemini
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -218,7 +219,6 @@ class SoSTerminology:
                 sheet.column_dimensions[col].width = value
 
     def add_formatting(self, sheet, column, formatType, formatting='', formula=''):
-
         start = openpyxl.utils.cell.absolute_coordinate(
             sheet.cell(2, column).coordinate
         )
@@ -241,6 +241,8 @@ class SoSTerminology:
                 formula=['LEN(TRIM(' + sheet.cell(2, column).coordinate + '))>0'],
                 dxf=formatting,
             )
+        else:
+            raise Exception(f"Unhandled format type {formatType}")
 
         # Value must be one of
         # {‘containsText’, ‘endsWith’, ‘colorScale’,
