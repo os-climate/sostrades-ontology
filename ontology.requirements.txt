@@ -4,13 +4,13 @@
 #
 #    pip-compile --output-file=./sostrades-ontology/ontology.requirements.txt ./sostrades-ontology/requirements.in
 #
-certifi==2024.2.2
+certifi==2024.6.2
     # via requests
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via flask
-coverage[toml]==7.5.1
+coverage[toml]==7.5.3
     # via pytest-cov
 et-xmlfile==1.1.0
     # via openpyxl
@@ -22,7 +22,7 @@ flask==1.1.1
     # via -r ./sostrades-ontology/requirements.in
 gitdb==4.0.11
     # via gitpython
-gitpython==3.1.31
+gitpython==3.1.43
     # via -r ./sostrades-ontology/requirements.in
 idna==3.7
     # via requests
@@ -38,11 +38,11 @@ jinja2==3.0.1
     # via
     #   -r ./sostrades-ontology/requirements.in
     #   flask
-jsonpickle==3.0.2
+jsonpickle==3.0.4
     # via -r ./sostrades-ontology/requirements.in
 markupsafe==2.1.5
     # via jinja2
-numpy==1.24.3
+numpy==1.24.4
     # via
     #   -r ./sostrades-ontology/requirements.in
     #   pandas
@@ -51,7 +51,7 @@ openpyxl==3.0.7
     # via -r ./sostrades-ontology/requirements.in
 packaging==24.0
     # via pytest
-pandas==2.2.1
+pandas==2.2.2
     # via -r ./sostrades-ontology/requirements.in
 pluggy==1.5.0
     # via pytest
