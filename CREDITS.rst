@@ -9,16 +9,16 @@ sostrades-ontology depends on software with compatible licenses that are listed 
 `jinja2 (3.0.1) <https://palletsprojects.com/p/jinja/>`_
     BSD-3-Clause
 
-`gitpython (3.1.31) <https://github.com/gitpython-developers/GitPython>`_
+`gitpython (3.1.43) <https://github.com/gitpython-developers/GitPython>`_
     BSD
 
 `itsdangerous (2.0.1) <https://palletsprojects.com/p/itsdangerous/>`_
     BSD-3-Clause
 
-`jsonpickle (1.4.1) <https://github.com/jsonpickle/jsonpickle>`_
+`jsonpickle (3.0.4) <https://github.com/jsonpickle/jsonpickle>`_
     BSD License
 
-`numpy (1.24.3) <https://numpy.org>`_
+`numpy (1.24.4) <https://numpy.org>`_
     BSD License
 
 `openpyxl (3.0.7) <https://openpyxl.readthedocs.io>`_
