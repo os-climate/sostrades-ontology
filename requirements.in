@@ -1,5 +1,4 @@
 # Project libraries
-# sos_trades_core
 # sostrades_core
 
 # External libraries
@@ -22,11 +21,3 @@ pytest==7.4.3
 pytest-cov==4.1.0
 pytest-xdist==3.4.0
 pytest-durations==1.2.0
-
-# Unused old requirements
-# python-gitlab==2.5.0
-# PyYAML==5.1.2
-# datetime==4.3
-# uvicorn==0.15.0
-# fastapi==0.70.0
-# simplejson>=3.17.5
