@@ -79,13 +79,13 @@ class SoSToolbox:
         for key, entityDict in oldDictComp.items():
             diffDict[key] = {'new': 0, 'new_list': [], 'removed': 0, 'removed_list': []}
             for id in entityDict:
-                if not (id in newDictComp[key]):
+                if id not in newDictComp[key]:
                     diffDict[key]['removed'] += 1
                     diffDict[key]['removed_list'].append(id)
 
         for key, entityDict in newDictComp.items():
             for id in entityDict:
-                if not (id in oldDictComp[key]):
+                if id not in oldDictComp[key]:
                     diffDict[key]['new'] += 1
                     diffDict[key]['new_list'].append(id)
 

@@ -28,7 +28,7 @@ def sendGChatNotification(webhook_url=None, textMessage=None, cards=None):
             bot_message = {
                 'cards': cards}
         else:
-            raise Exception(f"Nothing to send")
+            raise Exception("Nothing to send")
 
         response = requests.request(
             method='POST',

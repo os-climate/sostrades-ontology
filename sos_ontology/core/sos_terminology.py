@@ -15,11 +15,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-import openpyxl
-from openpyxl.worksheet.table import Table, TableStyleInfo
-from openpyxl.formatting.rule import Rule, FormulaRule
-import textdistance
 import datetime
+
+import openpyxl
+import textdistance
+from openpyxl.formatting.rule import FormulaRule, Rule
+from openpyxl.worksheet.table import Table, TableStyleInfo
 
 
 class SoSTerminology:
@@ -82,7 +83,7 @@ class SoSTerminology:
                         row_dict[headers[j]] = row[j].strftime('%d %B %Y')
                 else:
                     row_dict[headers[j]] = row[j]
-                if row[j] != None and row[j] != '' and str(row[j])[0:1] != '=':
+                if row[j] is not None and row[j] != '' and str(row[j])[0:1] != '=':
                     isNone = False
             if isNone == False:
                 if nameDictKey != '':
@@ -263,7 +264,7 @@ class SoSTerminology:
                     # retrieve first empty row
                     rowCount = 0
                     for max_row, row in enumerate(sheet, 1):
-                        if not row[col_index].value is None:
+                        if row[col_index].value is not None:
                             rowCount += 1
                     rowCount += 1
 
@@ -285,7 +286,7 @@ class SoSTerminology:
                     # clear list:
                     rowCount = 0
                     for max_row, row in enumerate(sheet, 1):
-                        if rowCount > 0 and not row[col_index].value is None:
+                        if rowCount > 0 and row[col_index].value is not None:
                             cell = sheet.cell(
                                 column=col_index + 1, row=rowCount + 1, value=None
                             )

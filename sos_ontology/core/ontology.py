@@ -15,25 +15,17 @@ limitations under the License.
 '''
 
 
-'''
-Creating an Ontology class to load ontology data
-'''
-
-
-'''
-End of documentation
-'''
-
-
-from copy import deepcopy
 import logging
+from copy import deepcopy
 from os.path import basename
-from rdflib import ConjunctiveGraph, Namespace, Literal, URIRef
-from rdflib.namespace import XSD, OWL, RDF, split_uri
-from sos_ontology.core.sos_toolbox import SoSToolbox
-from rdflib.term import bind
-import pandas as pd
+
 import numpy as np
+import pandas as pd
+from rdflib import ConjunctiveGraph, Literal, Namespace, URIRef
+from rdflib.namespace import OWL, RDF, XSD, split_uri
+from rdflib.term import bind
+
+from sos_ontology.core.sos_toolbox import SoSToolbox
 
 
 class Ontology:
@@ -226,13 +218,13 @@ class Ontology:
         # Copy triple from one external graph to the ontology graph
         if (s, p, o) in graphToCopyFrom:
             for s, p, o in graphToCopyFrom.triples((s, p, o)):
-                if not (s, p, o) in self.graph:
+                if (s, p, o) not in self.graph:
                     self.add_triple(s, p, o)
 
     def add_triple(self, s, p, o):
         # Add triple to the graph
         if s is not None and p is not None and o is not None:
-            if (type(o) is Literal and o.value != '' and o.value != None) or (
+            if (type(o) is Literal and o.value != '' and o.value is not None) or (
                 type(o) is not Literal
             ):
                 if (s, p, o) not in self.graph:
@@ -247,7 +239,7 @@ class Ontology:
             if (
                 type(o_updated) is Literal
                 and o_updated.value != ''
-                and o_updated.value != None
+                and o_updated.value is not None
             ) or (type(o_updated) is not Literal):
                 self.graph.set((s, p, o_updated))
                 # if (s, p, o_origin) in self.graph:
@@ -301,7 +293,7 @@ class Ontology:
         elif isinstance(valueLiteral, np.ndarray):
             # convert np.ndarray to list
             valueLiteral = valueLiteral.tolist()
-        if valueLiteral != None:
+        if valueLiteral is not None:
             if isinstance(valueLiteral, list):
                 for v in valueLiteral:
                     if v is None or v == 'null':
@@ -326,7 +318,7 @@ class Ontology:
         elif isinstance(valueLiteral, np.ndarray):
             # convert np.ndarray to list
             valueLiteral = valueLiteral.tolist()
-        if valueLiteral != None:
+        if valueLiteral is not None:
             if isinstance(valueLiteral, list):
                 for v in valueLiteral:
                     if v is None or v == 'null':

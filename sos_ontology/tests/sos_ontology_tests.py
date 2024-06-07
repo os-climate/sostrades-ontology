@@ -14,9 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from sos_ontology.core.sos_ontology import SoSOntology
-from os.path import dirname, join
 import json
+from os.path import dirname, join
+
+from sos_ontology.core.sos_ontology import SoSOntology
 
 parameter_usages_path = join(dirname(__file__), 'data', 'parameter_usages.json')
 with open(parameter_usages_path, 'r') as outfile:

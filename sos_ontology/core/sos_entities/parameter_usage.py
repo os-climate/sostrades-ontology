@@ -14,9 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from sos_ontology.core.sos_entities.sos_entity import SoSEntity
-from sos_ontology.core.sos_entities.parameter import Parameter
 from numpy import array_equal
+
+from sos_ontology.core.sos_entities.parameter import Parameter
+from sos_ontology.core.sos_entities.sos_entity import SoSEntity
 
 
 class ParameterUsage(SoSEntity):
