@@ -30,14 +30,10 @@ iniconfig==2.0.0
     # via pytest
 isodate==0.6.1
     # via rdflib
-itsdangerous==2.0.1
-    # via
-    #   -r ./sostrades-ontology/requirements.in
-    #   flask
-jinja2==3.0.1
-    # via
-    #   -r ./sostrades-ontology/requirements.in
-    #   flask
+itsdangerous==2.2.0
+    # via flask
+jinja2==3.1.4
+    # via flask
 jsonpickle==3.0.4
     # via -r ./sostrades-ontology/requirements.in
 markupsafe==2.1.5
