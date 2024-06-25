@@ -49,7 +49,7 @@ numpy==1.24.4
     #   table-logger
 openpyxl==3.0.7
     # via -r ./sostrades-ontology/requirements.in
-packaging==24.0
+packaging==24.1
     # via pytest
 pandas==2.2.2
     # via -r ./sostrades-ontology/requirements.in

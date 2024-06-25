@@ -41,6 +41,3 @@ sostrades-ontology depends on software with compatible licenses that are listed 
 
 `werkzeug (2.0.3) <https://werkzeug.palletsprojects.com/>`_
     BSD License
-
-`nose2 (0.9.1) <https://docs.nose2.io/>`_
-    BSD-2-Clause

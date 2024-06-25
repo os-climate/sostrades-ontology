@@ -15,10 +15,11 @@ See the License for the specific language governing permissions and
 limitations under the License.
 '''
 
-from sos_ontology.core.ontology import Ontology
-from sos_ontology.core.sos_terminology import SoSTerminology
 from rdflib import Literal
 from rdflib.namespace import OWL, RDF
+
+from sos_ontology.core.ontology import Ontology
+from sos_ontology.core.sos_terminology import SoSTerminology
 
 # function to transform any sos_ontology to sos_terminology
 

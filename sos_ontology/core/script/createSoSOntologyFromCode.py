@@ -23,8 +23,9 @@ import sys
 from os import environ, pathsep, system
 from os.path import dirname, join
 
-import sos_ontology
 from rdflib.namespace import Namespace
+
+import sos_ontology
 from sos_ontology.core.functions.ontology_to_terminology import ontology_to_terminology
 from sos_ontology.core.functions.sendGChatNotifications import sendGChatNotification
 from sos_ontology.core.ontology import Ontology

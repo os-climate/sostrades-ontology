@@ -27,7 +27,6 @@ from os.path import abspath, basename, dirname, isdir, isfile, join, splitext
 
 import git
 import pandas as pd
-
 from sostrades_core.execution_engine.execution_engine import ExecutionEngine
 from sostrades_core.sos_processes.processes_factory import SoSProcessFactory
 
@@ -925,7 +924,7 @@ class SoSCodeDataExtractor:
                             markdown_data = f.read()
 
                         # Find file reference in markdown file
-                        place_holder = f"!\\[(.*)\\]\\((.*)\\)"
+                        place_holder = "!\\[(.*)\\]\\((.*)\\)"
                         matches = re.finditer(place_holder, markdown_data)
 
                         images_base_64 = {}
