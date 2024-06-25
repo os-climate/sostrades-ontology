@@ -1,5 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
+Modifications on 2024/06/24 Copyright 2024 Capgemini
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -666,7 +667,7 @@ class SoSOntology(Ontology):
 
         # Go trough all parameters
         for parameter, parameterData in parameterItems.items():
-            if parameter not in parameterDict and parameterData['coupling'] == True:
+            if parameter not in parameterDict and parameterData['coupling']:
                 paramName = parameter.split('.')[-1]
                 instanceLabel = None
                 if scatterParameter is not None:
@@ -688,7 +689,7 @@ class SoSOntology(Ontology):
                         else:
                             parameterMetadata[attr] = value
                 parameterNodes.append(parameterMetadata)
-            if parameterData['coupling'] == False:
+            if not parameterData['coupling']:
                 totalPrivateParameters += 1
         return totalPrivateParameters
 
