@@ -11,7 +11,7 @@ numpy==1.24.4
 openpyxl==3.0.7
 pandas==2.2.2
 rdflib==5.0.0
-requests==2.31.0
+requests==2.32.3
 git+https://github.com/AleksTk/table-logger.git@v0.3.7  # table-logger==0.3.7 not released on pypi
 textdistance==4.2.0
 werkzeug==2.0.3
