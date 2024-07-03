@@ -30,7 +30,7 @@ sostrades-ontology depends on software with compatible licenses that are listed 
 `rdflib (5.0.0) <https://github.com/RDFLib/rdflib>`_
     BSD-3-Clause
 
-`requests (2.31.0) <https://requests.readthedocs.io>`_
+`requests (2.32.3) <https://requests.readthedocs.io>`_
     Apache 2.0
 
 `table-logger (0.3.6) <https://github.com/AleksTk/table-logger>`_
