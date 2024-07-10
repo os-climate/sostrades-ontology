@@ -1,6 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
-Modifications on 2024/06/07 Copyright 2024 Capgemini
+Modifications on 2024/06/07-2024/07/10 Copyright 2024 Capgemini
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -122,9 +122,10 @@ class Ontology:
     def attributesToDictString(self, attributes):
         attributesDict = {}
         for attributeName, attrDict in attributes.items():
-            attributeValue = []
-            for objectValue in attrDict['object']:
-                attributeValue.append(objectValue['label'])
+            attributeValue = [
+                objectValue['label']
+                for objectValue in attrDict['object']
+            ]
             attributesDict[attributeName] = attributeValue
         return attributesDict
 
