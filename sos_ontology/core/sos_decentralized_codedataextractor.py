@@ -1,6 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
-Modifications on 2022/11/29-2023/11/09 Copyright 2023 Capgemini
+Modifications on 2022/11/29-2024/07/10 Copyright 2023 Capgemini
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -179,22 +179,21 @@ class SoSCodeDataExtractor:
     def get_classes_from_parsing_code(self, file):
         # return the list of classes instantiated by the first declaration of
         # function in a Python file
-        classes = []
         try:
             with open(file=file, mode="r", encoding="utf-8", errors="ignore") as myfile:
                 data = myfile.read()
                 p = ast.parse(data)
-                for node in ast.walk(p):
-                    if isinstance(node, ast.ClassDef):
-                        classes.append(
-                            {
-                                "name": node.name,
-                                "type": [
-                                    n.id if hasattr(n, "id") else n.attr
-                                    for n in node.bases
-                                ],
-                            }
-                        )
+                classes = [
+                     {
+                        "name": node.name,
+                        "type": [
+                            n.id if hasattr(n, "id") else n.attr
+                            for n in node.bases
+                        ],
+                    }
+                    for node in ast.walk(p)
+                    if isinstance(node, ast.ClassDef)
+                ]
                 return classes
 
         except Exception as ex:
@@ -1276,11 +1275,10 @@ class SoSCodeDataExtractor:
                 )
 
             elif len(parameter.code_repositories) == 0:
-                parameter_code_repositories = []
-                for instance in parameter.instances_list:
-                    parameter_code_repositories.append(
-                        instance.sos_discipline.repository.label
-                    )
+                parameter_code_repositories = [
+                    instance.sos_discipline.repository.label
+                    for instance in parameter.instances_list
+                ]
                 parameter_code_repositories = list(
                     set(parameter_code_repositories))
                 no_parameter_info[parameter.id] = parameter_code_repositories
