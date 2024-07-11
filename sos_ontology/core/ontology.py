@@ -1,6 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
-Modifications on 2024/06/07-2024/07/10 Copyright 2024 Capgemini
+Modifications on 2024/06/07-2024/07/11 Copyright 2024 Capgemini
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
@@ -64,7 +64,7 @@ class Ontology:
 
     def load(self, path, onto_format):
         # Load ontology owl file
-        self.graph.load(path, format=onto_format)
+        self.graph.parse(path, format=onto_format)
         self.logger.info(
             f'Ontology {basename(path)} loaded with {len(self.graph)} triples'
         )
