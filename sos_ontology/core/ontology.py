@@ -64,7 +64,7 @@ class Ontology:
 
     def load(self, path, onto_format):
         # Load ontology owl file
-        self.graph.parse(path, format=onto_format)
+        self.graph.load(path, format=onto_format)
         self.logger.info(
             f'Ontology {basename(path)} loaded with {len(self.graph)} triples'
         )
