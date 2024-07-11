@@ -15,7 +15,7 @@ sostrades-ontology depends on software with compatible licenses that are listed 
 `numpy (1.24.4) <https://numpy.org>`_
     BSD License
 
-`openpyxl (3.0.7) <https://openpyxl.readthedocs.io>`_
+`openpyxl (3.1.5) <https://openpyxl.readthedocs.io>`_
     MIT
 
 `pandas (1.3.0) <https://pandas.pydata.org>`_
