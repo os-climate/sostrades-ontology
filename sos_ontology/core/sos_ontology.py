@@ -942,7 +942,7 @@ class SoSOntology(Ontology):
         creationDateTriple = [
             (
                 ontoURI,
-                DC.modified,
+                DC.date,
                 Literal(update_date, datatype=XSD.string),
                 self.graph,
             ),
@@ -2421,7 +2421,7 @@ class SoSOntology(Ontology):
             self.graph.value(ontoURI, OWL.versionIRI, None, default=None, any=True)
         )
         last_updated = str(
-            self.graph.value(ontoURI, DC.modified, None, default=None, any=True)
+            self.graph.value(ontoURI, DC.date, None, default=None, any=True)
         )
         general_information['description'] = description
         general_information['iri'] = str(ontoURI)
