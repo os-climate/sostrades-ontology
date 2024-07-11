@@ -33,5 +33,5 @@ sostrades-ontology depends on software with compatible licenses that are listed 
 `textdistance (4.6.2) <https://github.com/orsinium/textdistance>`_
     MIT
 
-`werkzeug (2.3.7) <https://werkzeug.palletsprojects.com/>`_
+`werkzeug (2.3.8) <https://werkzeug.palletsprojects.com/>`_
     BSD License
