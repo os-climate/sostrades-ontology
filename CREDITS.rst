@@ -3,17 +3,11 @@ External Dependencies
 
 sostrades-ontology depends on software with compatible licenses that are listed below.
 
-`Flask (1.1.1) <https://flask.palletsprojects.com/>`_
+`Flask (2.2.3) <https://flask.palletsprojects.com/>`_
     BSD License
-
-`jinja2 (3.0.1) <https://palletsprojects.com/p/jinja/>`_
-    BSD-3-Clause
 
 `gitpython (3.1.43) <https://github.com/gitpython-developers/GitPython>`_
     BSD
-
-`itsdangerous (2.0.1) <https://palletsprojects.com/p/itsdangerous/>`_
-    BSD-3-Clause
 
 `jsonpickle (3.0.4) <https://github.com/jsonpickle/jsonpickle>`_
     BSD License

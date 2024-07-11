@@ -2,10 +2,8 @@
 # sostrades_core
 
 # External libraries
-Flask==1.1.1
+Flask==2.2.3
 gitpython==3.1.43
-itsdangerous==2.0.1  # Necessary to be compatible with flask 1.1.1
-jinja2==3.0.1  # Necessary to be compatible with flask 1.1.1
 jsonpickle==3.0.4
 numpy==1.24.4
 openpyxl==3.0.7
@@ -14,7 +12,7 @@ rdflib==5.0.0
 requests==2.32.3
 git+https://github.com/AleksTk/table-logger.git@v0.3.7  # table-logger==0.3.7 not released on pypi
 textdistance==4.2.0
-werkzeug==2.0.3
+werkzeug==2.2.3
 
 # Development requirements
 pytest==7.4.3
