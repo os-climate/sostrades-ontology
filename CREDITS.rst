@@ -21,7 +21,7 @@ sostrades-ontology depends on software with compatible licenses that are listed 
 `pandas (2.2.2) <https://pandas.pydata.org>`_
     BSD License
 
-`rdflib (7.0.0) <https://github.com/RDFLib/rdflib>`_
+`rdflib (5.0.0) <https://github.com/RDFLib/rdflib>`_
     BSD-3-Clause
 
 `requests (2.32.3) <https://requests.readthedocs.io>`_
