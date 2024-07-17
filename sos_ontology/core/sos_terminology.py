@@ -1,6 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
-Modifications on 2024/05/16 Copyright 2024 Capgemini
+Modifications on 2024/05/16-2024/07/10 Copyright 2024 Capgemini
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -37,24 +37,25 @@ class SoSTerminology:
             self.workbook = openpyxl.load_workbook(xlFilePath)
 
     def get_sheet_headers(self, sheetName, columnsDict=None, maxColumn=0, stopAtNone=0):
-        headers = []
         sheet = self.workbook[sheetName]
         if maxColumn > 0 and maxColumn < sheet.max_column:
             lastColumn = maxColumn
         else:
             lastColumn = sheet.max_column
-        for column in sheet.iter_cols(1, lastColumn):
-            if stopAtNone == 0 or (stopAtNone == 1 and column[0].value is not None):
-                headers.append(column[0].value)
+        headers = [
+            column[0].value
+            for column in sheet.iter_cols(1, lastColumn)
+            if stopAtNone == 0 or (stopAtNone == 1 and column[0].value is not None)
+        ]
 
         if columnsDict is not None:
-            for columnId, columnDict in columnsDict.items():
+            for columnDict in columnsDict.values():
                 if columnDict['header'] not in headers:
                     print(
                         f'{columnDict["header"]} is defined as a header but is not found in the Excel sheet'
                     )
             columnsList = [
-                columnDict['header'] for columnId, columnDict in columnsDict.items()
+                columnDict['header'] for columnDict in columnsDict.values()
             ]
             for header in headers:
                 if header not in columnsList:
@@ -85,7 +86,7 @@ class SoSTerminology:
                     row_dict[headers[j]] = row[j]
                 if row[j] is not None and row[j] != '' and str(row[j])[0:1] != '=':
                     isNone = False
-            if isNone == False:
+            if not isNone:
                 if nameDictKey != '':
                     sheetDict[row[indexDictKey]] = row_dict
                 else:
@@ -246,11 +247,11 @@ class SoSTerminology:
             raise Exception(f"Unhandled format type {formatType}")
 
         # Value must be one of
-        # {‘containsText’, ‘endsWith’, ‘colorScale’,
-        # ‘notContainsText’, ‘containsBlanks’ = 'LEN(TRIM(B2))=0'’, ‘notContainsBlanks = ['LEN(TRIM(B2))>0'],
-        # ‘cellIs’, ‘iconSet’, ‘uniqueValues’, ‘expression’, ‘containsErrors’,
-        #  ‘timePeriod’, ‘notContainsErrors’, ‘aboveAverage’, ‘top10’, ‘duplicateValues’,
-        # ‘dataBar’, ‘beginsWith’}
+        # {'containsText', 'endsWith', 'colorScale',
+        # 'notContainsText', 'containsBlanks' = 'LEN(TRIM(B2))=0'', 'notContainsBlanks = ['LEN(TRIM(B2))>0'],
+        # 'cellIs', 'iconSet', 'uniqueValues', 'expression', 'containsErrors',
+        # 'timePeriod', 'notContainsErrors', 'aboveAverage', 'top10', 'duplicateValues',
+        # 'dataBar', 'beginsWith'}
 
         sheet.conditional_formatting.add(rangeString, rule)
 
