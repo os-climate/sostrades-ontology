@@ -1147,6 +1147,16 @@ class SoSCodeDataExtractor:
                             if repo.head.is_detached:
                                 branch_name = 'detached'
                                 commit = repo.head.commit
+                                # get tag version (format v0.0.0)
+                                tags = [tag.name for tag in repo.tags if tag.name.startswith('v') and tag.commit == commit]
+                                if len(tags)>0:
+                                    def convert_version(version:str)->list[int]:
+                                        return [int(part) for part in version.strip('v').split('.')]
+
+                                    # sort versions
+                                    sorted_tags = sorted(tags, key=convert_version)
+                                    
+                                    branch_name = sorted_tags[-1]
                             else:
                                 branch_name = repo.active_branch.name
                                 commit = repo.active_branch.commit
