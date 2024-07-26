@@ -20,7 +20,7 @@ limitations under the License.
 
 import logging
 import sys
-from os import environ, pathsep, system, name
+from os import environ, pathsep, system
 from os.path import dirname, join
 
 from rdflib.namespace import Namespace
