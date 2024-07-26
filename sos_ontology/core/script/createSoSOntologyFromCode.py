@@ -20,7 +20,7 @@ limitations under the License.
 
 import logging
 import sys
-from os import environ, pathsep, system
+from os import environ, pathsep, system, name
 from os.path import dirname, join
 
 from rdflib.namespace import Namespace
@@ -174,7 +174,10 @@ if len(PYTHONPATH_list) > 0:
         full_log_json_path=pathsDict['ontologyCreationLogs'],
     )
 
-    system('cat output_log.txt')
+    # Display output_log.txt file
+    with open('output_log.txt', 'r') as file:
+        content = file.read()
+        print(content)
 
     logging.disable(logging.INFO)
 
