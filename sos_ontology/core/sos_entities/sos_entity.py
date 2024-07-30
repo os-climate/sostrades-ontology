@@ -21,22 +21,16 @@ class SoSEntity:
         self.label = label
 
 
-class SoSEntityList:
+class SoSEntityDict:
     def __init__(self) -> None:
-        self.sos_entity_list = []
-        self.sos_entity_ids = set()
+        self.sos_entity_dict = {}
 
     def add(self, entity) -> None:
-        if entity.id not in self.sos_entity_ids:
-            self.sos_entity_list.append(entity)
-            self.sos_entity_ids.add(entity.id)
+        if entity.id not in self.sos_entity_dict:
+            self.sos_entity_dict[entity.id] = entity
 
     def get(self, id: str):
-        if id in self.sos_entity_ids:
-            for entity in self.sos_entity_list:
-                if entity.id == id:
-                    return entity
-        return None
+        return self.sos_entity_dict.get(id, None)
 
     def len(self):
-        return len(self.sos_entity_list)
+        return len(self.sos_entity_dict)

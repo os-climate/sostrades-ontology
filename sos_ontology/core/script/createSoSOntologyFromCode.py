@@ -23,6 +23,10 @@ import sys
 from os import environ, pathsep
 from os.path import dirname, join
 
+import cProfile
+import pstats
+import io
+
 from rdflib.namespace import Namespace
 
 import sos_ontology
@@ -33,6 +37,11 @@ from sos_ontology.core.sos_decentralized_codedataextractor import SoSCodeDataExt
 from sos_ontology.core.sos_ontology import SoSOntology
 from sos_ontology.core.sos_terminology import SoSTerminology
 from sos_ontology.core.sos_toolbox import SoSToolbox
+
+PROFILING = False
+if PROFILING:
+    profiler = cProfile.Profile()
+    profiler.enable()
 
 webhookURL = None
 platform = None
@@ -234,3 +243,12 @@ if webhookURL is not None and BUILD_URL is not None:
     ]
 
     sendGChatNotification(webhook_url=webhookURL, textMessage=None, cards=cards)
+
+if PROFILING:
+    profiler.disable()
+    profiling_output = io.StringIO()
+    stats = pstats.Stats(profiler, stream=profiling_output)
+    stats.sort_stats(pstats.SortKey.CUMULATIVE)
+    stats.print_stats()
+    with open('profiling.txt', 'w+') as f:
+        f.write(profiling_output.getvalue())
