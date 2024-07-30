@@ -18,14 +18,13 @@ limitations under the License.
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+import cProfile
+import io
 import logging
+import pstats
 import sys
 from os import environ, pathsep
 from os.path import dirname, join
-
-import cProfile
-import pstats
-import io
 
 from rdflib.namespace import Namespace
 
