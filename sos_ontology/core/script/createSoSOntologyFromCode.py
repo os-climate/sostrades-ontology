@@ -18,9 +18,12 @@ limitations under the License.
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+import cProfile
+import io
 import logging
+import pstats
 import sys
-from os import environ, pathsep, system
+from os import environ, pathsep
 from os.path import dirname, join
 
 from rdflib.namespace import Namespace
@@ -33,6 +36,11 @@ from sos_ontology.core.sos_decentralized_codedataextractor import SoSCodeDataExt
 from sos_ontology.core.sos_ontology import SoSOntology
 from sos_ontology.core.sos_terminology import SoSTerminology
 from sos_ontology.core.sos_toolbox import SoSToolbox
+
+PROFILING = False
+if PROFILING:
+    profiler = cProfile.Profile()
+    profiler.enable()
 
 webhookURL = None
 platform = None
@@ -174,7 +182,10 @@ if len(PYTHONPATH_list) > 0:
         full_log_json_path=pathsDict['ontologyCreationLogs'],
     )
 
-    system('cat output_log.txt')
+    # Display output_log.txt file
+    with open('output_log.txt', 'r') as file:
+        content = file.read()
+        print(content)
 
     logging.disable(logging.INFO)
 
@@ -231,3 +242,12 @@ if webhookURL is not None and BUILD_URL is not None:
     ]
 
     sendGChatNotification(webhook_url=webhookURL, textMessage=None, cards=cards)
+
+if PROFILING:
+    profiler.disable()
+    profiling_output = io.StringIO()
+    stats = pstats.Stats(profiler, stream=profiling_output)
+    stats.sort_stats(pstats.SortKey.CUMULATIVE)
+    stats.print_stats()
+    with open('profiling.txt', 'w+') as f:
+        f.write(profiling_output.getvalue())
