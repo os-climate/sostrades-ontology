@@ -2,7 +2,7 @@
 # sostrades_core
 
 # External libraries
-Flask==2.3.3
+Flask==3.0.3
 gitpython==3.1.43
 jsonpickle==3.2.2
 numpy==1.24.4
@@ -12,7 +12,7 @@ rdflib==5.0.0
 requests==2.32.3
 git+https://github.com/AleksTk/table-logger.git@v0.3.7  # table-logger==0.3.7 not released on pypi
 textdistance==4.6.2
-werkzeug==2.3.8
+werkzeug==3.0.3
 
 # Development requirements
 # breaking change in 8.2.0 https://docs.pytest.org/en/stable/changelog.html#pytest-8-2-0-2024-04-27
