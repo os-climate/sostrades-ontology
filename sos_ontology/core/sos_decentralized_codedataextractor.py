@@ -35,7 +35,7 @@ from sos_ontology.core.sos_entities.parameter import Parameter
 from sos_ontology.core.sos_entities.parameter_usage import ParameterUsage
 from sos_ontology.core.sos_entities.sos_coupling import SoSCoupling
 from sos_ontology.core.sos_entities.sos_discipline import SoSDiscipline
-from sos_ontology.core.sos_entities.sos_entity import SoSEntityList
+from sos_ontology.core.sos_entities.sos_entity import SoSEntityDict
 from sos_ontology.core.sos_entities.sos_process import SoSProcess
 from sos_ontology.core.sos_entities.sos_process_repository import SoSProcessRepository
 from sos_ontology.core.sos_entities.sos_usecase import SoSUsecase
@@ -95,14 +95,14 @@ class SoSCodeDataExtractor:
         ]
         self.logs_dict = logs_dict
 
-        self.code_repositories = SoSEntityList()
-        self.sos_process_repositories = SoSEntityList()
-        self.sos_processes = SoSEntityList()
-        self.sos_disciplines = SoSEntityList()
-        self.parameters = SoSEntityList()
-        self.parameters_usages = SoSEntityList()
-        self.usecases = SoSEntityList()
-        self.couplings = SoSEntityList()
+        self.code_repositories = SoSEntityDict()
+        self.sos_process_repositories = SoSEntityDict()
+        self.sos_processes = SoSEntityDict()
+        self.sos_disciplines = SoSEntityDict()
+        self.parameters = SoSEntityDict()
+        self.parameters_usages = SoSEntityDict()
+        self.usecases = SoSEntityDict()
+        self.couplings = SoSEntityDict()
         self.current_code_repo = None
         self.current_sos_discipline = None
         self.current_process_repository = None
@@ -1147,6 +1147,16 @@ class SoSCodeDataExtractor:
                             if repo.head.is_detached:
                                 branch_name = 'detached'
                                 commit = repo.head.commit
+                                # get tag version (format v0.0.0)
+                                tags = [tag.name for tag in repo.tags if tag.name.startswith('v') and tag.commit == commit]
+                                if len(tags)>0:
+                                    def convert_version(version:str)->list[int]:
+                                        return [int(part) for part in version.strip('v').split('.')]
+
+                                    # sort versions
+                                    sorted_tags = sorted(tags, key=convert_version)
+                                    
+                                    branch_name = sorted_tags[-1]
                             else:
                                 branch_name = repo.active_branch.name
                                 commit = repo.active_branch.commit
@@ -1163,6 +1173,9 @@ class SoSCodeDataExtractor:
                                         f'Code Repository {repo_name} has not been updated since last Ontology update.'
                                     )
 
+                            # Remove trailing .git
+                            if url.endswith(".git"):
+                                url = url[:-4]
                             code_repo_dict[repo_name] = {
                                 URL: url,
                                 BRANCH: branch_name,
@@ -1266,7 +1279,7 @@ class SoSCodeDataExtractor:
 
     def generate_full_extraction_logs(self):
         no_parameter_info = {}
-        for parameter in self.parameters.sos_entity_list:
+        for parameter in self.parameters.sos_entity_dict.values():
             if len(parameter.code_repositories) > 1:
                 self.add_to_log(
                     category="multiple_parameters_info",

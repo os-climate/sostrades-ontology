@@ -951,7 +951,7 @@ class SoSOntology(Ontology):
         self.add_triples_list(creationDateTriple)
 
     def createCodeRepositoriesTriples(self, code_repositories):
-        for code_repository in code_repositories.sos_entity_list:
+        for code_repository in code_repositories.sos_entity_dict.values():
 
             # Create the discipline URI
             codeRepoURI = self.create_new_URI(
@@ -1029,7 +1029,7 @@ class SoSOntology(Ontology):
             self.add_triples_list(codeRepositoriesTriples)
 
     def createSoSProcessRepositoriesTriples(self, sos_process_repositories):
-        for sos_process_repository in sos_process_repositories.sos_entity_list:
+        for sos_process_repository in sos_process_repositories.sos_entity_dict.values():
 
             # Create the discipline URI
             processRepoURI = self.create_new_URI(
@@ -1100,7 +1100,7 @@ class SoSOntology(Ontology):
             self.add_triples_list(codeRepositoriesTriples)
 
     def createSoSDisciplinesTriples(self, sos_disciplines):
-        for sos_discipline in sos_disciplines.sos_entity_list:
+        for sos_discipline in sos_disciplines.sos_entity_dict.values():
 
             # Create the sosDiscipline URI
             sosDisciplineURI = self.create_new_URI(
@@ -1335,7 +1335,7 @@ class SoSOntology(Ontology):
             self.add_triples_list(sosDisciplineTriples)
 
     def createUsecasesTriples(self, usecases):
-        for usecase in usecases.sos_entity_list:
+        for usecase in usecases.sos_entity_dict.values():
 
             # Create the usecase URI
             usecaseURI = self.create_new_URI(
@@ -1374,7 +1374,7 @@ class SoSOntology(Ontology):
             self.add_triples_list(usecaseTriples)
 
     def createCouplingsTriples(self, couplings):
-        for usecase in couplings.sos_entity_list:
+        for usecase in couplings.sos_entity_dict.values():
 
             # Create the usecase URI
             couplingURI = self.create_new_URI(
@@ -1451,7 +1451,7 @@ class SoSOntology(Ontology):
 
     def createSoSProcessTriples(self, sos_processes):
 
-        for sos_process in sos_processes.sos_entity_list:
+        for sos_process in sos_processes.sos_entity_dict.values():
             # Create the process URI
             processURI = self.create_new_URI(
                 f'{SoSOntology.BASE_URI}sos_process_', sos_process.id
@@ -1549,7 +1549,7 @@ class SoSOntology(Ontology):
 
     def createLinksBetweenSoSProcessAndSoSDisciplineTriples(self, sos_processes):
 
-        for sos_process in sos_processes.sos_entity_list:
+        for sos_process in sos_processes.sos_entity_dict.values():
             processDisciplineLinkTriples = []
 
             # retrieve the process URI
@@ -1574,7 +1574,7 @@ class SoSOntology(Ontology):
 
     def createParametersAndUsagesTriples(self, parameters):
 
-        for parameter in parameters.sos_entity_list:
+        for parameter in parameters.sos_entity_dict.values():
             # Create the parameter URI
             parameterURI = self.create_new_URI(
                 f'{SoSOntology.BASE_URI}parameter_', parameter.id
