@@ -24,6 +24,7 @@ from importlib import import_module
 from logging import Logger
 from os import environ, listdir, pathsep, scandir, sep
 from os.path import abspath, basename, dirname, isdir, isfile, join, splitext
+from pathlib import Path
 
 import git
 import pandas as pd
@@ -1183,7 +1184,7 @@ class SoSCodeDataExtractor:
                                 COMMITTED_DATE: commited_date.strftime(
                                     "%d/%m/%Y %H:%M:%S"
                                 ),
-                                REPO_PATH: library_path,
+                                REPO_PATH: str(Path(library_path)), # Allow to mixed / and \ on windows path of PYTHONPATH. Nothing Change for linux 
                             }
 
                         except git.exc.InvalidGitRepositoryError:  # type: ignore
