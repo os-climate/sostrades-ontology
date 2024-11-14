@@ -1106,6 +1106,11 @@ class SoSCodeDataExtractor:
         INFO_REGEXP = ':\/\/.*@'
         INFO_REPLACE = '://'
 
+        # Regular expression when it is a remote repostory with ssh
+        SSH_REGEX =  r'^[a-zA-Z]+@[a-zA-Z0-9.-]+:'
+        SSH_REGEX_TO_REPLACE = r'^.*@'
+        SSH_REGEX_REPLACE = 'https://'
+
         BRANCH = 'branch'
         COMMIT = 'commit'
         URL = 'url'
@@ -1177,6 +1182,10 @@ class SoSCodeDataExtractor:
                             # Remove trailing .git
                             if url.endswith(".git"):
                                 url = url[:-4]
+                            # Verify if we are dealing with ssh remote repository and replace by https://
+                            if bool(re.match(SSH_REGEX, url)):
+                                url = url.replace(":", "/")
+                                url = re.sub(SSH_REGEX_TO_REPLACE, SSH_REGEX_REPLACE, url)
                             code_repo_dict[repo_name] = {
                                 URL: url,
                                 BRANCH: branch_name,
