@@ -1140,16 +1140,21 @@ class SoSCodeDataExtractor:
                                 path=library_path, search_parent_directories=True
                             )
 
-                            # Retrieve url and remove connection info from it
-                            raw_url = repo.remotes.origin.url
-                            url = re.sub(INFO_REGEXP, INFO_REPLACE, raw_url)
-                            try:
-                                repo_name = url.split('.git')[0].split('/')[-1]
-                            except:
-                                print(
-                                    f'Impossible to retrieve repo name from url {url}'
-                                )
-                                repo_name = url
+                            # there is an url
+                            if len(repo.remotes) > 0:
+                                # Retrieve url and remove connection info from it
+                                raw_url = repo.remotes.origin.url
+                                url = re.sub(INFO_REGEXP, INFO_REPLACE, raw_url)
+                                try:
+                                    repo_name = url.split('.git')[0].split('/')[-1]
+                                except:
+                                    print(
+                                        f'Impossible to retrieve repo name from url {url}'
+                                    )
+                                    repo_name = url
+                            else:
+                                url = ""
+                                repo_name = basename(library_path)
                             if repo.head.is_detached:
                                 branch_name = 'detached'
                                 commit = repo.head.commit
@@ -1197,10 +1202,10 @@ class SoSCodeDataExtractor:
                             }
 
                         except git.exc.InvalidGitRepositoryError:  # type: ignore
-                            logger.debug(
+                            logger.error(
                                 f'{library_path} folder is not a git folder')
                         except Exception as error:
-                            logger.debug(
+                            logger.error(
                                 f'{library_path} folder generates the following error while accessing with git:\n {str(error)}'
                             )
 
