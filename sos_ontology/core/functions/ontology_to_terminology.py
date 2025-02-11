@@ -58,13 +58,13 @@ def ontology_to_terminology(
 
         # each OWL class will have dedicated sheet in the excel file
         # get the list of class in the ontology
-        classesDict, classesAttributes = retrieve_classes_dict_and_attributes(
+        classes_dict, classesAttributes = retrieve_classes_dict_and_attributes(
             onto, xl, OWL.Class
         )
 
         headers = list(classesAttributes.keys())
         sheetsToCreate = write_to_sheet(
-            xl, classesDict, headers, 'OWL Classes', isClasses=True
+            xl, classes_dict, headers, 'OWL Classes', is_classes=True
         )
 
         # loop through the sheets to create and fill them
@@ -77,7 +77,7 @@ def ontology_to_terminology(
             # write sheet
             headers = list(individualsAttributes.keys())
             write_to_sheet(
-                xl, individualsDict, headers, sheetClass['label'], isClasses=False
+                xl, individualsDict, headers, sheetClass['label'], is_classes=False
             )
 
         #  Save excel file
@@ -85,83 +85,82 @@ def ontology_to_terminology(
 
 
 def retrieve_classes_dict_and_attributes(onto, xl, typeURI):
-    classDict = {}
+    class_dict = {}
     attributesDict = {'uri': {}, 'label': {}}
     activateInstances = False
     for classURI in onto.graph.subjects(RDF.type, typeURI):
         instances = onto.graph.subjects(RDF.type, classURI)
-        instancesList = list(instances)
+        instances_list = list(instances)
         attributes = getSubjectAttributes(onto, classURI)
         attributesDict.update(attributes)
-        classDict[classURI] = {'uri': classURI, 'label': onto.label(classURI)}
+        class_dict[classURI] = {'uri': classURI, 'label': onto.label(classURI)}
         for attribute, attrValue in attributes.items():
             if attribute not in ['uri', 'label']:
-                objectLabels = [o['label'] for o in attrValue['object']]
-                # attributeValue = ',\n'.join(objectLabels)
-                attributeValue = xl.array_to_string(objectLabels)
+                object_labels = [o['label'] for o in attrValue['object']]
+                attribute_value = xl.array_to_string(object_labels)
 
-                classDict[classURI][f'{attribute}'] = attributeValue
-        if len(instancesList) > 0:
+                class_dict[classURI][f'{attribute}'] = attribute_value
+        if len(instances_list) > 0:
             activateInstances = True
-            classDict[classURI]['instances_quantity'] = len(instancesList)
-            classDict[classURI]['instances_list'] = xl.array_to_string(instancesList)
+            class_dict[classURI]['instances_quantity'] = len(instances_list)
+            class_dict[classURI]['instances_list'] = xl.array_to_string(instances_list)
     if activateInstances:
         attributesDict['instances_quantity'] = {}
         attributesDict['instances_list'] = {}
-    return classDict, attributesDict
+    return class_dict, attributesDict
 
 
 def getSubjectAttributes(onto, subject):
     attributes = {}
-    for (predicateURI, objectURI) in onto.graph.predicate_objects(subject):
-        predicatelabel = onto.label(predicateURI)
-        predicateType = onto.value(predicateURI, RDF.type, None, 'label')
-        objectType = onto.value(objectURI, RDF.type, None, 'label')
-        if isinstance(objectURI, Literal):
-            objectLabel = objectURI.value
+    for (predicateURI, object_uri) in onto.graph.predicate_objects(subject):
+        predicate_label = onto.label(predicateURI)
+        predicate_type = onto.value(predicateURI, RDF.type, None, 'label')
+        object_type = onto.value(object_uri, RDF.type, None, 'label')
+        if isinstance(object_uri, Literal):
+            object_label = object_uri.value
         else:
-            objectLabel = onto.label(objectURI)
-        if predicatelabel in attributes:
-            attributes[predicatelabel]['object'].append(
-                {'label': objectLabel, 'type': objectType, 'uri': objectURI}
+            object_label = onto.label(object_uri)
+        if predicate_label in attributes:
+            attributes[predicate_label]['object'].append(
+                {'label': object_label, 'type': object_type, 'uri': object_uri}
             )
         else:
-            attributes[predicatelabel] = {
+            attributes[predicate_label] = {
                 'predicate': {
-                    'label': predicatelabel,
-                    'type': predicateType,
+                    'label': predicate_label,
+                    'type': predicate_type,
                     'uri': predicateURI,
                 },
                 'object': [
-                    {'label': objectLabel, 'type': objectType, 'uri': objectURI}
+                    {'label': object_label, 'type': object_type, 'uri': object_uri}
                 ],
             }
     return attributes
 
 
-def write_to_sheet(xl, elementsDict, headers, sheetName, isClasses=False):
+def write_to_sheet(xl, elements_dict, headers, sheet_name, is_classes=False):
     # create the  sheet
-    sheet = xl.create_sheet(f'{sheetName}', len(xl.workbook.sheetnames))
+    sheet = xl.create_sheet(f'{sheet_name}', len(xl.workbook.sheetnames))
     xl.write_headers(sheet, headers)
-    rowCount = 2
-    sheetsToCreate = []
-    for rowDict in elementsDict.values():
-        for columnId, columnValue in rowDict.items():
-            col = headers.index(columnId) + 1
+    row_count = 2
+    sheets_to_create = []
+    for rowDict in elements_dict.values():
+        for column_id, column_value in rowDict.items():
+            col = headers.index(column_id) + 1
             try:
-                cell = sheet.cell(column=col, row=rowCount, value=columnValue)
+                sheet.cell(column=col, row=row_count, value=column_value)
             except:
-                print(f'Impossible to write value {columnValue}, it will be ignored')
-        rowCount += 1
-        if isClasses:
+                print(f'Impossible to write value {column_value}, it will be ignored')
+        row_count += 1
+        if is_classes:
             if rowDict.get('instances_quantity', 0) > 0:
-                sheetsToCreate.append(
+                sheets_to_create.append(
                     {'uri': rowDict['uri'], 'label': rowDict['label']}
                 )
 
     # Add an Excel Table to the terminology sheet
-    xl.add_xl_table(f'{sheetName}', sheet)
+    xl.add_xl_table(f'{sheet_name}', sheet)
 
     # Set columns width
     xl.set_columns_width(sheet)
-    return sheetsToCreate
+    return sheets_to_create
