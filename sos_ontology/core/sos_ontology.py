@@ -26,7 +26,6 @@ from rdflib.namespace import DC, OWL, RDF, RDFS, SKOS, XSD, split_uri
 import sos_ontology
 from sos_ontology.core.ontology import Ontology
 from sos_ontology.rest_api.models.model_status import ModelStatus
-from sos_ontology.rest_api.utils import cprofile_function
 
 '''
 Creating an SoS_Ontology class that uses the Ontology class and implement it for the SoS Ontology
@@ -379,7 +378,6 @@ class SoSOntology(Ontology):
 
         return result
 
-    @cprofile_function()
     def get_study_ontology_data(self, study_ontology_request: dict):
         """methods that retrieves ontology data for a given input list of disciplines and parameter usages
 
