@@ -54,6 +54,7 @@ class SoSOntology(Ontology):
 
         return SoSOntology.__instance
 
+    @cprofile_function()
     def __init__(self, version=1.1, source='file'):
         """
         Constructor
@@ -379,7 +380,7 @@ class SoSOntology(Ontology):
 
         return result
 
-    @cprofile_function
+    @cprofile_function()
     def get_study_ontology_data(self, study_ontology_request: dict):
         """methods that retrieves ontology data for a given input list of disciplines and parameter usages
 
