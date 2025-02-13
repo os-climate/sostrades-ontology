@@ -54,7 +54,6 @@ class SoSOntology(Ontology):
 
         return SoSOntology.__instance
 
-    @cprofile_function()
     def __init__(self, version=1.1, source='file'):
         """
         Constructor
