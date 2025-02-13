@@ -24,7 +24,7 @@ from flask import Flask, jsonify, make_response, request, send_file, session
 from werkzeug.exceptions import BadRequest
 
 from sos_ontology.core.sos_ontology import SoSOntology
-from sos_ontology.rest_api.utils import copy_file
+from sos_ontology.rest_api.utils import copy_file, cprofile_function
 
 
 def random_string_for_secret_key():
@@ -137,6 +137,7 @@ def get_general_information():
 
 
 @app.route('/api/ontology/v1/study', methods=['POST'])
+@cprofile_function
 def load_study_ontology_data():
     """
     Methods that retrieve disciplines and parameter usage ontology data
