@@ -75,6 +75,7 @@ class SoSOntology(Ontology):
                 self.SOS = Namespace(SoSOntology.BASE_URI)
 
                 load_path = self.ontology_owl_file_path
+                self.logger.info(f"Loading ontology from path {load_path}")
 
                 if isfile(load_path):
                     self.load(path=load_path, onto_format='xml')
