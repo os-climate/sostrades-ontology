@@ -2380,7 +2380,7 @@ class SoSOntology(Ontology):
 
                 input_parameters.append(parameter_info)
             discipline_info['input_parameters'] = input_parameters
-            print(discipline_info)
+            
             disciplineList.append(discipline_info)
 
         discipline_list_sorted = sorted(
