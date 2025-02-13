@@ -174,12 +174,11 @@ class Ontology:
             return valueUri
 
     def get_object_values_dict(self, subjectURI, values_dict):
-        result_dict = deepcopy(values_dict)
-        for key, predicate in values_dict.items():
-            if predicate is not None and isinstance(predicate, URIRef):
-                result_dict[key] = self.value(
-                    s=subjectURI, p=predicate, o=None, returnType='value'
-                )
+        result_dict = {
+            key: self.value(s=subjectURI, p=predicate, o=None, returnType='value')
+            for key, predicate in values_dict.items()
+            if predicate is not None and isinstance(predicate, URIRef)
+        }
         return result_dict
 
     def create_new_URI(self, namespace, URIstring):
