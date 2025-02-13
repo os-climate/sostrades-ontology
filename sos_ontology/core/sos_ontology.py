@@ -67,37 +67,7 @@ class SoSOntology(Ontology):
 
         Ontology.__init__(self)
 
-        environ_dict = dict(environ)
-        ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
-        if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
-            self.ontology_owl_file_path = join(
-                ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl'
-            )
-            self.ontology_excel_file_path = join(
-                ONTOLOGY_FOLDER, 'SoS_Trades_Terminology_ABox.xlsx'
-            )
-            self.ontology_log_file_path = join(
-                ONTOLOGY_FOLDER, 'ontologyCreationLogs.json'
-            )
-        else:
-            self.ontology_owl_file_path = join(
-                dirname(sos_ontology.__file__),
-                'data',
-                'sos_ontology',
-                'SoSTrades_Ontology_ABox_Decentralized.owl',
-            )
-            self.ontology_excel_file_path = join(
-                dirname(sos_ontology.__file__),
-                'data',
-                'terminology',
-                'SoS_Trades_Terminology_ABox.xlsx',
-            )
-            self.ontology_log_file_path = join(
-                dirname(sos_ontology.__file__),
-                'data',
-                'logs',
-                'ontologyCreationLogs.json',
-            )
+        self.ontology_owl_file_path, self.ontology_excel_file_path, self.ontology_log_file_path = SoSOntology.get_files_paths()
 
         # Load the SoS ontology
         if source == 'file':
@@ -128,6 +98,42 @@ class SoSOntology(Ontology):
                 )
 
         self.incoherences = {}
+
+    @staticmethod
+    def get_files_paths():
+        """
+        Gets the ontology files paths 
+        
+        Returns tuple:
+            ontology_owl_file_path, ontology_excel_file_path, ontology_log_file_path
+        """
+        environ_dict = dict(environ)
+        ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
+        if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
+            return join(
+                ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl'
+            ), join(
+                ONTOLOGY_FOLDER, 'SoS_Trades_Terminology_ABox.xlsx'
+            ), join(
+                ONTOLOGY_FOLDER, 'ontologyCreationLogs.json'
+            )
+        else:
+            return join(
+                dirname(sos_ontology.__file__),
+                'data',
+                'sos_ontology',
+                'SoSTrades_Ontology_ABox_Decentralized.owl',
+            ), join(
+                dirname(sos_ontology.__file__),
+                'data',
+                'terminology',
+                'SoS_Trades_Terminology_ABox.xlsx',
+            ), join(
+                dirname(sos_ontology.__file__),
+                'data',
+                'logs',
+                'ontologyCreationLogs.json',
+            )
 
     def get_parameter_metadata(self, parameterString):
         # methods which returns all metadata for a given parameter name through

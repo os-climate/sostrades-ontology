@@ -16,12 +16,15 @@ limitations under the License.
 '''
 
 import logging
+import os
+import tempfile
 import time
 
 from flask import Flask, jsonify, make_response, request, send_file, session
 from werkzeug.exceptions import BadRequest
 
 from sos_ontology.core.sos_ontology import SoSOntology
+from sos_ontology.rest_api.utils import copy_file
 
 
 def random_string_for_secret_key():
@@ -43,6 +46,33 @@ def random_string_for_secret_key():
 
     return random.sample(all_characters, 32)
 
+
+# When in API mode, create a copy of the file in a tempoary copy of the ontology
+# So it can be loaded in parallel by several workers
+# Because rdflib does not allow parallel loading of the same file
+file_paths = SoSOntology.get_files_paths()
+
+ontology_owl_file_path, ontology_excel_file_path, ontology_log_file_path = file_paths
+
+# Create a temporary folder.
+temp_folder = tempfile.mkdtemp(prefix="ontology_temp_")
+
+# List of files to copy.
+files_to_copy = [
+    ontology_owl_file_path,
+    ontology_excel_file_path,
+    ontology_log_file_path
+]
+
+# Copy each file into the temporary folder.
+for file_path in files_to_copy:
+    if not os.path.exists(file_path):
+        raise Exception(f"File not found {file_path}")
+    dest_path = os.path.join(temp_folder, os.path.basename(file_path))
+    copy_file(file_path, dest_path)
+
+# Update the ONTOLOGY_FOLDER environment variable.
+os.environ['ONTOLOGY_FOLDER'] = temp_folder
 
 SoSOntology.instance()
 
