@@ -175,9 +175,12 @@ class Ontology:
 
     def get_object_values_dict(self, subjectURI, values_dict):
         result_dict = {
-            key: self.value(s=subjectURI, p=predicate, o=None, returnType='value')
+            key: (
+                self.value(s=subjectURI, p=predicate, o=None, returnType="value")
+                if predicate is not None and isinstance(predicate, URIRef)
+                else predicate
+            )
             for key, predicate in values_dict.items()
-            if predicate is not None and isinstance(predicate, URIRef)
         }
         return result_dict
 
