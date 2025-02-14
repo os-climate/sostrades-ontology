@@ -388,9 +388,7 @@ def retrieve_documentations():
 
 @app.route('/api/ontology/v1/download', methods=['GET'])
 def download_ontology_owl():
-    """
-    Methods that return the ontology owl to be downloaded
-    """
+    """Methods that return the ontology owl to be downloaded"""
     args = request.args
     if args is not None:
         filetype = args.get("filetype", None)
@@ -414,9 +412,7 @@ def download_ontology_owl():
 
 @app.route('/api/ontology/v1/download_logs', methods=['GET'])
 def download_ontology_logs():
-    """
-    Methods that return the ontology creation logs to be downloaded
-    """
+    """Methods that return the ontology creation logs to be downloaded"""
     ontology = SoSOntology.instance()
     path = ontology.ontology_log_file_path
 
@@ -566,6 +562,7 @@ def load_ontology_process_metadata_by_names():
 
 @app.route('/api/ontology/repository/<string:repository_identifier>', methods=['GET'])
 def load_ontology_repository_metadata(repository_identifier):
+    """Gets the repository metadata"""
     ontology = SoSOntology.instance()
 
     return make_response(
@@ -601,7 +598,7 @@ def load_ontology_repository_metadata_by_names():
 
 @app.route('/api/ontology/n2', methods=['POST'])
 def load_ontology_n2():
-
+    """Gets the n2 matrix"""
     treeView = request.json.get('treeview', None)
 
     missing_parameter = []
@@ -627,6 +624,7 @@ def load_ontology_n2():
     '/api/ontology/markdown_documentation/<string:element_identifier>', methods=['GET'],
 )
 def load_ontology_markdown_documentation(element_identifier):
+    """Gets the markdown documentation of the element"""
     ontology = SoSOntology.instance()
 
     return make_response(
@@ -636,17 +634,19 @@ def load_ontology_markdown_documentation(element_identifier):
 
 @app.route('/api/ping', methods=['GET'])
 def ping():
+    """Standard ping route"""
     return make_response(jsonify('pong'), 200)
 
 
 @app.before_request
 def before_request():
+    """Store time for after request handler to log information"""
     session[START_TIME] = time.time()
 
 
 @app.after_request
 def after_request(response):
-
+    """After request handler to log information"""
     duration = 0
     if START_TIME in session:
         duration = time.time() - session[START_TIME]

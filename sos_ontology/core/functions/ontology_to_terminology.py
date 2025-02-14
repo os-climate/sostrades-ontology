@@ -30,6 +30,7 @@ def ontology_to_terminology(
     loaded_terminology=None,
     terminology_file_path=None,
 ):
+    """Makes the terminology from the ontology"""
     onto = None
     xl = None
 
@@ -85,6 +86,7 @@ def ontology_to_terminology(
 
 
 def retrieve_classes_dict_and_attributes(onto, xl, typeURI):
+    """Retrieves the classes dict and attributes"""
     class_dict = {}
     attributesDict = {'uri': {}, 'label': {}}
     activateInstances = False
@@ -111,6 +113,7 @@ def retrieve_classes_dict_and_attributes(onto, xl, typeURI):
 
 
 def getSubjectAttributes(onto, subject):
+    """Gets the subject attributes"""
     attributes = {}
     for (predicateURI, object_uri) in onto.graph.predicate_objects(subject):
         predicate_label = onto.label(predicateURI)
@@ -139,6 +142,7 @@ def getSubjectAttributes(onto, subject):
 
 
 def write_to_sheet(xl, elements_dict, headers, sheet_name, is_classes=False):
+    """Writes elements_dict to excel file"""
     # create the  sheet
     sheet = xl.create_sheet(f'{sheet_name}', len(xl.workbook.sheetnames))
     xl.write_headers(sheet, headers)

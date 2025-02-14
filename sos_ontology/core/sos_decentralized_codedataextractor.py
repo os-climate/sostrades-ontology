@@ -46,9 +46,7 @@ from sos_ontology.core.sos_toolbox import SoSToolbox
 
 
 class SoSCodeDataExtractor:
-    """
-    Class to read and parse Python code to look for entities and links for the ontology
-    """
+    """Class to read and parse Python code to look for entities and links for the ontology"""
 
     def __init__(
             self,
@@ -56,9 +54,7 @@ class SoSCodeDataExtractor:
             logs_dict: dict = {},
             previous_code_repositories_traceability: dict = {},
     ):
-        """
-        Constructor
-        """
+        """Constructor"""
         self.toolbox = SoSToolbox()
         self.basepath = basepath
         self.exclusions_list = [

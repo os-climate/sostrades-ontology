@@ -29,14 +29,10 @@ from sos_ontology.core.sos_toolbox import SoSToolbox
 
 
 class Ontology:
-    """
-    Class to use an ontology
-    """
+    """Class to use an ontology"""
 
     def __init__(self):
-        """
-        Constructor
-        """
+        """Constructor"""
         # Retrieve logging system
         self.logger = logging.getLogger('SoS.Ontology')
 
@@ -51,9 +47,7 @@ class Ontology:
         bind(datatype=URIRef('http://qudt.org/schema/qudt/LatexString'), pythontype=str)
 
     def __del__(self):
-        """
-        Destructor
-        """
+        """Destructor"""
         self.graph.close()
 
     def add_namespace_dict(self, namespace_dict):

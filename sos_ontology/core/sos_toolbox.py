@@ -20,9 +20,7 @@ from table_logger import TableLogger
 
 
 class SoSToolbox:
-    """
-    Toolbox Class
-    """
+    """Toolbox Class"""
 
     def array_to_string(self, arrayToConvert):
         if arrayToConvert is not None:

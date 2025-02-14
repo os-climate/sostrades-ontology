@@ -24,14 +24,10 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 
 
 class SoSTerminology:
-    """
-    Class to use the SoS Terminology
-    """
+    """Class to use the SoS Terminology"""
 
     def __init__(self, xlFilePath, loadOrCreate='load'):
-        """
-        Constructor
-        """
+        """Constructor"""
         self.filePath = xlFilePath
         if loadOrCreate == 'load':
             self.workbook = openpyxl.load_workbook(xlFilePath)

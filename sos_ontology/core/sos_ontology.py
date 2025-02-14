@@ -38,9 +38,7 @@ End of documentation
 
 
 class SoSOntology(Ontology):
-    """
-    Class to use an SoS ontology
-    """
+    """Class to use an SoS ontology"""
 
     __instance = None
     BASE_URI = 'https://www.sostrades.org/ontology#'
@@ -54,9 +52,7 @@ class SoSOntology(Ontology):
         return SoSOntology.__instance
 
     def __init__(self, version=1.1, source='file'):
-        """
-        Constructor
-        """
+        """Constructor"""
         # Retrieve logging system
         self.logger = logging.getLogger('SoS.Ontology')
 
@@ -1903,9 +1899,7 @@ class SoSOntology(Ontology):
             print(f'SoS Ontology saved with {len(self.graph)} triples !')
 
     def get_markdown_documentation(self, identifier):
-        """
-        Method to retrive Markdown documentation as a string associated to a model or a process represented by the identifier
-        """
+        """Method to retrive Markdown documentation as a string associated to a model or a process represented by the identifier"""
         markdown_documentation = ''
 
         # we first need to find the entity associated to the identifier

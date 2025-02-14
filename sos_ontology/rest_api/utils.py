@@ -31,9 +31,7 @@ def copy_file(src_path, dst_path):
         dst_file.write(src_file.read())
 
 def time_function(logger: logging.Logger | None = None):
-    """
-    This decorator times another function and logs time spend in logger given as argument (if any)
-    """
+    """This decorator times another function and logs time spend in logger given as argument (if any)"""
 
     def inner(func):
         def wrapper_function(*args, **kwargs):
@@ -53,9 +51,7 @@ def time_function(logger: logging.Logger | None = None):
     return inner
 
 def cprofile_function(logger: logging.Logger | None = None):
-    """
-    This decorator cprofiles another function and logs result in logger given as argument (if any)
-    """
+    """This decorator cprofiles another function and logs result in logger given as argument (if any)"""
 
     def inner(func):
         def wrapper_function(*args, **kwargs):
