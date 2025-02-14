@@ -17,7 +17,6 @@ limitations under the License.
 
 
 import logging
-from copy import deepcopy
 from os.path import basename
 
 import numpy as np
