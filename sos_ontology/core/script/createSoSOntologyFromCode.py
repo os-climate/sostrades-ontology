@@ -63,7 +63,7 @@ except Exception:
     print('Impossible to retrieve Python Path. Stopping script')
 
 # retrieve path to current SoSOntology
-ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
+ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER')
 if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
     SoSaBox_current_path = join(
         ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl',
@@ -101,7 +101,7 @@ if len(PYTHONPATH_list) > 0:
     logs_dict = {}
 
     # retrieve previous traceability
-    previous_extraction_logs_path = pathsDict.get('ontologyCreationLogs', None)
+    previous_extraction_logs_path = pathsDict.get('ontologyCreationLogs')
     previous_extraction_logs = toolbox.load_json(
         json_file_path=previous_extraction_logs_path, entity='Previous Logs',
     )
@@ -205,10 +205,7 @@ if webhookURL is not None and BUILD_URL is not None:
     with open('short_log.txt') as short_log_file:
         shortLog = short_log_file.read()
 
-    if platform is None:
-        platform = ''
-    else:
-        platform = ' on platform ' + platform
+    platform = '' if platform is None else ' on platform ' + platform
 
     cards = [
         {

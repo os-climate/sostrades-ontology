@@ -152,11 +152,10 @@ def write_to_sheet(xl, elements_dict, headers, sheet_name, is_classes=False):
             except:
                 print(f'Impossible to write value {column_value}, it will be ignored')
         row_count += 1
-        if is_classes:
-            if rowDict.get('instances_quantity', 0) > 0:
-                sheets_to_create.append(
-                    {'uri': rowDict['uri'], 'label': rowDict['label']},
-                )
+        if is_classes and rowDict.get('instances_quantity', 0) > 0:
+            sheets_to_create.append(
+                {'uri': rowDict['uri'], 'label': rowDict['label']},
+            )
 
     # Add an Excel Table to the terminology sheet
     xl.add_xl_table(f'{sheet_name}', sheet)

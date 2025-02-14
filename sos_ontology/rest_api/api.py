@@ -128,7 +128,6 @@ def get_general_information():
             ]
         }
     """
-
     ontology = SoSOntology.instance()
 
     resp = make_response(jsonify(ontology.get_general_information()), 200)
@@ -194,7 +193,6 @@ def load_study_ontology_data():
         }
 
     """
-
     data_request = request.json.get('study_ontology_request', None)
 
     missing_parameter = []
@@ -227,7 +225,6 @@ def get_full_parameter_label_list():
             }
         ]
     """
-
     ontology = SoSOntology.instance()
 
     resp = make_response(jsonify(ontology.get_full_parameter_label_list()), 200)
@@ -258,7 +255,6 @@ def get_full_process_list():
             }
         ]
     """
-
     ontology = SoSOntology.instance()
 
     resp = make_response(jsonify(ontology.get_full_process_list()), 200)
@@ -300,7 +296,6 @@ def get_full_discipline_list():
             }
         ]
     """
-
     ontology = SoSOntology.instance()
 
     resp = make_response(jsonify(ontology.get_full_discipline_list()), 200)
@@ -352,7 +347,6 @@ def get_full_parameter_list():
             }
         ]
     """
-
     ontology = SoSOntology.instance()
 
     resp = make_response(jsonify(ontology.get_full_parameter_list()), 200)
@@ -478,7 +472,6 @@ def load_ontology_request():
         }
 
     """
-
     data_request = request.json.get('ontology_request', None)
 
     missing_parameter = []
@@ -511,7 +504,6 @@ def load_ontology_models_status():
             }
         }
     """
-
     ontology = SoSOntology.instance()
 
     result = {}
@@ -528,7 +520,6 @@ def load_ontology_models_status_filtered():
 
     Returned response is a list of class ModelStatus
     """
-
     linked_process_dict = request.json.get('linked_process_dict', None)
 
     ontology = SoSOntology.instance()
@@ -549,10 +540,10 @@ def load_ontology_process_metadata(process_identifier):
 
 @app.route('/api/ontology/process/by/names', methods=['POST'])
 def load_ontology_process_metadata_by_names():
-    """given a list of process identifier, return a dictionary with each of their
+    """
+    given a list of process identifier, return a dictionary with each of their
     metadata
     """
-
     processes_name = request.json.get('processes_name', None)
 
     if processes_name is None:
@@ -584,10 +575,10 @@ def load_ontology_repository_metadata(repository_identifier):
 
 @app.route('/api/ontology/repository/by/names', methods=['POST'])
 def load_ontology_repository_metadata_by_names():
-    """given a list of repository identifier, return a dictionary with each of their
+    """
+    given a list of repository identifier, return a dictionary with each of their
     metadata
     """
-
     repositories_name = request.json.get('repositories_name', None)
 
     if repositories_name is None:

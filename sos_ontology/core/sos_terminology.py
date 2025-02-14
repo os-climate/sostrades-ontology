@@ -67,10 +67,7 @@ class SoSTerminology:
     def get_sheet_dict(self, sheetName, headers, nameDictKey, startingRow=2):
         sheetDict = {}
         sheet = self.workbook[sheetName]
-        if nameDictKey != '':
-            indexDictKey = headers.index(nameDictKey)
-        else:
-            indexDictKey = 1
+        indexDictKey = headers.index(nameDictKey) if nameDictKey != '' else 1
 
         for i, row in enumerate(
             sheet.iter_rows(min_row=startingRow, max_col=len(headers), values_only=True),
@@ -107,12 +104,7 @@ class SoSTerminology:
                     return ',\n'.join([str(i) for i in arrayToConvert])
                 else:
                     return ''
-            elif (
-                isinstance(arrayToConvert, int)
-                or isinstance(arrayToConvert, float)
-                or isinstance(arrayToConvert, dict)
-                or isinstance(arrayToConvert, str)
-            ):
+            elif isinstance(arrayToConvert, (int, float, dict, str)):
                 return str(arrayToConvert)
             else:
                 print(f'Unknown type for {arrayToConvert}')
@@ -256,46 +248,44 @@ class SoSTerminology:
         sheet.conditional_formatting.add(rangeString, rule)
 
     def add_list_to_sheet(self, listToAdd, sheetName, columnName):
-        if len(listToAdd):
-            if sheetName in self.workbook.sheetnames:
-                sheet = self.workbook[sheetName]
-                headers = self.get_sheet_headers(sheetName)
-                if columnName in headers:
-                    col_index = headers.index(columnName)
-                    # retrieve first empty row
-                    rowCount = 0
-                    for max_row, row in enumerate(sheet, 1):
-                        if row[col_index].value is not None:
-                            rowCount += 1
+        if len(listToAdd) and sheetName in self.workbook.sheetnames:
+            sheet = self.workbook[sheetName]
+            headers = self.get_sheet_headers(sheetName)
+            if columnName in headers:
+                col_index = headers.index(columnName)
+                # retrieve first empty row
+                rowCount = 0
+                for max_row, row in enumerate(sheet, 1):
+                    if row[col_index].value is not None:
+                        rowCount += 1
+                rowCount += 1
+
+                # add elements to the sheet
+                for element in listToAdd:
+                    cell = sheet.cell(
+                        column=col_index + 1, row=rowCount, value=str(element),
+                    )
                     rowCount += 1
 
-                    # add elements to the sheet
-                    for element in listToAdd:
-                        cell = sheet.cell(
-                            column=col_index + 1, row=rowCount, value=str(element),
-                        )
-                        rowCount += 1
-
     def update_list_in_sheet(self, listToUpdate, sheetName, columnName):
-        if len(listToUpdate):
-            if sheetName in self.workbook.sheetnames:
-                sheet = self.workbook[sheetName]
-                headers = self.get_sheet_headers(sheetName)
-                if columnName in headers:
-                    col_index = headers.index(columnName)
+        if len(listToUpdate) and sheetName in self.workbook.sheetnames:
+            sheet = self.workbook[sheetName]
+            headers = self.get_sheet_headers(sheetName)
+            if columnName in headers:
+                col_index = headers.index(columnName)
 
-                    # clear list:
-                    rowCount = 0
-                    for max_row, row in enumerate(sheet, 1):
-                        if rowCount > 0 and row[col_index].value is not None:
-                            cell = sheet.cell(
-                                column=col_index + 1, row=rowCount + 1, value=None,
-                            )
-                            rowCount += 1
-                    # write new list
-                    rowCount = 2
-                    for element in listToUpdate:
+                # clear list:
+                rowCount = 0
+                for max_row, row in enumerate(sheet, 1):
+                    if rowCount > 0 and row[col_index].value is not None:
                         cell = sheet.cell(
-                            column=col_index + 1, row=rowCount + 1, value=element,
+                            column=col_index + 1, row=rowCount + 1, value=None,
                         )
                         rowCount += 1
+                # write new list
+                rowCount = 2
+                for element in listToUpdate:
+                    cell = sheet.cell(
+                        column=col_index + 1, row=rowCount + 1, value=element,
+                    )
+                    rowCount += 1

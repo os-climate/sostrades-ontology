@@ -13,21 +13,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 '''
+from __future__ import annotations
+
 import cProfile
 import io
-import logging
 import pstats
 from time import time
-from typing import Optional
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import logging
 
 
 def copy_file(src_path, dst_path):
     """Copies file from src_path to dst_path without using shutil."""
-    with open(src_path, "rb") as src_file:
-        with open(dst_path, "wb") as dst_file:
-            dst_file.write(src_file.read())
+    with open(src_path, "rb") as src_file, open(dst_path, "wb") as dst_file:
+        dst_file.write(src_file.read())
 
-def time_function(logger: Optional[logging.Logger] = None):
+def time_function(logger: logging.Logger | None = None):
     """
     This decorator times another function and logs time spend in logger given as argument (if any)
     """
@@ -49,7 +52,7 @@ def time_function(logger: Optional[logging.Logger] = None):
 
     return inner
 
-def cprofile_function(logger: Optional[logging.Logger] = None):
+def cprofile_function(logger: logging.Logger | None = None):
     """
     This decorator cprofiles another function and logs result in logger given as argument (if any)
     """

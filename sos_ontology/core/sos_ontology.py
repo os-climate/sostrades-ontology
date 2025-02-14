@@ -57,7 +57,6 @@ class SoSOntology(Ontology):
         """
         Constructor
         """
-
         # Retrieve logging system
         self.logger = logging.getLogger('SoS.Ontology')
 
@@ -70,33 +69,32 @@ class SoSOntology(Ontology):
         self.ontology_owl_file_path, self.ontology_excel_file_path, self.ontology_log_file_path = SoSOntology.get_files_paths()
 
         # Load the SoS ontology
-        if source == 'file':
-            if self.ontologyVersion == 1.1:
-                self.SOS = Namespace(SoSOntology.BASE_URI)
+        if source == 'file' and self.ontologyVersion == 1.1:
+            self.SOS = Namespace(SoSOntology.BASE_URI)
 
-                load_path = self.ontology_owl_file_path
-                self.logger.info(f"Loading ontology from path {load_path}")
+            load_path = self.ontology_owl_file_path
+            self.logger.info(f"Loading ontology from path {load_path}")
 
-                if isfile(load_path):
-                    self.load(path=load_path, onto_format='xml')
-                    print(f'SoSOntology loaded from path {load_path}')
-                else:
-                    raise Exception('Impossible to load Ontology, path does not exists')
+            if isfile(load_path):
+                self.load(path=load_path, onto_format='xml')
+                print(f'SoSOntology loaded from path {load_path}')
+            else:
+                raise Exception('Impossible to load Ontology, path does not exists')
 
-                # get a list of all dataproperties that will become attributes
-                self.datapropertyDict = self.getOntologyPredicatesDict(
-                    OWL.DatatypeProperty,
-                )
+            # get a list of all dataproperties that will become attributes
+            self.datapropertyDict = self.getOntologyPredicatesDict(
+                OWL.DatatypeProperty,
+            )
 
-                # get a list of all objectproperties that will become links
-                self.objectpropertyDict = self.getOntologyPredicatesDict(
-                    OWL.ObjectProperty,
-                )
+            # get a list of all objectproperties that will become links
+            self.objectpropertyDict = self.getOntologyPredicatesDict(
+                OWL.ObjectProperty,
+            )
 
-                # get a list of all AnnotationProperty that will become links
-                self.annotationPropertyDict = self.getOntologyPredicatesDict(
-                    OWL.AnnotationProperty,
-                )
+            # get a list of all AnnotationProperty that will become links
+            self.annotationPropertyDict = self.getOntologyPredicatesDict(
+                OWL.AnnotationProperty,
+            )
 
         self.incoherences = {}
 
@@ -109,7 +107,7 @@ class SoSOntology(Ontology):
             ontology_owl_file_path, ontology_excel_file_path, ontology_log_file_path
         """
         environ_dict = dict(environ)
-        ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
+        ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER')
         if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
             return join(
                 ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl',
@@ -379,7 +377,8 @@ class SoSOntology(Ontology):
         return result
 
     def get_study_ontology_data(self, study_ontology_request: dict):
-        """methods that retrieves ontology data for a given input list of disciplines and parameter usages
+        """
+        methods that retrieves ontology data for a given input list of disciplines and parameter usages
 
         Args:
             study_ontology_request (dict): _description_
@@ -427,6 +426,7 @@ class SoSOntology(Ontology):
                     }
                 }
             }
+
         """
         result = {}
 
@@ -446,7 +446,8 @@ class SoSOntology(Ontology):
         return result
 
     def get_parameter_usage_metadata(self, parameterUsageString: str):
-        """Retrieve parameter usage ontology data from an identifier
+        """
+        Retrieve parameter usage ontology data from an identifier
 
         Args:
             parameterUsageString (str): parameter usage identifier constructed as
@@ -476,6 +477,7 @@ class SoSOntology(Ontology):
                     visibility: string,
                     structuring: boolean,
                     }
+
         """
         metadata = dict({'id': parameterUsageString})
 
@@ -602,9 +604,8 @@ class SoSOntology(Ontology):
                 elif attr == 'definition':
                     modelMetadata['Definition'] = value
 
-            if 'children' in treeviewDict:
-                if len(treeviewDict['children']) > 0:
-                    modelMetadata['expandable'] = 1
+            if 'children' in treeviewDict and len(treeviewDict['children']) > 0:
+                modelMetadata['expandable'] = 1
 
             treeNodes.append(modelMetadata)
             parentNamespace = treeviewDict['full_namespace']
@@ -830,31 +831,30 @@ class SoSOntology(Ontology):
                         processURI,
                         {**self.datapropertyDict, **self.annotationPropertyDict},
                     )
-                    if 'repository' in processAttributes:
                         # Check if repository and process authorised for user
-                        if processAttributes['repository'] in linked_process_dict:
-                            for process_name in linked_process_dict[
-                                processAttributes['repository']
-                            ]:
-                                if (
-                                    processAttributes.get('id', '')
-                                    == f'{processAttributes["repository"]}.{process_name}'
-                                ):
-                                    model_authorised = True
-                                    process_metadata = self.get_process_metadata(
-                                        processAttributes.get('id', ''),
-                                    )
-                                    repo_metadata = self.get_repo_metadata(
-                                        processAttributes.get('repository', ''),
-                                    )
-                                    process_name = process_metadata.get('label', 'id')
-                                    repo_name = repo_metadata.get('label', 'id')
+                    if 'repository' in processAttributes and processAttributes['repository'] in linked_process_dict:
+                        for process_name in linked_process_dict[
+                            processAttributes['repository']
+                        ]:
+                            if (
+                                processAttributes.get('id', '')
+                                == f'{processAttributes["repository"]}.{process_name}'
+                            ):
+                                model_authorised = True
+                                process_metadata = self.get_process_metadata(
+                                    processAttributes.get('id', ''),
+                                )
+                                repo_metadata = self.get_repo_metadata(
+                                    processAttributes.get('repository', ''),
+                                )
+                                process_name = process_metadata.get('label', 'id')
+                                repo_name = repo_metadata.get('label', 'id')
 
-                                    if repo_name in processesDict:
-                                        processesDict[repo_name].append(process_name)
-                                    else:
-                                        processesDict[repo_name] = [process_name]
-                                    processesNumber += 1
+                                if repo_name in processesDict:
+                                    processesDict[repo_name].append(process_name)
+                                else:
+                                    processesDict[repo_name] = [process_name]
+                                processesNumber += 1
 
             if model_authorised:
                 # Add model to list
@@ -1930,13 +1930,15 @@ class SoSOntology(Ontology):
         return markdown_documentation
 
     def retrieve_documentations(self, identifier_list: list) -> dict:
-        """Methods that retrieve documentation from a list of identifier
+        """
+        Methods that retrieve documentation from a list of identifier
 
         Args:
             identifier_list (list): list of Process or Discipline identifier
 
         Returns:
             dict: identifier: Markdown documentation as string
+
         """
         documentation_dict = {}
 
@@ -1945,7 +1947,8 @@ class SoSOntology(Ontology):
         return documentation_dict
 
     def get_full_parameter_list(self):
-        """Method that return a list of all ontology parameters and their related information
+        """
+        Method that return a list of all ontology parameters and their related information
         with this specific structure:
         [
             parameter_id:{
@@ -1984,7 +1987,6 @@ class SoSOntology(Ontology):
             }
         ]
         """
-
         parameterList = []
         # retrieve all parameter URI
         for parameterURI in self.graph.subjects(
@@ -2091,7 +2093,8 @@ class SoSOntology(Ontology):
         return parameterList
 
     def get_full_parameter_label_list(self):
-        """Method that return a list of all ontology parameters and their related information
+        """
+        Method that return a list of all ontology parameters and their related information
         with this specific structure:
         [
             parameter_id:{
@@ -2101,7 +2104,6 @@ class SoSOntology(Ontology):
             }
         ]
         """
-
         parameterList = []
         # retrieve all parameter URI
         for parameterURI in self.graph.subjects(
@@ -2123,7 +2125,8 @@ class SoSOntology(Ontology):
         return parameterList
 
     def get_full_process_list(self):
-        """Method that return a list of all ontology processes and their related information
+        """
+        Method that return a list of all ontology processes and their related information
         with this specific structure:
         [
             process_id:{
@@ -2141,7 +2144,6 @@ class SoSOntology(Ontology):
             }
         ]
         """
-
         processList = []
         # retrieve all process URI
         for processURI in self.graph.subjects(
@@ -2224,7 +2226,8 @@ class SoSOntology(Ontology):
         return processList
 
     def get_full_discipline_list(self):
-        """Method that return a list of all ontology disciplines and their related information
+        """
+        Method that return a list of all ontology disciplines and their related information
         with this specific structure:
         [
             discipline_id:{
@@ -2252,7 +2255,6 @@ class SoSOntology(Ontology):
             }
         ]
         """
-
         disciplineList = []
         # retrieve all discipline URI
         for disciplineURI in self.graph.subjects(

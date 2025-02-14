@@ -37,7 +37,6 @@ class Ontology:
         """
         Constructor
         """
-
         # Retrieve logging system
         self.logger = logging.getLogger('SoS.Ontology')
 
@@ -80,15 +79,14 @@ class Ontology:
     def getSubjectAttributes(self, subject, attributesDict):
         attributes = {'uri': str(subject), 'label': self.label(subject)}
         for (attribute, attributeValue) in self.graph.predicate_objects(subject):
-            if attribute in attributesDict:
-                if (
-                    attributeValue.value is not None
-                    and attributeValue.value != ''
-                    and attributeValue.value != ' '
-                ):
-                    attributes[
-                        attributesDict[attribute]['label']
-                    ] = attributeValue.value
+            if attribute in attributesDict and (
+                attributeValue.value is not None
+                and attributeValue.value != ''
+                and attributeValue.value != ' '
+            ):
+                attributes[
+                    attributesDict[attribute]['label']
+                ] = attributeValue.value
         return attributes
 
     def getSubjectFullAttributes(self, subject):
@@ -226,28 +224,26 @@ class Ontology:
 
     def add_triple(self, s, p, o):
         # Add triple to the graph
-        if s is not None and p is not None and o is not None:
-            if (type(o) is Literal and o.value != '' and o.value is not None) or (
-                type(o) is not Literal
-            ):
-                if (s, p, o) not in self.graph:
-                    self.graph.add((s, p, o))
-                    self.countAddedTriples['triples'] += 1
-                    if p == RDF.type and o == OWL.NamedIndividual:
-                        self.countAddedTriples['individuals'] += 1
+        if s is not None and p is not None and o is not None and (
+            (type(o) is Literal and o.value != "" and o.value is not None)
+            or (type(o) is not Literal)
+        ) and (s, p, o) not in self.graph:
+            self.graph.add((s, p, o))
+            self.countAddedTriples["triples"] += 1
+            if p == RDF.type and o == OWL.NamedIndividual:
+                self.countAddedTriples["individuals"] += 1
 
     def update_triple_object(self, s, p, o_origin, o_updated):
         # Update triple object
-        if s is not None and p is not None and o_updated is not None:
-            if (
-                type(o_updated) is Literal
-                and o_updated.value != ''
-                and o_updated.value is not None
-            ) or (type(o_updated) is not Literal):
-                self.graph.set((s, p, o_updated))
-                # if (s, p, o_origin) in self.graph:
-                # self.graph.remove([s, p, o_origin])
-                # self.add_triple(s, p, o_updated)
+        if s is not None and p is not None and o_updated is not None and ((
+            type(o_updated) is Literal
+            and o_updated.value != ''
+            and o_updated.value is not None
+        ) or (type(o_updated) is not Literal)):
+            self.graph.set((s, p, o_updated))
+            # if (s, p, o_origin) in self.graph:
+            # self.graph.remove([s, p, o_origin])
+            # self.add_triple(s, p, o_updated)
 
     def add_triples_list(self, triplesList):
         # make use of addN method
@@ -304,10 +300,7 @@ class Ontology:
                 if valueLiteral is not None and len(valueLiteral) > 0:
                     returnLiteral = ',\n'.join([str(i) for i in valueLiteral])
             elif (
-                isinstance(valueLiteral, int)
-                or isinstance(valueLiteral, float)
-                or isinstance(valueLiteral, dict)
-                or isinstance(valueLiteral, str)
+                isinstance(valueLiteral, (int, float, dict, str))
             ):
                 returnLiteral = str(valueLiteral)
 
@@ -329,10 +322,7 @@ class Ontology:
                 if valueLiteral is not None and len(valueLiteral) > 0:
                     returnLiteral = ',\n'.join([str(i) for i in valueLiteral])
             elif (
-                isinstance(valueLiteral, int)
-                or isinstance(valueLiteral, float)
-                or isinstance(valueLiteral, dict)
-                or isinstance(valueLiteral, str)
+                isinstance(valueLiteral, (int, float, dict, str))
             ):
                 returnLiteral = str(valueLiteral)
 

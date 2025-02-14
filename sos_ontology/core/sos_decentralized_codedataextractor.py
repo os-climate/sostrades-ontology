@@ -14,6 +14,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 '''
+from __future__ import annotations
+
 import ast
 import base64
 import copy
@@ -146,9 +148,8 @@ class SoSCodeDataExtractor:
                     self.logs_dict[category] = []
                 else:
                     self.logs_dict[category] = {}
-            if sub_category is not None:
-                if sub_category not in self.logs_dict[category]:
-                    self.logs_dict[category][sub_category] = []
+            if sub_category is not None and sub_category not in self.logs_dict[category]:
+                self.logs_dict[category][sub_category] = []
 
             if category == "date":
                 self.logs_dict[category] = datetime.now(
@@ -220,53 +221,52 @@ class SoSCodeDataExtractor:
                 for node in ast.walk(p):
                     if isinstance(node, ast.ClassDef):
                         for assign in node.body:
-                            if isinstance(assign, ast.Assign):
-                                if isinstance(assign.targets[0], ast.Name):
-                                    if isinstance(assign.value, ast.Dict):
-                                        if assign.targets[0].id == "_ontology_data":
-                                            try:
-                                                metadata = ast.literal_eval(
-                                                    assign.value,
-                                                )
-                                            except Exception as ex:
-                                                self.add_to_log(
-                                                    category="errors",
-                                                    sub_category="parsingDiscipline",
-                                                    message=f'Impossible to parse _ontology_data from {abspath(file).replace(self.basepath, "")}',
-                                                    exception=ex,
-                                                )
-                                        if assign.targets[0].id == "DESC_IN":
-                                            # this check is to avoid error on
-                                            # statements where DESC_IN is updated via a
-                                            # function
-                                            try:
-                                                desc_in = ast.literal_eval(
-                                                    assign.value)
-                                            except Exception as ex:
-                                                self.add_to_log(
-                                                    category="errors",
-                                                    sub_category="parsingDiscipline",
-                                                    message=f'Impossible to parse DESC_IN from {abspath(file).replace(self.basepath, "")}',
-                                                    exception=ex,
-                                                )
-                                        if assign.targets[0].id == "DESC_OUT":
-                                            # this check is to avoid error on
-                                            # statements where DESC_IN is updated via a
-                                            # function
-                                            try:
-                                                desc_out = ast.literal_eval(
-                                                    assign.value,
-                                                )
-                                            except Exception as ex:
-                                                self.add_to_log(
-                                                    category="errors",
-                                                    sub_category="parsingDiscipline",
-                                                    message=f'Impossible to parse DESC_OUT from {abspath(file).replace(self.basepath, "")}',
-                                                    exception=ex,
-                                                )
-                                    if assign.targets[0].id == "_maturity":
-                                        maturity = ast.literal_eval(
-                                            assign.value)
+                            if isinstance(assign, ast.Assign) and isinstance(assign.targets[0], ast.Name):
+                                if isinstance(assign.value, ast.Dict):
+                                    if assign.targets[0].id == "_ontology_data":
+                                        try:
+                                            metadata = ast.literal_eval(
+                                                assign.value,
+                                            )
+                                        except Exception as ex:
+                                            self.add_to_log(
+                                                category="errors",
+                                                sub_category="parsingDiscipline",
+                                                message=f'Impossible to parse _ontology_data from {abspath(file).replace(self.basepath, "")}',
+                                                exception=ex,
+                                            )
+                                    if assign.targets[0].id == "DESC_IN":
+                                        # this check is to avoid error on
+                                        # statements where DESC_IN is updated via a
+                                        # function
+                                        try:
+                                            desc_in = ast.literal_eval(
+                                                assign.value)
+                                        except Exception as ex:
+                                            self.add_to_log(
+                                                category="errors",
+                                                sub_category="parsingDiscipline",
+                                                message=f'Impossible to parse DESC_IN from {abspath(file).replace(self.basepath, "")}',
+                                                exception=ex,
+                                            )
+                                    if assign.targets[0].id == "DESC_OUT":
+                                        # this check is to avoid error on
+                                        # statements where DESC_IN is updated via a
+                                        # function
+                                        try:
+                                            desc_out = ast.literal_eval(
+                                                assign.value,
+                                            )
+                                        except Exception as ex:
+                                            self.add_to_log(
+                                                category="errors",
+                                                sub_category="parsingDiscipline",
+                                                message=f'Impossible to parse DESC_OUT from {abspath(file).replace(self.basepath, "")}',
+                                                exception=ex,
+                                            )
+                                if assign.targets[0].id == "_maturity":
+                                    maturity = ast.literal_eval(
+                                        assign.value)
 
         except Exception as ex:
             self.add_to_log(
@@ -286,7 +286,7 @@ class SoSCodeDataExtractor:
                 p = ast.parse(data)
                 for node in ast.walk(p):
                     module = None
-                    if isinstance(node, ast.Import) or isinstance(node, ast.ImportFrom):
+                    if isinstance(node, (ast.Import, ast.ImportFrom)):
                         if isinstance(node, ast.ImportFrom):
                             module = node.module
                         for n in node.names:
@@ -416,23 +416,21 @@ class SoSCodeDataExtractor:
             parsed_DESC_IN,
             parsed_DESC_OUT,
         ) = self.get_disc_attributes_from_parsing_code(entry)
-        if parsed_DESC_IN is not None and parsed_DESC_IN != {}:
-            if len(parsed_DESC_IN.keys()) > len(attributes.get("DESC_IN", {}).keys()):
-                self.add_to_log(
-                    category="errors",
-                    sub_category="loadingDiscipline",
-                    message=f'Parsed DESC_IN used because it contains more info than loaded DESC_IN for  {abspath(entry).replace(self.basepath, "")}',
-                )
-                attributes["DESC_IN"] = copy.deepcopy(parsed_DESC_IN)
+        if parsed_DESC_IN is not None and parsed_DESC_IN != {} and len(parsed_DESC_IN.keys()) > len(attributes.get("DESC_IN", {}).keys()):
+            self.add_to_log(
+                category="errors",
+                sub_category="loadingDiscipline",
+                message=f'Parsed DESC_IN used because it contains more info than loaded DESC_IN for  {abspath(entry).replace(self.basepath, "")}',
+            )
+            attributes["DESC_IN"] = copy.deepcopy(parsed_DESC_IN)
 
-        if parsed_DESC_OUT is not None and parsed_DESC_OUT != {}:
-            if len(parsed_DESC_OUT.keys()) > len(attributes.get("DESC_OUT", {}).keys()):
-                self.add_to_log(
-                    category="errors",
-                    sub_category="loadingDiscipline",
-                    message=f'Parsed DESC_OUT used because it contains more info than loaded DESC_OUT for  {abspath(entry).replace(self.basepath, "")}',
-                )
-                attributes["DESC_OUT"] = copy.deepcopy(parsed_DESC_OUT)
+        if parsed_DESC_OUT is not None and parsed_DESC_OUT != {} and len(parsed_DESC_OUT.keys()) > len(attributes.get("DESC_OUT", {}).keys()):
+            self.add_to_log(
+                category="errors",
+                sub_category="loadingDiscipline",
+                message=f'Parsed DESC_OUT used because it contains more info than loaded DESC_OUT for  {abspath(entry).replace(self.basepath, "")}',
+            )
+            attributes["DESC_OUT"] = copy.deepcopy(parsed_DESC_OUT)
 
         if attributes["_ontology_data"] == {} and parsed_ontology_data != {}:
             attributes["_ontology_data"] = parsed_ontology_data
@@ -598,20 +596,18 @@ class SoSCodeDataExtractor:
 
     def generate_sos_disciplines_and_parameters(self, basepath, level, rootpath):
         """This function looks for sos_discipline and associated parameters in all files in directory"""
-
         with scandir(basepath) as entries:
             for entry in entries:
                 if entry.name not in self.exclusions_list:
-                    if entry.is_file():
-                        if splitext(entry)[1] == ".py":
-                            is_sos_disc, class_info = self.is_sos_discipline(
-                                entry)
-                            if is_sos_disc:
-                                self.add_sos_discipline_and_associated_parameters(
-                                    entry=entry,
-                                    rootpath=rootpath,
-                                    class_info=class_info,
-                                )
+                    if entry.is_file() and splitext(entry)[1] == ".py":
+                        is_sos_disc, class_info = self.is_sos_discipline(
+                            entry)
+                        if is_sos_disc:
+                            self.add_sos_discipline_and_associated_parameters(
+                                entry=entry,
+                                rootpath=rootpath,
+                                class_info=class_info,
+                            )
 
                     if entry.is_dir():
                         if level == 1:
@@ -840,23 +836,24 @@ class SoSCodeDataExtractor:
                         pattern = re.compile(r"^usecase.*\.py")
                         for f in listdir(folder_path):
                             if (
-                                    f != "__init__.py"
-                                    and f != "process.py"
-                                    and f != "__pycache__"
-                            ):
-                                if pattern.match(f):
-                                    usecase_id = f"{process_repo_id}.{process}.{f}"
-                                    (
-                                        new_usecase_entity,
-                                        couplings_list,
-                                    ) = self.generate_usecase(
-                                        usecase_id, process_entity=new_process_entity,
-                                    )
+                                f != "__init__.py"
+                                and f != "process.py"
+                                and f != "__pycache__"
+                            ) and pattern.match(f):
+                                usecase_id = f"{process_repo_id}.{process}.{f}"
+                                (
+                                    new_usecase_entity,
+                                    couplings_list,
+                                ) = self.generate_usecase(
+                                    usecase_id,
+                                    process_entity=new_process_entity,
+                                )
 
-                                    # generate couplings
-                                    self.generate_couplings(
-                                        couplings_list, usecase=new_usecase_entity,
-                                    )
+                                # generate couplings
+                                self.generate_couplings(
+                                    couplings_list,
+                                    usecase=new_usecase_entity,
+                                )
 
         print(
             "#####################    LOOKING FOR PARAMETERS GLOSSARY    #########################",
@@ -943,9 +940,9 @@ class SoSCodeDataExtractor:
                             image_filepath = join(doc_folder_path, image_name)
 
                             if isfile(image_filepath):
-                                image_data = open(image_filepath, "r+b").read()
-                                encoded = base64.b64encode(
-                                    image_data).decode("utf-8")
+                                with open(image_filepath, "r+b") as image_file:
+                                    image_data = image_file.read()
+                                encoded = base64.b64encode(image_data).decode("utf-8")
 
                                 images_base_64.update({image_name: encoded})
 
@@ -1080,7 +1077,7 @@ class SoSCodeDataExtractor:
                     self.couplings.add(new_coupling)
 
     def check_ontology_keys(self, ontology_data_dict, entity, id):
-        for k in ontology_data_dict.keys():
+        for k in ontology_data_dict:
             if k not in self.ontology_data_keys[entity]:
                 self.add_to_log(
                     category="errors",
@@ -1100,7 +1097,6 @@ class SoSCodeDataExtractor:
         :param previous_code_repo_dict: code_repo_dict from previous extraction
         :type previous_code_repo_dict: dict
         """
-
         # Regular expression to remove connection info from url when token is
         # used
         INFO_REGEXP = r':\/\/.*@'
@@ -1128,86 +1124,96 @@ class SoSCodeDataExtractor:
             libraries = python_path_libraries.split(pathsep)
 
             for library_path in libraries:
-                if isdir(library_path):
-                    if all(
-                            [
-                                exclude not in library_path
-                                for exclude in self.path_exclusion_list
-                            ],
-                    ):
-                        try:
-                            repo = git.Repo(
-                                path=library_path, search_parent_directories=True,
-                            )
+                if isdir(library_path) and all(
+                    [
+                        exclude not in library_path
+                        for exclude in self.path_exclusion_list
+                    ],
+                ):
+                    try:
+                        repo = git.Repo(
+                            path=library_path,
+                            search_parent_directories=True,
+                        )
 
-                            # there is an url
-                            if len(repo.remotes) > 0:
-                                # Retrieve url and remove connection info from it
-                                raw_url = repo.remotes.origin.url
-                                url = re.sub(INFO_REGEXP, INFO_REPLACE, raw_url)
-                                try:
-                                    repo_name = url.split('.git')[0].split('/')[-1]
-                                except:
-                                    print(
-                                        f'Impossible to retrieve repo name from url {url}',
-                                    )
-                                    repo_name = url
-                            else:
-                                url = ""
-                                repo_name = basename(library_path)
-                            if repo.head.is_detached:
-                                branch_name = 'detached'
-                                commit = repo.head.commit
-                                # get tag version (format v0.0.0)
-                                tags = [tag.name for tag in repo.tags if tag.name.startswith('v') and tag.commit == commit]
-                                if len(tags)>0:
-                                    def convert_version(version:str)->list[int]:
-                                        return [int(part) for part in version.strip('v').split('.')]
+                        # there is an url
+                        if len(repo.remotes) > 0:
+                            # Retrieve url and remove connection info from it
+                            raw_url = repo.remotes.origin.url
+                            url = re.sub(INFO_REGEXP, INFO_REPLACE, raw_url)
+                            try:
+                                repo_name = url.split(".git")[0].split("/")[-1]
+                            except:
+                                print(
+                                    f"Impossible to retrieve repo name from url {url}",
+                                )
+                                repo_name = url
+                        else:
+                            url = ""
+                            repo_name = basename(library_path)
+                        if repo.head.is_detached:
+                            branch_name = "detached"
+                            commit = repo.head.commit
+                            # get tag version (format v0.0.0)
+                            tags = [
+                                tag.name
+                                for tag in repo.tags
+                                if tag.name.startswith("v") and tag.commit == commit
+                            ]
+                            if len(tags) > 0:
 
-                                    # sort versions
-                                    sorted_tags = sorted(tags, key=convert_version)
+                                def convert_version(version: str) -> list[int]:
+                                    return [
+                                        int(part)
+                                        for part in version.strip("v").split(".")
+                                    ]
 
-                                    branch_name = sorted_tags[-1]
-                            else:
-                                branch_name = repo.active_branch.name
-                                commit = repo.active_branch.commit
-                            commited_date = datetime.fromtimestamp(
-                                commit.committed_date, timezone.utc,
-                            )
+                                # sort versions
+                                sorted_tags = sorted(tags, key=convert_version)
 
-                            if previous_code_repo_dict.get(repo_name, {}) != {}:
-                                previous_commit_hexsha = previous_code_repo_dict[
-                                    repo_name
-                                ].get(COMMIT, '')
-                                if previous_commit_hexsha == commit.hexsha:
-                                    print(
-                                        f'Code Repository {repo_name} has not been updated since last Ontology update.',
-                                    )
+                                branch_name = sorted_tags[-1]
+                        else:
+                            branch_name = repo.active_branch.name
+                            commit = repo.active_branch.commit
+                        commited_date = datetime.fromtimestamp(
+                            commit.committed_date,
+                            timezone.utc,
+                        )
 
-                            # Remove trailing .git
-                            if url.endswith(".git"):
-                                url = url[:-4]
-                            # Verify if we are dealing with ssh remote repository and replace by https://
-                            if bool(re.match(SSH_REGEX, url)):
-                                url = url.replace(":", "/")
-                                url = re.sub(SSH_REGEX_TO_REPLACE, SSH_REGEX_REPLACE, url)
-                            code_repo_dict[repo_name] = {
-                                URL: url,
-                                BRANCH: branch_name,
-                                COMMIT: commit.hexsha,
-                                COMMITTED_DATE: commited_date.strftime(
-                                    "%d/%m/%Y %H:%M:%S",
-                                ),
-                                REPO_PATH: str(Path(library_path)), # Allow to mixed / and \ on windows path of PYTHONPATH. Nothing Change for linux
-                            }
+                        if previous_code_repo_dict.get(repo_name, {}) != {}:
+                            previous_commit_hexsha = previous_code_repo_dict[
+                                repo_name
+                            ].get(COMMIT, "")
+                            if previous_commit_hexsha == commit.hexsha:
+                                print(
+                                    f"Code Repository {repo_name} has not been updated since last Ontology update.",
+                                )
 
-                        except git.exc.InvalidGitRepositoryError:  # type: ignore
-                            logger.error(
-                                f'{library_path} folder is not a git folder')
-                        except Exception as error:
-                            logger.error(
-                                f'{library_path} folder generates the following error while accessing with git:\n {error!s}',
-                            )
+                        # Remove trailing .git
+                        if url.endswith(".git"):
+                            url = url[:-4]
+                        # Verify if we are dealing with ssh remote repository and replace by https://
+                        if bool(re.match(SSH_REGEX, url)):
+                            url = url.replace(":", "/")
+                            url = re.sub(SSH_REGEX_TO_REPLACE, SSH_REGEX_REPLACE, url)
+                        code_repo_dict[repo_name] = {
+                            URL: url,
+                            BRANCH: branch_name,
+                            COMMIT: commit.hexsha,
+                            COMMITTED_DATE: commited_date.strftime(
+                                "%d/%m/%Y %H:%M:%S",
+                            ),
+                            REPO_PATH: str(
+                                Path(library_path),
+                            ),  # Allow to mixed / and \ on windows path of PYTHONPATH. Nothing Change for linux
+                        }
+
+                    except git.exc.InvalidGitRepositoryError:  # type: ignore
+                        logger.error(f"{library_path} folder is not a git folder")
+                    except Exception as error:
+                        logger.error(
+                            f"{library_path} folder generates the following error while accessing with git:\n {error!s}",
+                        )
 
         return code_repo_dict
 
