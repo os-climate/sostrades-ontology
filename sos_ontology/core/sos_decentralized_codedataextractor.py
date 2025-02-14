@@ -1103,7 +1103,7 @@ class SoSCodeDataExtractor:
 
         # Regular expression to remove connection info from url when token is
         # used
-        INFO_REGEXP = ':\/\/.*@'
+        INFO_REGEXP = r':\/\/.*@'
         INFO_REPLACE = '://'
 
         # Regular expression when it is a remote repostory with ssh
@@ -1166,7 +1166,7 @@ class SoSCodeDataExtractor:
 
                                     # sort versions
                                     sorted_tags = sorted(tags, key=convert_version)
-                                    
+
                                     branch_name = sorted_tags[-1]
                             else:
                                 branch_name = repo.active_branch.name
@@ -1198,7 +1198,7 @@ class SoSCodeDataExtractor:
                                 COMMITTED_DATE: commited_date.strftime(
                                     "%d/%m/%Y %H:%M:%S",
                                 ),
-                                REPO_PATH: str(Path(library_path)), # Allow to mixed / and \ on windows path of PYTHONPATH. Nothing Change for linux 
+                                REPO_PATH: str(Path(library_path)), # Allow to mixed / and \ on windows path of PYTHONPATH. Nothing Change for linux
                             }
 
                         except git.exc.InvalidGitRepositoryError:  # type: ignore

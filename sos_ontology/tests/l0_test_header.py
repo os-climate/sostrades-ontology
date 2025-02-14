@@ -44,7 +44,7 @@ class Testheader(unittest.TestCase):
             #commit from where to compare added, modeified deleted ...
             self.airbus_rev_commit = headers_ignore_config["airbus_rev_commit"]
 
-        
+
 
     def test_Headers(self):
         ht = HeaderTools()

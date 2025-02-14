@@ -103,8 +103,8 @@ class SoSOntology(Ontology):
     @staticmethod
     def get_files_paths():
         """
-        Gets the ontology files paths 
-        
+        Gets the ontology files paths
+
         Returns tuple:
             ontology_owl_file_path, ontology_excel_file_path, ontology_log_file_path
         """
@@ -2377,7 +2377,7 @@ class SoSOntology(Ontology):
 
                 input_parameters.append(parameter_info)
             discipline_info['input_parameters'] = input_parameters
-            
+
             disciplineList.append(discipline_info)
 
         discipline_list_sorted = sorted(
