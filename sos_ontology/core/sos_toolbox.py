@@ -54,7 +54,7 @@ class SoSToolbox:
             with open(json_file_path, 'w+') as outfile:
                 outfile.write(jsonpickle.encode(dict_to_write, unpicklable=False))
             print(
-                f'Writing of {len(dict_to_write.keys())} {entity} to {json_file_path}'
+                f'Writing of {len(dict_to_write.keys())} {entity} to {json_file_path}',
             )
 
     def load_json(self, json_file_path, entity):
@@ -93,7 +93,7 @@ class SoSToolbox:
         return diffDict
 
     def calculate_difference_before_after(
-        self, oldOntology, newOntology, ontologyNamespace, logs_dict=None
+        self, oldOntology, newOntology, ontologyNamespace, logs_dict=None,
     ):
 
         # construct oldOntology dict
@@ -101,21 +101,21 @@ class SoSToolbox:
         oldOntoDict[
             'Code Repository'
         ] = oldOntology.retrieve_classes_dict_and_attributes(
-            ontologyNamespace.CodeRepository
+            ontologyNamespace.CodeRepository,
         )
         oldOntoDict[
             'SoSProcessRepository'
         ] = oldOntology.retrieve_classes_dict_and_attributes(
-            ontologyNamespace.SoSProcessRepository
+            ontologyNamespace.SoSProcessRepository,
         )
         oldOntoDict['SoSProcess'] = oldOntology.retrieve_classes_dict_and_attributes(
-            ontologyNamespace.SoSProcess
+            ontologyNamespace.SoSProcess,
         )
         oldOntoDict['Parameter'] = oldOntology.retrieve_classes_dict_and_attributes(
-            ontologyNamespace.Parameter
+            ontologyNamespace.Parameter,
         )
         oldOntoDict['SoSDiscipline'] = oldOntology.retrieve_classes_dict_and_attributes(
-            ontologyNamespace.SoSDiscipline
+            ontologyNamespace.SoSDiscipline,
         )
 
         # construct newOntology dict
@@ -123,34 +123,34 @@ class SoSToolbox:
         newOntoDict[
             'Code Repository'
         ] = newOntology.retrieve_classes_dict_and_attributes(
-            ontologyNamespace.CodeRepository
+            ontologyNamespace.CodeRepository,
         )
         newOntoDict[
             'SoSProcessRepository'
         ] = newOntology.retrieve_classes_dict_and_attributes(
-            ontologyNamespace.SoSProcessRepository
+            ontologyNamespace.SoSProcessRepository,
         )
         newOntoDict['SoSProcess'] = newOntology.retrieve_classes_dict_and_attributes(
-            ontologyNamespace.SoSProcess
+            ontologyNamespace.SoSProcess,
         )
         newOntoDict['Parameter'] = newOntology.retrieve_classes_dict_and_attributes(
-            ontologyNamespace.Parameter
+            ontologyNamespace.Parameter,
         )
         newOntoDict['SoSDiscipline'] = newOntology.retrieve_classes_dict_and_attributes(
-            ontologyNamespace.SoSDiscipline
+            ontologyNamespace.SoSDiscipline,
         )
 
         # calculate updated dict containing differences list
         updatedDict = {}
         self.diffDictElements(
-            diffDict=updatedDict, oldDict=oldOntoDict, newDict=newOntoDict
+            diffDict=updatedDict, oldDict=oldOntoDict, newDict=newOntoDict,
         )
 
         if logs_dict is not None:
             logs_dict['updatesDetails'] = updatedDict
 
     def write_logs(
-        self, logs_dict, log_file_name, short_log_file_name, full_log_json_path
+        self, logs_dict, log_file_name, short_log_file_name, full_log_json_path,
     ):
 
         log_file = open(log_file_name, 'wb+')
@@ -164,7 +164,7 @@ class SoSToolbox:
                 [
                     diffDict["new"] + diffDict["removed"]
                     for diffDict in diffDict.values()
-                ]
+                ],
             )
             > 0
         ):
@@ -189,7 +189,7 @@ class SoSToolbox:
                     log_file.write(bytes(f'\n{key}:\n', encoding='utf-8'))
                     added_col_width = max([len(p) for p in diffDict["new_list"]] + [5])
                     removed_col_width = max(
-                        [len(p) for p in diffDict["removed_list"]] + [7]
+                        [len(p) for p in diffDict["removed_list"]] + [7],
                     )
                     tbl_log = TableLogger(
                         columns='Added,Removed',
@@ -219,19 +219,19 @@ class SoSToolbox:
                     short_log_file.write(
                         b"\n - "
                         + bytes(str(nb_process), encoding='utf-8')
-                        + b" processes fail to load"
+                        + b" processes fail to load",
                     )
 
                     log_file.write(
-                        b"\n\n--------------Processes that fail to load:--------------\n\n"
+                        b"\n\n--------------Processes that fail to load:--------------\n\n",
                     )
 
                     tbl_log = TableLogger(
-                        columns='Process,Error', file=log_file, default_colwidth=70
+                        columns='Process,Error', file=log_file, default_colwidth=70,
                     )
                     for process_error_dict in logs_dict["errors"]["loadProcess"]:
                         tbl_log(
-                            process_error_dict['message'], process_error_dict['error']
+                            process_error_dict['message'], process_error_dict['error'],
                         )
 
             # write info about Usecases that are impossible to load
@@ -241,25 +241,25 @@ class SoSToolbox:
                     short_log_file.write(
                         b"\n - "
                         + bytes(str(nb_usecase), encoding='utf-8')
-                        + b" usecases fail to load"
+                        + b" usecases fail to load",
                     )
 
                     log_file.write(
-                        b"\n\n--------------Usecases that fail to load:--------------\n\n"
+                        b"\n\n--------------Usecases that fail to load:--------------\n\n",
                     )
 
                     tbl_log = TableLogger(
-                        columns='Usecase,Error', file=log_file, default_colwidth=70
+                        columns='Usecase,Error', file=log_file, default_colwidth=70,
                     )
                     for process_error_dict in logs_dict["errors"]["loadUsecase"]:
                         tbl_log(
-                            process_error_dict['message'], process_error_dict['error']
+                            process_error_dict['message'], process_error_dict['error'],
                         )
 
         # write info about ontology info missing
         if "ontologyInfo" in logs_dict:
             log_file.write(
-                b"\n\n--------------Missing Ontology info:--------------\n\n"
+                b"\n\n--------------Missing Ontology info:--------------\n\n",
             )
 
             for entity, entity_list in logs_dict["ontologyInfo"].items():
@@ -269,17 +269,17 @@ class SoSToolbox:
                     bytes(
                         f'\n - {nb_entity} {entity} lack ontology info',
                         encoding='utf-8',
-                    )
+                    ),
                 )
 
                 log_file.write(bytes(f'\n- {entity}:\n', encoding='utf-8'))
                 entity_width = max(
                     [len(entity_dict['id']) for entity_dict in entity_list]
-                    + [len('Entity')]
+                    + [len('Entity')],
                 )
                 error_width = max(
                     [len(entity_dict['error']) for entity_dict in entity_list]
-                    + [len('Error')]
+                    + [len('Error')],
                 )
                 tbl_log = TableLogger(
                     columns='Entity,Error',
@@ -296,16 +296,16 @@ class SoSToolbox:
                     [
                         len(param_list)
                         for param_list in logs_dict["no_parameter_info"].values()
-                    ]
+                    ],
                 )
                 short_log_file.write(
                     b"\n - "
                     + bytes(str(nb_param), encoding='utf-8')
-                    + b" parameters missing in glossary files"
+                    + b" parameters missing in glossary files",
                 )
 
                 log_file.write(
-                    b"\n\n--------------Parameters missing in Parameter Glossary:--------------\n\n"
+                    b"\n\n--------------Parameters missing in Parameter Glossary:--------------\n\n",
                 )
                 self.log_as_two_columns_table(
                     list_dict=logs_dict["no_parameter_info"],
@@ -321,11 +321,11 @@ class SoSToolbox:
                 short_log_file.write(
                     b"\n - "
                     + bytes(str(nb_param), encoding='utf-8')
-                    + b" parameters in multiple code repositories"
+                    + b" parameters in multiple code repositories",
                 )
 
                 log_file.write(
-                    b"\n\n--------------Parameters present in multiple Parameter Glossary:--------------\n\n"
+                    b"\n\n--------------Parameters present in multiple Parameter Glossary:--------------\n\n",
                 )
                 self.log_as_two_columns_table(
                     list_dict=logs_dict["multiple_parameters_info"],
@@ -337,7 +337,7 @@ class SoSToolbox:
         if "parameter_does_not_exist" in logs_dict:
             if logs_dict["parameter_does_not_exist"] != {}:
                 log_file.write(
-                    b"\n\n--------------Parameters present in Parameter Glossary but do not exist in the code:--------------\n\n"
+                    b"\n\n--------------Parameters present in Parameter Glossary but do not exist in the code:--------------\n\n",
                 )
                 self.log_as_two_columns_table(
                     list_dict=logs_dict["parameter_does_not_exist"],
@@ -349,7 +349,7 @@ class SoSToolbox:
         if "inconsistencies" in logs_dict:
             if logs_dict["inconsistencies"] != {}:
                 log_file.write(
-                    b"\n\n--------------Parameter inconsistencies found in the code:--------------\n\n"
+                    b"\n\n--------------Parameter inconsistencies found in the code:--------------\n\n",
                 )
 
                 self.log_inconsistencies_as_table(
@@ -368,7 +368,7 @@ class SoSToolbox:
         )
 
     def log_as_two_columns_table(
-        self, list_dict, first_col_name, second_col_name, log_file
+        self, list_dict, first_col_name, second_col_name, log_file,
     ):
         if list_dict != {}:
             max_width_first_col = max([len(k) for k in list_dict.keys()])
@@ -378,7 +378,7 @@ class SoSToolbox:
                     len(param)
                     for param_list in list_dict.values()
                     for param in param_list
-                ]
+                ],
             )
             max_width_second_col = max([max_width_second_col, len(second_col_name)])
             tbl = TableLogger(
@@ -413,19 +413,19 @@ class SoSToolbox:
                     second_col_elements.append(inconsistency_type)
                     for value, disciplines_list in values_dict.items():
                         disc_count = len(
-                            [t[1] for t in disciplines_list if t[0] == 'discipline']
+                            [t[1] for t in disciplines_list if t[0] == 'discipline'],
                         )
                         glossary_count = len(
-                            [t[1] for t in disciplines_list if t[0] == 'glossary']
+                            [t[1] for t in disciplines_list if t[0] == 'glossary'],
                         )
                         element_message_list = []
                         if disc_count > 0:
                             element_message_list.append(
-                                f'{value}: {disc_count} disciplines'
+                                f'{value}: {disc_count} disciplines',
                             )
                         if glossary_count > 0:
                             element_message_list.append(
-                                f'{value}: {glossary_count} glossaries'
+                                f'{value}: {glossary_count} glossaries',
                             )
                         if len(element_message_list) > 0:
                             third_col_elements.append('\n'.join(element_message_list))
@@ -453,19 +453,19 @@ class SoSToolbox:
                     for value, disciplines_list in values_dict.items():
 
                         disc_count = len(
-                            [t[1] for t in disciplines_list if t[0] == 'discipline']
+                            [t[1] for t in disciplines_list if t[0] == 'discipline'],
                         )
                         glossary_count = len(
-                            [t[1] for t in disciplines_list if t[0] == 'glossary']
+                            [t[1] for t in disciplines_list if t[0] == 'glossary'],
                         )
                         element_message_list = []
                         if disc_count > 0:
                             element_message_list.append(
-                                f'{value}: {disc_count} disciplines'
+                                f'{value}: {disc_count} disciplines',
                             )
                         if glossary_count > 0:
                             element_message_list.append(
-                                f'{value}: {glossary_count} glossaries'
+                                f'{value}: {glossary_count} glossaries',
                             )
 
                         if first_row_param:

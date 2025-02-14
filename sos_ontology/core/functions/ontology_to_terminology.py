@@ -59,12 +59,12 @@ def ontology_to_terminology(
         # each OWL class will have dedicated sheet in the excel file
         # get the list of class in the ontology
         classes_dict, classesAttributes = retrieve_classes_dict_and_attributes(
-            onto, xl, OWL.Class
+            onto, xl, OWL.Class,
         )
 
         headers = list(classesAttributes.keys())
         sheetsToCreate = write_to_sheet(
-            xl, classes_dict, headers, 'OWL Classes', is_classes=True
+            xl, classes_dict, headers, 'OWL Classes', is_classes=True,
         )
 
         # loop through the sheets to create and fill them
@@ -77,7 +77,7 @@ def ontology_to_terminology(
             # write sheet
             headers = list(individualsAttributes.keys())
             write_to_sheet(
-                xl, individualsDict, headers, sheetClass['label'], is_classes=False
+                xl, individualsDict, headers, sheetClass['label'], is_classes=False,
             )
 
         #  Save excel file
@@ -122,7 +122,7 @@ def getSubjectAttributes(onto, subject):
             object_label = onto.label(object_uri)
         if predicate_label in attributes:
             attributes[predicate_label]['object'].append(
-                {'label': object_label, 'type': object_type, 'uri': object_uri}
+                {'label': object_label, 'type': object_type, 'uri': object_uri},
             )
         else:
             attributes[predicate_label] = {
@@ -132,7 +132,7 @@ def getSubjectAttributes(onto, subject):
                     'uri': predicateURI,
                 },
                 'object': [
-                    {'label': object_label, 'type': object_type, 'uri': object_uri}
+                    {'label': object_label, 'type': object_type, 'uri': object_uri},
                 ],
             }
     return attributes
@@ -155,7 +155,7 @@ def write_to_sheet(xl, elements_dict, headers, sheet_name, is_classes=False):
         if is_classes:
             if rowDict.get('instances_quantity', 0) > 0:
                 sheets_to_create.append(
-                    {'uri': rowDict['uri'], 'label': rowDict['label']}
+                    {'uri': rowDict['uri'], 'label': rowDict['label']},
                 )
 
     # Add an Excel Table to the terminology sheet

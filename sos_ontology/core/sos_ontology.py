@@ -85,17 +85,17 @@ class SoSOntology(Ontology):
 
                 # get a list of all dataproperties that will become attributes
                 self.datapropertyDict = self.getOntologyPredicatesDict(
-                    OWL.DatatypeProperty
+                    OWL.DatatypeProperty,
                 )
 
                 # get a list of all objectproperties that will become links
                 self.objectpropertyDict = self.getOntologyPredicatesDict(
-                    OWL.ObjectProperty
+                    OWL.ObjectProperty,
                 )
 
                 # get a list of all AnnotationProperty that will become links
                 self.annotationPropertyDict = self.getOntologyPredicatesDict(
-                    OWL.AnnotationProperty
+                    OWL.AnnotationProperty,
                 )
 
         self.incoherences = {}
@@ -112,11 +112,11 @@ class SoSOntology(Ontology):
         ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
         if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
             return join(
-                ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl'
+                ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl',
             ), join(
-                ONTOLOGY_FOLDER, 'SoS_Trades_Terminology_ABox.xlsx'
+                ONTOLOGY_FOLDER, 'SoS_Trades_Terminology_ABox.xlsx',
             ), join(
-                ONTOLOGY_FOLDER, 'ontologyCreationLogs.json'
+                ONTOLOGY_FOLDER, 'ontologyCreationLogs.json',
             )
         else:
             return join(
@@ -142,7 +142,7 @@ class SoSOntology(Ontology):
         metadata = dict({'id': parameterString, 'label': parameterString})
 
         parameterURI = self.value(
-            None, self.SOS.id, Literal(parameterString, datatype=XSD.string), 'uri'
+            None, self.SOS.id, Literal(parameterString, datatype=XSD.string), 'uri',
         )
 
         if parameterURI is not None:
@@ -151,7 +151,7 @@ class SoSOntology(Ontology):
 
             # get attributes
             parameterAttributes = self.getSubjectAttributes(
-                parameterURI, {**self.datapropertyDict, **self.annotationPropertyDict}
+                parameterURI, {**self.datapropertyDict, **self.annotationPropertyDict},
             )
 
             attributesList = [
@@ -169,7 +169,7 @@ class SoSOntology(Ontology):
 
             # get attributes for parameter usage (retrieve the first one)
             parameterUsagesURIList = list(
-                self.graph.subjects(predicate=self.SOS.instanceOf, object=parameterURI)
+                self.graph.subjects(predicate=self.SOS.instanceOf, object=parameterURI),
             )
 
             attributesUsageList = ['id']
@@ -186,7 +186,7 @@ class SoSOntology(Ontology):
 
                     if parameterUsageAttributes.get('id', None) is not None:
                         parameterUsagesIDs.append(
-                            parameterUsageAttributes.get('id', None)
+                            parameterUsageAttributes.get('id', None),
                         )
 
                     # for attr in attributesUsageList:
@@ -198,7 +198,7 @@ class SoSOntology(Ontology):
         else:
             # It means the value has not been found
             self.logger.debug(
-                f'The parameter: {parameterString} HAS NOT BEEN FOUND in the Ontology'
+                f'The parameter: {parameterString} HAS NOT BEEN FOUND in the Ontology',
             )
         return metadata
 
@@ -207,7 +207,7 @@ class SoSOntology(Ontology):
         metadata = dict({'id': disciplineString, 'label': disciplineString})
 
         modelURI = self.value(
-            None, self.SOS.id, Literal(disciplineString, datatype=XSD.string), 'uri'
+            None, self.SOS.id, Literal(disciplineString, datatype=XSD.string), 'uri',
         )
 
         if modelURI is not None:
@@ -219,7 +219,7 @@ class SoSOntology(Ontology):
                     metadata['label'] = disciplineString
                 # get attributes
                 modelAttribute = self.getSubjectAttributes(
-                    modelURI, {**self.datapropertyDict, **self.annotationPropertyDict}
+                    modelURI, {**self.datapropertyDict, **self.annotationPropertyDict},
                 )
 
                 attributesList = [
@@ -250,12 +250,12 @@ class SoSOntology(Ontology):
             else:
                 # It means the value has been found but is not a discipline
                 self.logger.debug(
-                    f'The entity: {disciplineString} HAS BEEN FOUND in the Ontology but is not of type Discipline. It is a {", ".join(entityTypes)}'
+                    f'The entity: {disciplineString} HAS BEEN FOUND in the Ontology but is not of type Discipline. It is a {", ".join(entityTypes)}',
                 )
         else:
             # It means the value has not been found
             self.logger.debug(
-                f'The model: {disciplineString} HAS NOT BEEN FOUND in the Ontology'
+                f'The model: {disciplineString} HAS NOT BEEN FOUND in the Ontology',
             )
 
         return metadata
@@ -264,7 +264,7 @@ class SoSOntology(Ontology):
         metadata = dict({'id': process_identifier, 'label': process_identifier})
 
         processURI = self.value(
-            None, self.SOS.id, Literal(process_identifier, datatype=XSD.string), 'uri'
+            None, self.SOS.id, Literal(process_identifier, datatype=XSD.string), 'uri',
         )
 
         if processURI is not None:
@@ -276,7 +276,7 @@ class SoSOntology(Ontology):
 
                 # get attributes
                 modelAttribute = self.getSubjectAttributes(
-                    processURI, {**self.datapropertyDict, **self.annotationPropertyDict}
+                    processURI, {**self.datapropertyDict, **self.annotationPropertyDict},
                 )
 
                 attributesList = [
@@ -294,13 +294,13 @@ class SoSOntology(Ontology):
             else:
                 # It means the value has not been found
                 self.logger.debug(
-                    f'A concept has been found with id: {process_identifier} but is not a process'
+                    f'A concept has been found with id: {process_identifier} but is not a process',
                 )
 
         else:
             # It means the value has not been found
             self.logger.debug(
-                f'The process: {process_identifier} HAS NOT BEEN FOUND in the Ontology'
+                f'The process: {process_identifier} HAS NOT BEEN FOUND in the Ontology',
             )
 
         return metadata
@@ -324,7 +324,7 @@ class SoSOntology(Ontology):
 
                 # get attributes
                 modelAttribute = self.getSubjectAttributes(
-                    repoURI, {**self.datapropertyDict, **self.annotationPropertyDict}
+                    repoURI, {**self.datapropertyDict, **self.annotationPropertyDict},
                 )
 
                 attributesList = ['uri', 'description', 'processList']
@@ -335,13 +335,13 @@ class SoSOntology(Ontology):
             else:
                 # It means the value has not been found
                 self.logger.debug(
-                    f'A concept has been found with id: {repository_identifier} but is not a process repository'
+                    f'A concept has been found with id: {repository_identifier} but is not a process repository',
                 )
 
         else:
             # It means the value has not been found
             self.logger.debug(
-                f'The process repository: {repository_identifier} HAS NOT BEEN FOUND in the Ontology'
+                f'The process repository: {repository_identifier} HAS NOT BEEN FOUND in the Ontology',
             )
 
         return metadata
@@ -355,25 +355,25 @@ class SoSOntology(Ontology):
             result['disciplines'] = {}
             for requestDiscipline in request['disciplines']:
                 result['disciplines'][requestDiscipline] = self.get_discipline_metadata(
-                    requestDiscipline
+                    requestDiscipline,
                 )
         if 'parameters' in request:
             result['parameters'] = {}
             for requestParameter in request['parameters']:
                 result['parameters'][requestParameter] = self.get_parameter_metadata(
-                    requestParameter
+                    requestParameter,
                 )
         if 'process' in request:
             result['process'] = {}
             for requestProcess in request['process']:
                 result['process'][requestProcess] = self.get_process_metadata(
-                    requestProcess
+                    requestProcess,
                 )
         if 'repository' in request:
             result['repository'] = {}
             for requestRepository in request['repository']:
                 result['repository'][requestRepository] = self.get_repo_metadata(
-                    requestRepository
+                    requestRepository,
                 )
 
         return result
@@ -434,7 +434,7 @@ class SoSOntology(Ontology):
             result['disciplines'] = {}
             for requestDiscipline in study_ontology_request['disciplines']:
                 result['disciplines'][requestDiscipline] = self.get_discipline_metadata(
-                    requestDiscipline
+                    requestDiscipline,
                 )
         if 'parameter_usages' in study_ontology_request:
             result['parameter_usages'] = {}
@@ -480,7 +480,7 @@ class SoSOntology(Ontology):
         metadata = dict({'id': parameterUsageString})
 
         parameterUsageURI = self.value(
-            None, self.SOS.id, Literal(parameterUsageString, datatype=XSD.string), 'uri'
+            None, self.SOS.id, Literal(parameterUsageString, datatype=XSD.string), 'uri',
         )
 
         if parameterUsageURI is not None:
@@ -504,14 +504,14 @@ class SoSOntology(Ontology):
                 }
 
                 parameter_usage_info = self.get_object_values_dict(
-                    subjectURI=parameterUsageURI, values_dict=parameter_usage_info
+                    subjectURI=parameterUsageURI, values_dict=parameter_usage_info,
                 )
 
                 # retrieve associated parameter
                 parameterURI = list(
                     self.graph.objects(
-                        subject=parameterUsageURI, predicate=self.SOS.instanceOf
-                    )
+                        subject=parameterUsageURI, predicate=self.SOS.instanceOf,
+                    ),
                 )[0]
 
                 if parameterURI is not None:
@@ -525,7 +525,7 @@ class SoSOntology(Ontology):
                     }
                     # get parameter attributes
                     parameter_info = self.get_object_values_dict(
-                        subjectURI=parameterURI, values_dict=parameter_info
+                        subjectURI=parameterURI, values_dict=parameter_info,
                     )
                     parameter_info['uri'] = parameterURI
                     parameter_info['label'] = self.label(parameterURI)
@@ -536,12 +536,12 @@ class SoSOntology(Ontology):
             else:
                 # It means the value has been found but is not a parameter usage
                 self.logger.debug(
-                    f'The entity: {parameterUsageString} HAS BEEN FOUND in the Ontology but is not of type Parameter_Usage. It is a {", ".join(entityTypes)}'
+                    f'The entity: {parameterUsageString} HAS BEEN FOUND in the Ontology but is not of type Parameter_Usage. It is a {", ".join(entityTypes)}',
                 )
         else:
             # It means the value has not been found
             self.logger.debug(
-                f'The parameter usage: {parameterUsageString} HAS NOT BEEN FOUND in the Ontology'
+                f'The parameter usage: {parameterUsageString} HAS NOT BEEN FOUND in the Ontology',
             )
         return metadata
 
@@ -575,7 +575,7 @@ class SoSOntology(Ontology):
                 scatterParameter,
             )
             modelAdditionalData = self.get_discipline_metadata(
-                treeviewDict['model_name_full_path']
+                treeviewDict['model_name_full_path'],
             )
             modelMetadata = dict(
                 {
@@ -588,12 +588,12 @@ class SoSOntology(Ontology):
                     'Total Parameters': totalParameters,
                     'Total Private Parameters': totalPrivateParameters,
                     'expandable': 0,
-                }
+                },
             )
 
             # add children list to the attributes
             modelMetadata['childrenIDs'] = self.getChildrenList(
-                treeviewDict, treeviewDict['full_namespace']
+                treeviewDict, treeviewDict['full_namespace'],
             )
 
             for attr, value in modelAdditionalData.items():
@@ -624,7 +624,7 @@ class SoSOntology(Ontology):
                             'target': parentNamespace,
                             'Type': 'PART_OF',
                             'Size': 2,
-                        }
+                        },
                     )
                     link['id'] = (
                         link['source']
@@ -663,7 +663,7 @@ class SoSOntology(Ontology):
         return nodesIDList
 
     def get_treeview_coupling_parameters(
-        self, parameterItems, parameterNodes, namespace, scatterParameter=None
+        self, parameterItems, parameterNodes, namespace, scatterParameter=None,
     ):
         # Create a dict to verify if parameter already exist
         if len(parameterNodes) > 0:
@@ -687,7 +687,7 @@ class SoSOntology(Ontology):
                 # retrieve parameter metadata in ontology
                 additionalData = self.get_parameter_metadata(paramName)
                 parameterMetadata = dict(
-                    {'id': parameter, 'Type': 'CouplingParameter', 'Level': 0}
+                    {'id': parameter, 'Type': 'CouplingParameter', 'Level': 0},
                 )
                 for attr, value in additionalData.items():
                     if attr != 'id':
@@ -707,7 +707,7 @@ class SoSOntology(Ontology):
 
         # Create tree nodes and links from treeview
         self.get_treeview_nodes_and_links(
-            treeview, treeNodes, '', parameterNodes, hierarchyLinks, 0
+            treeview, treeNodes, '', parameterNodes, hierarchyLinks, 0,
         )
 
         return treeNodes, parameterNodes, hierarchyLinks
@@ -730,20 +730,20 @@ class SoSOntology(Ontology):
         modelList = []
         # retrive all models
         for modelURI in self.graph.subjects(
-            predicate=RDF.type, object=self.SOS.SoSDiscipline
+            predicate=RDF.type, object=self.SOS.SoSDiscipline,
         ):
             modelRow = dict.fromkeys(list(tableHeaders.keys()), '')
             modelRow['Name'] = self.label(modelURI)
 
             # get attributes
             modelAttributes = self.getSubjectAttributes(
-                modelURI, {**self.datapropertyDict, **self.annotationPropertyDict}
+                modelURI, {**self.datapropertyDict, **self.annotationPropertyDict},
             )
 
             # get discipline label
             disciplineLabel = ''
             for discURI in self.graph.objects(
-                subject=modelURI, predicate=self.SOS.belongsTo
+                subject=modelURI, predicate=self.SOS.belongsTo,
             ):
                 if (discURI, RDF.type, self.SOS.Discipline) in self.graph:
                     disciplineLabel = self.label(discURI)
@@ -753,7 +753,7 @@ class SoSOntology(Ontology):
             processesDict = {}
             processesNumber = 0
             for processURI in self.graph.objects(
-                subject=modelURI, predicate=self.SOS.usedIn
+                subject=modelURI, predicate=self.SOS.usedIn,
             ):
                 if (processURI, RDF.type, self.SOS.SoSProcess) in self.graph:
                     processAttributes = self.getSubjectAttributes(
@@ -763,18 +763,18 @@ class SoSOntology(Ontology):
                     if 'repository' in processAttributes:
                         if processAttributes['repository'] in processesDict:
                             processesDict[processAttributes['repository']].append(
-                                processAttributes.get('name', 'id')
+                                processAttributes.get('name', 'id'),
                             )
                         else:
                             processesDict[processAttributes['repository']] = [
-                                processAttributes.get('name', 'id')
+                                processAttributes.get('name', 'id'),
                             ]
                         processesNumber += 1
 
             modelRow['Type'] = modelAttributes.get('type', '')
             modelRow['Source'] = modelAttributes.get('source', '')
             modelRow['Last modification date'] = modelAttributes.get(
-                'last_modification_date', ''
+                'last_modification_date', '',
             )
             modelRow['Validated by'] = modelAttributes.get('validated_by', '')
             modelRow['Validated'] = modelAttributes.get('validated', '')
@@ -784,10 +784,10 @@ class SoSOntology(Ontology):
             modelRow['id'] = modelAttributes.get('id', '')
             if not onlyTable:
                 modelRow['input parameters quantity'] = modelAttributes.get(
-                    'outputParametersQuantity'
+                    'outputParametersQuantity',
                 )
                 modelRow['output parameters quantity'] = modelAttributes.get(
-                    'inputParametersQuantity'
+                    'inputParametersQuantity',
                 )
                 modelRow['description'] = modelAttributes.get('description')
 
@@ -800,20 +800,20 @@ class SoSOntology(Ontology):
         model_list = []
 
         for modelURI in self.graph.subjects(
-            predicate=RDF.type, object=self.SOS.SoSDiscipline
+            predicate=RDF.type, object=self.SOS.SoSDiscipline,
         ):
             # Model not authorised by default
             model_authorised = False
 
             # get attributes
             modelAttributes = self.getSubjectAttributes(
-                modelURI, {**self.datapropertyDict, **self.annotationPropertyDict}
+                modelURI, {**self.datapropertyDict, **self.annotationPropertyDict},
             )
 
             # get code repository label
             codeRepositoryLabel = ''
             for codeRepoURI in self.graph.objects(
-                subject=modelURI, predicate=self.SOS.belongsTo
+                subject=modelURI, predicate=self.SOS.belongsTo,
             ):
                 if (codeRepoURI, RDF.type, self.SOS.CodeRepository) in self.graph:
                     codeRepositoryLabel = self.label(codeRepoURI)
@@ -823,7 +823,7 @@ class SoSOntology(Ontology):
             processesDict = {}
             processesNumber = 0
             for processURI in self.graph.objects(
-                subject=modelURI, predicate=self.SOS.usedIn
+                subject=modelURI, predicate=self.SOS.usedIn,
             ):
                 if (processURI, RDF.type, self.SOS.SoSProcess) in self.graph:
                     processAttributes = self.getSubjectAttributes(
@@ -842,10 +842,10 @@ class SoSOntology(Ontology):
                                 ):
                                     model_authorised = True
                                     process_metadata = self.get_process_metadata(
-                                        processAttributes.get('id', '')
+                                        processAttributes.get('id', ''),
                                     )
                                     repo_metadata = self.get_repo_metadata(
-                                        processAttributes.get('repository', '')
+                                        processAttributes.get('repository', ''),
                                     )
                                     process_name = process_metadata.get('label', 'id')
                                     repo_name = repo_metadata.get('label', 'id')
@@ -865,7 +865,7 @@ class SoSOntology(Ontology):
                 new_model.type = modelAttributes.get('type', '')
                 new_model.source = modelAttributes.get('source', '')
                 new_model.last_modification_date = modelAttributes.get(
-                    'last_modification_date', ''
+                    'last_modification_date', '',
                 )
                 new_model.validated_by = modelAttributes.get('validated_by', '')
                 new_model.validated = modelAttributes.get('validated', 'NO')
@@ -873,10 +873,10 @@ class SoSOntology(Ontology):
                 new_model.processes_using_model = processesNumber
                 new_model.processes_using_model_list = processesDict
                 new_model.inputs_parameters_quantity = modelAttributes.get(
-                    'inputParameterUsagesQuantity', ''
+                    'inputParameterUsagesQuantity', '',
                 )
                 new_model.outputs_parameters_quantity = modelAttributes.get(
-                    'outputParameterUsagesQuantity', ''
+                    'outputParameterUsagesQuantity', '',
                 )
                 new_model.icon = modelAttributes.get('icon', '')
                 new_model.version = modelAttributes.get('version', '')
@@ -920,7 +920,7 @@ class SoSOntology(Ontology):
             for key, value in modelDict.items():
                 if key == 'Processes Using Model':
                     modelStatusRow.append(
-                        {'header': key, 'value': value, 'details': processList}
+                        {'header': key, 'value': value, 'details': processList},
                     )
                 elif key == 'Name':
                     modelStatusRow.append(
@@ -928,11 +928,11 @@ class SoSOntology(Ontology):
                             'header': key,
                             'value': value,
                             'details': modelDict.get('id', None),
-                        }
+                        },
                     )
                 elif key != 'Processes Using Model List' and key != 'id':
                     modelStatusRow.append(
-                        {'header': key, 'value': value, 'details': None}
+                        {'header': key, 'value': value, 'details': None},
                     )
 
             modelsStatusTable.append(modelStatusRow)
@@ -1101,7 +1101,7 @@ class SoSOntology(Ontology):
 
             if codeRepoURI is not None:
                 codeRepositoriesTriples.append(
-                    (processRepoURI, self.SOS.belongsTo, codeRepoURI, self.graph)
+                    (processRepoURI, self.SOS.belongsTo, codeRepoURI, self.graph),
                 )
 
             self.add_triples_list(codeRepositoriesTriples)
@@ -1275,7 +1275,7 @@ class SoSOntology(Ontology):
 
             # we search for the code repository URI
             codeRepositoryURI = self.value(
-                None, self.SOS.id, self.toLiteral(sos_discipline.repository.id), 'uri'
+                None, self.SOS.id, self.toLiteral(sos_discipline.repository.id), 'uri',
             )
 
             if codeRepositoryURI is not None:
@@ -1286,12 +1286,12 @@ class SoSOntology(Ontology):
                         self.SOS.belongsTo,
                         codeRepositoryURI,
                         self.graph,
-                    )
+                    ),
                 )
 
             # we search for the code repository URI
             codeRepositoryURI = self.value(
-                None, self.SOS.id, self.toLiteral(sos_discipline.repository.id), 'uri'
+                None, self.SOS.id, self.toLiteral(sos_discipline.repository.id), 'uri',
             )
 
             if codeRepositoryURI is not None:
@@ -1302,14 +1302,14 @@ class SoSOntology(Ontology):
                         self.SOS.belongsTo,
                         codeRepositoryURI,
                         self.graph,
-                    )
+                    ),
                 )
 
             if len(sos_discipline.inputParameterUsagesIds) > 0:
                 for parameter_usage in sos_discipline.inputParameterUsagesList:
                     # we search for the URI
                     parameterUsageIRI = self.value(
-                        None, self.SOS.id, self.toLiteral(parameter_usage.id), 'uri'
+                        None, self.SOS.id, self.toLiteral(parameter_usage.id), 'uri',
                     )
 
                     if parameterUsageIRI is not None:
@@ -1319,14 +1319,14 @@ class SoSOntology(Ontology):
                                 self.SOS.hasInput,
                                 parameterUsageIRI,
                                 self.graph,
-                            )
+                            ),
                         )
 
             if len(sos_discipline.outputParameterUsagesIds) > 0:
                 for parameter_usage in sos_discipline.outputParameterUsagesList:
                     # we search for the URI
                     parameterUsageIRI = self.value(
-                        None, self.SOS.id, self.toLiteral(parameter_usage.id), 'uri'
+                        None, self.SOS.id, self.toLiteral(parameter_usage.id), 'uri',
                     )
 
                     if parameterUsageIRI is not None:
@@ -1336,7 +1336,7 @@ class SoSOntology(Ontology):
                                 self.SOS.hasOutput,
                                 parameterUsageIRI,
                                 self.graph,
-                            )
+                            ),
                         )
 
             self.add_triples_list(sosDisciplineTriples)
@@ -1346,7 +1346,7 @@ class SoSOntology(Ontology):
 
             # Create the usecase URI
             usecaseURI = self.create_new_URI(
-                f'{SoSOntology.BASE_URI}usecase_', usecase.id
+                f'{SoSOntology.BASE_URI}usecase_', usecase.id,
             )
 
             usecaseTriples = [
@@ -1370,12 +1370,12 @@ class SoSOntology(Ontology):
 
             # we search for the process URI
             processURI = self.value(
-                None, self.SOS.id, self.toLiteral(usecase.process.id), 'uri'
+                None, self.SOS.id, self.toLiteral(usecase.process.id), 'uri',
             )
 
             if processURI is not None:
                 usecaseTriples.append(
-                    (usecaseURI, self.SOS.implements, processURI, self.graph)
+                    (usecaseURI, self.SOS.implements, processURI, self.graph),
                 )
 
             self.add_triples_list(usecaseTriples)
@@ -1385,7 +1385,7 @@ class SoSOntology(Ontology):
 
             # Create the usecase URI
             couplingURI = self.create_new_URI(
-                f'{SoSOntology.BASE_URI}usecase_', usecase.id
+                f'{SoSOntology.BASE_URI}usecase_', usecase.id,
             )
 
             usecaseTriples = [
@@ -1407,19 +1407,19 @@ class SoSOntology(Ontology):
 
             # we search for the disciplineFrom URI
             disciplineFromURI = self.value(
-                None, self.SOS.id, self.toLiteral(usecase.disciplineFrom.id), 'uri'
+                None, self.SOS.id, self.toLiteral(usecase.disciplineFrom.id), 'uri',
             )
             # we search for the disciplineTo URI
             disciplineToURI = self.value(
-                None, self.SOS.id, self.toLiteral(usecase.disciplineTo.id), 'uri'
+                None, self.SOS.id, self.toLiteral(usecase.disciplineTo.id), 'uri',
             )
 
             if disciplineFromURI is not None and disciplineToURI is not None:
                 usecaseTriples.append(
-                    (couplingURI, self.SOS.couplingOut, disciplineFromURI, self.graph)
+                    (couplingURI, self.SOS.couplingOut, disciplineFromURI, self.graph),
                 )
                 usecaseTriples.append(
-                    (couplingURI, self.SOS.couplingIn, disciplineToURI, self.graph)
+                    (couplingURI, self.SOS.couplingIn, disciplineToURI, self.graph),
                 )
 
             # we search for the parameterUsageIn URI
@@ -1433,7 +1433,7 @@ class SoSOntology(Ontology):
                 )
                 if parameterUsageIn is not None:
                     usecaseTriples.append(
-                        (couplingURI, self.SOS.represents, parameterUsageIn, self.graph)
+                        (couplingURI, self.SOS.represents, parameterUsageIn, self.graph),
                     )
             # we search for the parameterUsageOut URI
             parameterUsageOut = None
@@ -1451,7 +1451,7 @@ class SoSOntology(Ontology):
                             self.SOS.represents,
                             parameterUsageOut,
                             self.graph,
-                        )
+                        ),
                     )
 
             self.add_triples_list(usecaseTriples)
@@ -1461,7 +1461,7 @@ class SoSOntology(Ontology):
         for sos_process in sos_processes.sos_entity_dict.values():
             # Create the process URI
             processURI = self.create_new_URI(
-                f'{SoSOntology.BASE_URI}sos_process_', sos_process.id
+                f'{SoSOntology.BASE_URI}sos_process_', sos_process.id,
             )
 
             processTriples = [
@@ -1544,12 +1544,12 @@ class SoSOntology(Ontology):
 
             # we search for the process URI
             processRepoURI = self.value(
-                None, self.SOS.id, self.toLiteral(sos_process.repository.id), 'uri'
+                None, self.SOS.id, self.toLiteral(sos_process.repository.id), 'uri',
             )
 
             if processRepoURI is not None:
                 processTriples.append(
-                    (processURI, self.SOS.belongsTo, processRepoURI, self.graph)
+                    (processURI, self.SOS.belongsTo, processRepoURI, self.graph),
                 )
 
             self.add_triples_list(processTriples)
@@ -1561,19 +1561,19 @@ class SoSOntology(Ontology):
 
             # retrieve the process URI
             processURI = self.value(
-                None, self.SOS.id, self.toLiteral(sos_process.id), 'uri'
+                None, self.SOS.id, self.toLiteral(sos_process.id), 'uri',
             )
 
             if processURI is not None:
                 for modelId in sos_process.models_list_ids:
                     # we search for the sos_discipline URI
                     sosDisciplineURI = self.value(
-                        None, self.SOS.id, self.toLiteral(modelId), 'uri'
+                        None, self.SOS.id, self.toLiteral(modelId), 'uri',
                     )
 
                     if sosDisciplineURI is not None:
                         processDisciplineLinkTriples.append(
-                            (sosDisciplineURI, self.SOS.usedIn, processURI, self.graph)
+                            (sosDisciplineURI, self.SOS.usedIn, processURI, self.graph),
                         )
 
             if len(processDisciplineLinkTriples) > 0:
@@ -1584,7 +1584,7 @@ class SoSOntology(Ontology):
         for parameter in parameters.sos_entity_dict.values():
             # Create the parameter URI
             parameterURI = self.create_new_URI(
-                f'{SoSOntology.BASE_URI}parameter_', parameter.id
+                f'{SoSOntology.BASE_URI}parameter_', parameter.id,
             )
 
             parameterTriples = [
@@ -1853,7 +1853,7 @@ class SoSOntology(Ontology):
         if sos_process_repositories is not None:
             # we will add all triples for the sos_process_repositories
             print(
-                f'Add {sos_process_repositories.len()} SoS Process Repositories triples'
+                f'Add {sos_process_repositories.len()} SoS Process Repositories triples',
             )
             self.createSoSProcessRepositoriesTriples(sos_process_repositories)
 
@@ -1865,7 +1865,7 @@ class SoSOntology(Ontology):
         if parameters_usages is not None and parameters is not None:
             # we will add all triples for the sos_processes
             print(
-                f'Add {parameters_usages.len()} Parameter Usage and {parameters.len()} Parameters triples'
+                f'Add {parameters_usages.len()} Parameter Usage and {parameters.len()} Parameters triples',
             )
             self.createParametersAndUsagesTriples(parameters)
 
@@ -1910,13 +1910,13 @@ class SoSOntology(Ontology):
 
         # we first need to find the entity associated to the identifier
         entityURI = self.value(
-            None, self.SOS.id, Literal(identifier, datatype=XSD.string), 'uri'
+            None, self.SOS.id, Literal(identifier, datatype=XSD.string), 'uri',
         )
 
         if entityURI is not None:
             # get documentation
             entity_documentation = self.value(
-                entityURI, self.SOS.documentation, None, 'value'
+                entityURI, self.SOS.documentation, None, 'value',
             )
             if entity_documentation is not None and entity_documentation != '':
                 markdown_documentation = entity_documentation
@@ -1924,7 +1924,7 @@ class SoSOntology(Ontology):
         else:
             # It means the value has not been found
             self.logger.debug(
-                f'The entity: {identifier} HAS NOT BEEN FOUND in the Ontology'
+                f'The entity: {identifier} HAS NOT BEEN FOUND in the Ontology',
             )
 
         return markdown_documentation
@@ -1988,7 +1988,7 @@ class SoSOntology(Ontology):
         parameterList = []
         # retrieve all parameter URI
         for parameterURI in self.graph.subjects(
-            predicate=RDF.type, object=self.SOS.Parameter
+            predicate=RDF.type, object=self.SOS.Parameter,
         ):
             parameter_info = {
                 'id': self.SOS.id,
@@ -2006,7 +2006,7 @@ class SoSOntology(Ontology):
             }
             # get parameter attributes
             parameter_info = self.get_object_values_dict(
-                subjectURI=parameterURI, values_dict=parameter_info
+                subjectURI=parameterURI, values_dict=parameter_info,
             )
             parameter_info['uri'] = parameterURI
             parameter_info['label'] = self.label(parameterURI)
@@ -2027,14 +2027,14 @@ class SoSOntology(Ontology):
                     'disciplines_using_parameter'
                 ].split(',\n')
                 parameter_info['nb_disciplines_using_parameter'] = len(
-                    parameter_info['disciplines_using_parameter']
+                    parameter_info['disciplines_using_parameter'],
                 )
 
             # get all parameter usage
             models_using_parameter = set()
             parameter_usage_details = []
             for parameterUsageURI in self.graph.subjects(
-                predicate=self.SOS.instanceOf, object=parameterURI
+                predicate=self.SOS.instanceOf, object=parameterURI,
             ):
                 parameter_usage_info = {
                     'model_id': None,
@@ -2056,7 +2056,7 @@ class SoSOntology(Ontology):
                 }
 
                 parameter_usage_info = self.get_object_values_dict(
-                    subjectURI=parameterUsageURI, values_dict=parameter_usage_info
+                    subjectURI=parameterUsageURI, values_dict=parameter_usage_info,
                 )
 
                 modelURI = None
@@ -2077,7 +2077,7 @@ class SoSOntology(Ontology):
 
                 if modelURI is not None:
                     parameter_usage_info['model_id'] = self.value(
-                        s=modelURI, p=self.SOS.id, o=None, returnType='value'
+                        s=modelURI, p=self.SOS.id, o=None, returnType='value',
                     )
                     parameter_usage_info['model_label'] = self.label(modelURI)
                     models_using_parameter.add(parameter_usage_info['model_id'])
@@ -2105,7 +2105,7 @@ class SoSOntology(Ontology):
         parameterList = []
         # retrieve all parameter URI
         for parameterURI in self.graph.subjects(
-            predicate=RDF.type, object=self.SOS.Parameter
+            predicate=RDF.type, object=self.SOS.Parameter,
         ):
             parameter_info = {
                 'id': None,
@@ -2113,7 +2113,7 @@ class SoSOntology(Ontology):
                 'label': None,
             }
             parameter_info['id'] = self.value(
-                s=parameterURI, p=self.SOS.id, o=None, returnType='value'
+                s=parameterURI, p=self.SOS.id, o=None, returnType='value',
             )
             parameter_info['uri'] = parameterURI
             parameter_info['label'] = self.label(parameterURI)
@@ -2145,7 +2145,7 @@ class SoSOntology(Ontology):
         processList = []
         # retrieve all process URI
         for processURI in self.graph.subjects(
-            predicate=RDF.type, object=self.SOS.SoSProcess
+            predicate=RDF.type, object=self.SOS.SoSProcess,
         ):
             process_info = {
                 'id': self.SOS.id,
@@ -2162,23 +2162,23 @@ class SoSOntology(Ontology):
             }
             # get parameter attributes
             process_info = self.get_object_values_dict(
-                subjectURI=processURI, values_dict=process_info
+                subjectURI=processURI, values_dict=process_info,
             )
             process_info['uri'] = processURI
             process_info['label'] = self.label(processURI)
 
             processRepositoryURI = self.value(
-                s=processURI, p=self.SOS.belongsTo, o=None, returnType='uri'
+                s=processURI, p=self.SOS.belongsTo, o=None, returnType='uri',
             )
             if processRepositoryURI is not None:
                 process_info['process_repository_label'] = self.label(
-                    processRepositoryURI
+                    processRepositoryURI,
                 )
 
             # get all disciplines used in the process
             disciplines_used_in_process = []
             for discURI in self.graph.subjects(
-                predicate=self.SOS.usedIn, object=processURI
+                predicate=self.SOS.usedIn, object=processURI,
             ):
                 disc_info = {
                     'id': self.SOS.id,
@@ -2187,19 +2187,19 @@ class SoSOntology(Ontology):
                 }
 
                 disc_info = self.get_object_values_dict(
-                    subjectURI=discURI, values_dict=disc_info
+                    subjectURI=discURI, values_dict=disc_info,
                 )
                 disc_info['label'] = self.label(discURI)
                 disciplines_used_in_process.append(disc_info)
                 process_info['quantity_disciplines_used'] += 1
             process_info['discipline_list'] = sorted(
-                disciplines_used_in_process, key=lambda x: x['label'].lower()
+                disciplines_used_in_process, key=lambda x: x['label'].lower(),
             )
 
             # get all usecases associated to the process
             associated_usecases = []
             for usecaseURI in self.graph.subjects(
-                predicate=self.SOS.implements, object=processURI
+                predicate=self.SOS.implements, object=processURI,
             ):
                 usecase_info = {
                     'id': self.SOS.id,
@@ -2210,13 +2210,13 @@ class SoSOntology(Ontology):
                 }
 
                 usecase_info = self.get_object_values_dict(
-                    subjectURI=usecaseURI, values_dict=usecase_info
+                    subjectURI=usecaseURI, values_dict=usecase_info,
                 )
                 usecase_info['process'] = process_info['label']
                 usecase_info['repository'] = process_info['process_repository_label']
                 associated_usecases.append(usecase_info)
             process_info['associated_usecases'] = sorted(
-                associated_usecases, key=lambda x: x['name'].lower()
+                associated_usecases, key=lambda x: x['name'].lower(),
             )
 
             processList.append(process_info)
@@ -2256,7 +2256,7 @@ class SoSOntology(Ontology):
         disciplineList = []
         # retrieve all discipline URI
         for disciplineURI in self.graph.subjects(
-            predicate=RDF.type, object=self.SOS.SoSDiscipline
+            predicate=RDF.type, object=self.SOS.SoSDiscipline,
         ):
             discipline_info = {
                 'id': self.SOS.id,
@@ -2285,7 +2285,7 @@ class SoSOntology(Ontology):
             }
             # get discipline attributes
             discipline_info = self.get_object_values_dict(
-                subjectURI=disciplineURI, values_dict=discipline_info
+                subjectURI=disciplineURI, values_dict=discipline_info,
             )
             discipline_info['uri'] = disciplineURI
             discipline_info['label'] = self.label(disciplineURI)
@@ -2298,7 +2298,7 @@ class SoSOntology(Ontology):
             # get all processes using the discipline
             process_using_discipline = []
             for processURI in self.graph.objects(
-                predicate=self.SOS.usedIn, subject=disciplineURI
+                predicate=self.SOS.usedIn, subject=disciplineURI,
             ):
                 # {process_id: string, process_label: string, repository_id: string, repository_label: string}
                 process_info = {
@@ -2309,12 +2309,12 @@ class SoSOntology(Ontology):
                 }
 
                 process_info = self.get_object_values_dict(
-                    subjectURI=processURI, values_dict=process_info
+                    subjectURI=processURI, values_dict=process_info,
                 )
                 process_info['process_label'] = self.label(processURI)
 
                 processRepositoryURI = self.value(
-                    s=processURI, p=self.SOS.belongsTo, o=None, returnType='uri'
+                    s=processURI, p=self.SOS.belongsTo, o=None, returnType='uri',
                 )
                 if processRepositoryURI is not None:
                     process_info['repository_label'] = self.label(processRepositoryURI)
@@ -2325,7 +2325,7 @@ class SoSOntology(Ontology):
             # get all output parameters od the discipline
             output_parameters = []
             for parameterUsageURI in self.graph.objects(
-                predicate=self.SOS.hasOutput, subject=disciplineURI
+                predicate=self.SOS.hasOutput, subject=disciplineURI,
             ):
                 # {parameter_usage_id: string, parameter_id: string, parameter_label: string}
                 parameter_info = {
@@ -2335,15 +2335,15 @@ class SoSOntology(Ontology):
                 }
 
                 parameter_info = self.get_object_values_dict(
-                    subjectURI=parameterUsageURI, values_dict=parameter_info
+                    subjectURI=parameterUsageURI, values_dict=parameter_info,
                 )
 
                 parameterURI = self.value(
-                    s=parameterUsageURI, p=self.SOS.instanceOf, o=None, returnType='uri'
+                    s=parameterUsageURI, p=self.SOS.instanceOf, o=None, returnType='uri',
                 )
                 if parameterURI is not None:
                     parameter_info['parameter_id'] = self.value(
-                        s=parameterURI, p=self.SOS.id, o=None, returnType='value'
+                        s=parameterURI, p=self.SOS.id, o=None, returnType='value',
                     )
                     parameter_info['parameter_label'] = self.label(parameterURI)
 
@@ -2353,7 +2353,7 @@ class SoSOntology(Ontology):
             # get all input parameters od the discipline
             input_parameters = []
             for parameterUsageURI in self.graph.objects(
-                predicate=self.SOS.hasInput, subject=disciplineURI
+                predicate=self.SOS.hasInput, subject=disciplineURI,
             ):
                 # {parameter_usage_id: string, parameter_id: string, parameter_label: string}
                 parameter_info = {
@@ -2363,15 +2363,15 @@ class SoSOntology(Ontology):
                 }
 
                 parameter_info = self.get_object_values_dict(
-                    subjectURI=parameterUsageURI, values_dict=parameter_info
+                    subjectURI=parameterUsageURI, values_dict=parameter_info,
                 )
 
                 parameterURI = self.value(
-                    s=parameterUsageURI, p=self.SOS.instanceOf, o=None, returnType='uri'
+                    s=parameterUsageURI, p=self.SOS.instanceOf, o=None, returnType='uri',
                 )
                 if parameterURI is not None:
                     parameter_info['parameter_id'] = self.value(
-                        s=parameterURI, p=self.SOS.id, o=None, returnType='value'
+                        s=parameterURI, p=self.SOS.id, o=None, returnType='value',
                     )
                     parameter_info['parameter_label'] = self.label(parameterURI)
 
@@ -2381,7 +2381,7 @@ class SoSOntology(Ontology):
             disciplineList.append(discipline_info)
 
         discipline_list_sorted = sorted(
-            disciplineList, key=lambda x: x['label'].lower().strip()
+            disciplineList, key=lambda x: x['label'].lower().strip(),
         )
         return discipline_list_sorted
 
@@ -2425,10 +2425,10 @@ class SoSOntology(Ontology):
         ontoURI = self.value(None, RDF.type, OWL.Ontology, 'uri')
         description = str(self.value(ontoURI, DC.description, None, 'uri'))
         versionIRI = str(
-            self.graph.value(ontoURI, OWL.versionIRI, None, default=None, any=True)
+            self.graph.value(ontoURI, OWL.versionIRI, None, default=None, any=True),
         )
         last_updated = str(
-            self.graph.value(ontoURI, DC.modified, None, default=None, any=True)
+            self.graph.value(ontoURI, DC.modified, None, default=None, any=True),
         )
         general_information['description'] = description
         general_information['iri'] = str(ontoURI)
@@ -2452,7 +2452,7 @@ class SoSOntology(Ontology):
 
         source_code_traceability = []
         for codeRepoURI in self.graph.subjects(
-            predicate=RDF.type, object=self.SOS.CodeRepository
+            predicate=RDF.type, object=self.SOS.CodeRepository,
         ):
             codeRepo_info = {
                 'name': self.SOS.name,
@@ -2463,11 +2463,11 @@ class SoSOntology(Ontology):
             }
             # get discipline attributes
             codeRepo_info = self.get_object_values_dict(
-                subjectURI=codeRepoURI, values_dict=codeRepo_info
+                subjectURI=codeRepoURI, values_dict=codeRepo_info,
             )
             source_code_traceability.append(codeRepo_info)
         general_information['source_code_traceability'] = sorted(
-            source_code_traceability, key=lambda x: x['name'].lower()
+            source_code_traceability, key=lambda x: x['name'].lower(),
         )
 
         return general_information

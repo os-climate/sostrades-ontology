@@ -65,7 +65,7 @@ class Ontology:
         # Load ontology owl file
         self.graph.load(path, format=onto_format)
         self.logger.info(
-            f'Ontology {basename(path)} loaded with {len(self.graph)} triples'
+            f'Ontology {basename(path)} loaded with {len(self.graph)} triples',
         )
 
     def getOntologyPredicatesDict(self, predicate):
@@ -103,7 +103,7 @@ class Ontology:
                 objectLabel = self.label(objectURI)
             if predicatelabel in attributes:
                 attributes[predicatelabel]['object'].append(
-                    {'label': objectLabel, 'type': objectType, 'uri': objectURI}
+                    {'label': objectLabel, 'type': objectType, 'uri': objectURI},
                 )
             else:
                 attributes[predicatelabel] = {
@@ -113,7 +113,7 @@ class Ontology:
                         'uri': predicateURI,
                     },
                     'object': [
-                        {'label': objectLabel, 'type': objectType, 'uri': objectURI}
+                        {'label': objectLabel, 'type': objectType, 'uri': objectURI},
                     ],
                 }
         return attributes
@@ -131,7 +131,7 @@ class Ontology:
     def query(self, queryString, resultType):
         queryResults = self.graph.query(queryString, initNs=self.namespace_dict)
         self.logger.debug(
-            f'SPARQL Query Executed, {len(list(queryResults))} result lines.'
+            f'SPARQL Query Executed, {len(list(queryResults))} result lines.',
         )
         # self.graph.query.ResultSerializer(queryResults)
         if resultType == 'dict':
@@ -280,7 +280,7 @@ class Ontology:
                 activateInstances = True
                 classDict[classURI]['instances_quantity'] = len(instancesList)
                 classDict[classURI]['instances_list'] = self.toolbox.array_to_string(
-                    instancesList
+                    instancesList,
                 )
         if activateInstances:
             attributesDict['instances_quantity'] = {}

@@ -61,7 +61,7 @@ temp_folder = tempfile.mkdtemp(prefix="ontology_temp_")
 files_to_copy = [
     ontology_owl_file_path,
     ontology_excel_file_path,
-    ontology_log_file_path
+    ontology_log_file_path,
 ]
 
 # Copy each file into the temporary folder.
@@ -408,7 +408,7 @@ def download_ontology_owl():
                 path = ontology.ontology_excel_file_path
             else:
                 return str(
-                    f'Filetype {filetype} does not exists. Possible options are filetype == owl or filetype == xlsx'
+                    f'Filetype {filetype} does not exists. Possible options are filetype == owl or filetype == xlsx',
                 )
 
             try:
@@ -416,7 +416,7 @@ def download_ontology_owl():
             except Exception as e:
                 return str(e)
     return str(
-        'No correct parameter were given. Possible options are filetype == owl or filetype == xlsx'
+        'No correct parameter were given. Possible options are filetype == owl or filetype == xlsx',
     )
 
 
@@ -545,7 +545,7 @@ def load_ontology_process_metadata(process_identifier):
     ontology = SoSOntology.instance()
 
     return make_response(
-        jsonify(ontology.get_process_metadata(process_identifier)), 200
+        jsonify(ontology.get_process_metadata(process_identifier)), 200,
     )
 
 
@@ -561,7 +561,7 @@ def load_ontology_process_metadata_by_names():
         raise BadRequest('Missing mandatory parameter list "processes_name"')
     if not isinstance(processes_name, list):
         raise BadRequest(
-            f'Parameter "processes_name" has the wrong type, intended "list" received "{type(processes_name)}"'
+            f'Parameter "processes_name" has the wrong type, intended "list" received "{type(processes_name)}"',
         )
 
     ontology = SoSOntology.instance()
@@ -580,7 +580,7 @@ def load_ontology_repository_metadata(repository_identifier):
     ontology = SoSOntology.instance()
 
     return make_response(
-        jsonify(ontology.get_repo_metadata(repository_identifier)), 200
+        jsonify(ontology.get_repo_metadata(repository_identifier)), 200,
     )
 
 
@@ -596,7 +596,7 @@ def load_ontology_repository_metadata_by_names():
         raise BadRequest('Missing mandatory repository list "repositories_name"')
     if not isinstance(repositories_name, list):
         raise BadRequest(
-            f'Parameter "repositories_name" has the wrong type, intended "list" received "{type(repositories_name)}"'
+            f'Parameter "repositories_name" has the wrong type, intended "list" received "{type(repositories_name)}"',
         )
 
     ontology = SoSOntology.instance()
@@ -635,13 +635,13 @@ def load_ontology_n2():
 
 
 @app.route(
-    '/api/ontology/markdown_documentation/<string:element_identifier>', methods=['GET']
+    '/api/ontology/markdown_documentation/<string:element_identifier>', methods=['GET'],
 )
 def load_ontology_markdown_documentation(element_identifier):
     ontology = SoSOntology.instance()
 
     return make_response(
-        jsonify(ontology.get_markdown_documentation(element_identifier)), 200
+        jsonify(ontology.get_markdown_documentation(element_identifier)), 200,
     )
 
 
@@ -663,7 +663,7 @@ def after_request(response):
         duration = time.time() - session[START_TIME]
 
     app.logger.info(
-        f'{request.remote_addr}, {request.method}, {request.scheme}, {request.full_path}, {response.status}, {duration} sec.'
+        f'{request.remote_addr}, {request.method}, {request.scheme}, {request.full_path}, {response.status}, {duration} sec.',
     )
     return response
 
