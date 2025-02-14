@@ -508,11 +508,11 @@ class SoSOntology(Ontology):
                 )
 
                 # retrieve associated parameter
-                parameterURI = list(
+                parameterURI = next(
                     self.graph.objects(
                         subject=parameterUsageURI, predicate=self.SOS.instanceOf,
                     ),
-                )[0]
+                )
 
                 if parameterURI is not None:
                     parameter_info = {

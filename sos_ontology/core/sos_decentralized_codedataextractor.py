@@ -1206,7 +1206,7 @@ class SoSCodeDataExtractor:
                                 f'{library_path} folder is not a git folder')
                         except Exception as error:
                             logger.error(
-                                f'{library_path} folder generates the following error while accessing with git:\n {str(error)}',
+                                f'{library_path} folder generates the following error while accessing with git:\n {error!s}',
                             )
 
         return code_repo_dict
