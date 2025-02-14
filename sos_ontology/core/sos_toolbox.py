@@ -61,7 +61,7 @@ class SoSToolbox:
         loaded_json = None
         if json_file_path is not None:
             try:
-                with open(json_file_path, 'r') as outfile:
+                with open(json_file_path) as outfile:
                     loaded_json = jsonpickle.decode(outfile.read())
                 print(f'{len(loaded_json.keys())} {entity} loaded')
             except Exception as ex:

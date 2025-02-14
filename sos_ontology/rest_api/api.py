@@ -415,9 +415,7 @@ def download_ontology_owl():
                 return send_file(path, as_attachment=True)
             except Exception as e:
                 return str(e)
-    return str(
-        'No correct parameter were given. Possible options are filetype == owl or filetype == xlsx',
-    )
+    return 'No correct parameter were given. Possible options are filetype == owl or filetype == xlsx'
 
 
 @app.route('/api/ontology/v1/download_logs', methods=['GET'])

@@ -183,7 +183,7 @@ if len(PYTHONPATH_list) > 0:
     )
 
     # Display output_log.txt file
-    with open('output_log.txt', 'r') as file:
+    with open('output_log.txt') as file:
         content = file.read()
         print(content)
 
@@ -202,7 +202,7 @@ if 'BUILD_URL' in environ_dict:
     BUILD_URL = environ_dict['BUILD_URL']
 
 if webhookURL is not None and BUILD_URL is not None:
-    with open('short_log.txt', 'r') as short_log_file:
+    with open('short_log.txt') as short_log_file:
         shortLog = short_log_file.read()
 
     if platform is None:

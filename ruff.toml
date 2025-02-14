@@ -1,5 +1,5 @@
 [lint]
-select = ["I", "TCH", "PLC", "PLE", "F", "E", "PERF", "COM", "RUF"]
+select = ["I", "TCH", "PLC", "PLE", "F", "E", "PERF", "COM", "RUF", "UP"]
 # extend-select = ["ALL"]
 
 ignore  = [

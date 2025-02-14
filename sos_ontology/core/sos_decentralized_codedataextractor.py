@@ -181,7 +181,7 @@ class SoSCodeDataExtractor:
         # return the list of classes instantiated by the first declaration of
         # function in a Python file
         try:
-            with open(file=file, mode="r", encoding="utf-8", errors="ignore") as myfile:
+            with open(file=file, encoding="utf-8", errors="ignore") as myfile:
                 data = myfile.read()
                 p = ast.parse(data)
                 classes = [
@@ -214,7 +214,7 @@ class SoSCodeDataExtractor:
         desc_out = {}
 
         try:
-            with open(file=file, mode="r", encoding="utf-8", errors="ignore") as myfile:
+            with open(file=file, encoding="utf-8", errors="ignore") as myfile:
                 data = myfile.read()
                 p = ast.parse(data)
                 for node in ast.walk(p):
@@ -281,7 +281,7 @@ class SoSCodeDataExtractor:
     def get_imports_from_parsing_code(self, file):
         imports = {}
         try:
-            with open(file=file, mode="r", encoding="utf-8", errors="ignore") as myfile:
+            with open(file=file, encoding="utf-8", errors="ignore") as myfile:
                 data = myfile.read()
                 p = ast.parse(data)
                 for node in ast.walk(p):
