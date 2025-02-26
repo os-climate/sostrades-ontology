@@ -1103,7 +1103,7 @@ class SoSCodeDataExtractor:
 
         # Regular expression to remove connection info from url when token is
         # used
-        INFO_REGEXP = ':\/\/.*@'
+        INFO_REGEXP = '://.*@'
         INFO_REPLACE = '://'
 
         # Regular expression when it is a remote repostory with ssh
