@@ -214,7 +214,7 @@ if webhookURL is not None and BUILD_URL is not None:
         {
             "header": {
                 "title": "Decentralized Ontology Update" + platform,
-                "subtitle": "Mister Jenkins",
+                "subtitle": "CI/CD",
                 "imageUrl": "https://www.coolcatcollars.co.uk/user/products/large/Leopold.jpg",
                 "imageStyle": "IMAGE",
             },
