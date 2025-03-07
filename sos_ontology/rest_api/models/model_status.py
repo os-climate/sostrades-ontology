@@ -35,7 +35,7 @@ class ModelStatus:
         self.category = None
 
     def serialize(self):
-        """json serializer for dto purpose"""
+        """Json serializer for dto purpose"""
         return {
             'id': self.id,
             'name': self.name,

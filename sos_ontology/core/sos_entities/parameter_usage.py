@@ -103,7 +103,7 @@ class ParameterUsage(SoSEntity):
                 if key == 'user_level' and self.userLevel != value:
                     self.userLevel = value
                 if key == 'possible_values' and array_equal(
-                    self.possibleValues, value, equal_nan=False
+                    self.possibleValues, value, equal_nan=False,
                 ):
                     self.possibleValues = value
                 if key == 'range' and self.range != value:

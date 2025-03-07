@@ -21,23 +21,23 @@ from os.path import dirname, join
 from sos_ontology.core.sos_ontology import SoSOntology
 
 parameter_usages_path = join(dirname(__file__), 'data', 'parameter_usages.json')
-with open(parameter_usages_path, 'r') as outfile:
+with open(parameter_usages_path) as outfile:
     parameter_usages = json.loads(outfile.read())
 
 repositories_name_path = join(dirname(__file__), 'data', 'repositories_name.json')
-with open(repositories_name_path, 'r') as outfile:
+with open(repositories_name_path) as outfile:
     repositories_name = json.loads(outfile.read())
 
 processes_name_path = join(dirname(__file__), 'data', 'processes_name.json')
-with open(processes_name_path, 'r') as outfile:
+with open(processes_name_path) as outfile:
     processes_name = json.loads(outfile.read())
 
 linked_process_dict_path = join(dirname(__file__), 'data', 'linked_process_dict.json')
-with open(linked_process_dict_path, 'r') as outfile:
+with open(linked_process_dict_path) as outfile:
     linked_process_dict = json.loads(outfile.read())
 
 data_request_path = join(dirname(__file__), 'data', 'data_request.json')
-with open(data_request_path, 'r') as outfile:
+with open(data_request_path) as outfile:
     data_request = json.loads(outfile.read())
 
 onto = SoSOntology.instance()

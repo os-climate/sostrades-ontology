@@ -21,7 +21,7 @@ from sos_ontology.core.sos_entities.sos_entity import SoSEntity
 
 class SoSProcessRepository(SoSEntity):
     def __init__(
-        self, id: str, label: str, description: str, code_repository: CodeRepository
+        self, id: str, label: str, description: str, code_repository: CodeRepository,
     ) -> None:
         super().__init__(id, label)
         self.description = description
