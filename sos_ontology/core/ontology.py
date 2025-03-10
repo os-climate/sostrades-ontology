@@ -17,7 +17,6 @@ limitations under the License.
 
 
 import logging
-from copy import deepcopy
 from os.path import basename
 
 import numpy as np
@@ -30,15 +29,10 @@ from sos_ontology.core.sos_toolbox import SoSToolbox
 
 
 class Ontology:
-    """
-    Class to use an ontology
-    """
+    """Class to use an ontology"""
 
     def __init__(self):
-        """
-        Constructor
-        """
-
+        """Constructor"""
         # Retrieve logging system
         self.logger = logging.getLogger('SoS.Ontology')
 
@@ -53,9 +47,7 @@ class Ontology:
         bind(datatype=URIRef('http://qudt.org/schema/qudt/LatexString'), pythontype=str)
 
     def __del__(self):
-        """
-        Destructor
-        """
+        """Destructor"""
         self.graph.close()
 
     def add_namespace_dict(self, namespace_dict):
@@ -66,7 +58,7 @@ class Ontology:
         # Load ontology owl file
         self.graph.load(path, format=onto_format)
         self.logger.info(
-            f'Ontology {basename(path)} loaded with {len(self.graph)} triples'
+            f'Ontology {basename(path)} loaded with {len(self.graph)} triples',
         )
 
     def getOntologyPredicatesDict(self, predicate):
@@ -81,15 +73,14 @@ class Ontology:
     def getSubjectAttributes(self, subject, attributesDict):
         attributes = {'uri': str(subject), 'label': self.label(subject)}
         for (attribute, attributeValue) in self.graph.predicate_objects(subject):
-            if attribute in attributesDict:
-                if (
-                    attributeValue.value is not None
-                    and attributeValue.value != ''
-                    and attributeValue.value != ' '
-                ):
-                    attributes[
-                        attributesDict[attribute]['label']
-                    ] = attributeValue.value
+            if attribute in attributesDict and (
+                attributeValue.value is not None
+                and attributeValue.value != ''
+                and attributeValue.value != ' '
+            ):
+                attributes[
+                    attributesDict[attribute]['label']
+                ] = attributeValue.value
         return attributes
 
     def getSubjectFullAttributes(self, subject):
@@ -104,7 +95,7 @@ class Ontology:
                 objectLabel = self.label(objectURI)
             if predicatelabel in attributes:
                 attributes[predicatelabel]['object'].append(
-                    {'label': objectLabel, 'type': objectType, 'uri': objectURI}
+                    {'label': objectLabel, 'type': objectType, 'uri': objectURI},
                 )
             else:
                 attributes[predicatelabel] = {
@@ -114,7 +105,7 @@ class Ontology:
                         'uri': predicateURI,
                     },
                     'object': [
-                        {'label': objectLabel, 'type': objectType, 'uri': objectURI}
+                        {'label': objectLabel, 'type': objectType, 'uri': objectURI},
                     ],
                 }
         return attributes
@@ -132,7 +123,7 @@ class Ontology:
     def query(self, queryString, resultType):
         queryResults = self.graph.query(queryString, initNs=self.namespace_dict)
         self.logger.debug(
-            f'SPARQL Query Executed, {len(list(queryResults))} result lines.'
+            f'SPARQL Query Executed, {len(list(queryResults))} result lines.',
         )
         # self.graph.query.ResultSerializer(queryResults)
         if resultType == 'dict':
@@ -174,12 +165,14 @@ class Ontology:
             return valueUri
 
     def get_object_values_dict(self, subjectURI, values_dict):
-        result_dict = deepcopy(values_dict)
-        for key, predicate in values_dict.items():
-            if predicate is not None and isinstance(predicate, URIRef):
-                result_dict[key] = self.value(
-                    s=subjectURI, p=predicate, o=None, returnType='value'
-                )
+        result_dict = {
+            key: (
+                self.value(s=subjectURI, p=predicate, o=None, returnType="value")
+                if predicate is not None and isinstance(predicate, URIRef)
+                else predicate
+            )
+            for key, predicate in values_dict.items()
+        }
         return result_dict
 
     def create_new_URI(self, namespace, URIstring):
@@ -225,28 +218,26 @@ class Ontology:
 
     def add_triple(self, s, p, o):
         # Add triple to the graph
-        if s is not None and p is not None and o is not None:
-            if (type(o) is Literal and o.value != '' and o.value is not None) or (
-                type(o) is not Literal
-            ):
-                if (s, p, o) not in self.graph:
-                    self.graph.add((s, p, o))
-                    self.countAddedTriples['triples'] += 1
-                    if p == RDF.type and o == OWL.NamedIndividual:
-                        self.countAddedTriples['individuals'] += 1
+        if s is not None and p is not None and o is not None and (
+            (type(o) is Literal and o.value != "" and o.value is not None)
+            or (type(o) is not Literal)
+        ) and (s, p, o) not in self.graph:
+            self.graph.add((s, p, o))
+            self.countAddedTriples["triples"] += 1
+            if p == RDF.type and o == OWL.NamedIndividual:
+                self.countAddedTriples["individuals"] += 1
 
     def update_triple_object(self, s, p, o_origin, o_updated):
         # Update triple object
-        if s is not None and p is not None and o_updated is not None:
-            if (
-                type(o_updated) is Literal
-                and o_updated.value != ''
-                and o_updated.value is not None
-            ) or (type(o_updated) is not Literal):
-                self.graph.set((s, p, o_updated))
-                # if (s, p, o_origin) in self.graph:
-                # self.graph.remove([s, p, o_origin])
-                # self.add_triple(s, p, o_updated)
+        if s is not None and p is not None and o_updated is not None and ((
+            type(o_updated) is Literal
+            and o_updated.value != ''
+            and o_updated.value is not None
+        ) or (type(o_updated) is not Literal)):
+            self.graph.set((s, p, o_updated))
+            # if (s, p, o_origin) in self.graph:
+            # self.graph.remove([s, p, o_origin])
+            # self.add_triple(s, p, o_updated)
 
     def add_triples_list(self, triplesList):
         # make use of addN method
@@ -279,7 +270,7 @@ class Ontology:
                 activateInstances = True
                 classDict[classURI]['instances_quantity'] = len(instancesList)
                 classDict[classURI]['instances_list'] = self.toolbox.array_to_string(
-                    instancesList
+                    instancesList,
                 )
         if activateInstances:
             attributesDict['instances_quantity'] = {}
@@ -303,10 +294,7 @@ class Ontology:
                 if valueLiteral is not None and len(valueLiteral) > 0:
                     returnLiteral = ',\n'.join([str(i) for i in valueLiteral])
             elif (
-                isinstance(valueLiteral, int)
-                or isinstance(valueLiteral, float)
-                or isinstance(valueLiteral, dict)
-                or isinstance(valueLiteral, str)
+                isinstance(valueLiteral, (int, float, dict, str))
             ):
                 returnLiteral = str(valueLiteral)
 
@@ -328,10 +316,7 @@ class Ontology:
                 if valueLiteral is not None and len(valueLiteral) > 0:
                     returnLiteral = ',\n'.join([str(i) for i in valueLiteral])
             elif (
-                isinstance(valueLiteral, int)
-                or isinstance(valueLiteral, float)
-                or isinstance(valueLiteral, dict)
-                or isinstance(valueLiteral, str)
+                isinstance(valueLiteral, (int, float, dict, str))
             ):
                 returnLiteral = str(valueLiteral)
 

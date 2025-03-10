@@ -1,5 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
+Modifications on 12/02/2025 Copyright 2025 Capgemini
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -35,7 +36,7 @@ class ModelStatus:
         self.category = None
 
     def serialize(self):
-        """json serializer for dto purpose"""
+        """Json serializer for dto purpose"""
         return {
             'id': self.id,
             'name': self.name,
