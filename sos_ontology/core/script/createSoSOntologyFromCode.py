@@ -63,10 +63,10 @@ except Exception:
     print('Impossible to retrieve Python Path. Stopping script')
 
 # retrieve path to current SoSOntology
-ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER', None)
+ONTOLOGY_FOLDER = environ_dict.get('ONTOLOGY_FOLDER')
 if ONTOLOGY_FOLDER is not None and ONTOLOGY_FOLDER != '':
     SoSaBox_current_path = join(
-        ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl'
+        ONTOLOGY_FOLDER, 'SoSTrades_Ontology_ABox_Decentralized.owl',
     )
 else:
     SoSaBox_current_path = join(
@@ -78,7 +78,7 @@ else:
 if len(PYTHONPATH_list) > 0:
     pathsDict = {
         'SoStBox': join(
-            dataOntologyPath, 'sos_ontology', 'SoSTrades_Ontology_TBox.owl'
+            dataOntologyPath, 'sos_ontology', 'SoSTrades_Ontology_TBox.owl',
         ),
         'SoSaBox': join(
             dataOntologyPath,
@@ -87,10 +87,10 @@ if len(PYTHONPATH_list) > 0:
         ),
         'SoSaBoxCurrent': SoSaBox_current_path,
         'ontologyCreationLogs': join(
-            dataOntologyPath, 'logs', 'ontologyCreationLogs.json'
+            dataOntologyPath, 'logs', 'ontologyCreationLogs.json',
         ),
         'excelTerminology': join(
-            dataOntologyPath, 'terminology', 'SoS_Trades_Terminology_ABox.xlsx'
+            dataOntologyPath, 'terminology', 'SoS_Trades_Terminology_ABox.xlsx',
         ),
     }
 
@@ -101,14 +101,14 @@ if len(PYTHONPATH_list) > 0:
     logs_dict = {}
 
     # retrieve previous traceability
-    previous_extraction_logs_path = pathsDict.get('ontologyCreationLogs', None)
+    previous_extraction_logs_path = pathsDict.get('ontologyCreationLogs')
     previous_extraction_logs = toolbox.load_json(
-        json_file_path=previous_extraction_logs_path, entity='Previous Logs'
+        json_file_path=previous_extraction_logs_path, entity='Previous Logs',
     )
     previous_code_repositories_traceability = {}
     if previous_extraction_logs is not None:
         previous_code_repositories_traceability = previous_extraction_logs.get(
-            'code_repositories_traceability', {}
+            'code_repositories_traceability', {},
         )
 
     codeData = SoSCodeDataExtractor(
@@ -121,7 +121,7 @@ if len(PYTHONPATH_list) > 0:
     logs_dict = codeData.generate_entities_from_code_repositories()
 
     print(
-        "#####################    CREATE ONTOLOGY ABOX FROM CODE  #########################"
+        "#####################    CREATE ONTOLOGY ABOX FROM CODE  #########################",
     )
 
     # Load SoS Tbox
@@ -143,18 +143,18 @@ if len(PYTHONPATH_list) > 0:
     )
 
     print(
-        "#####################    LOAD PREVIOUS ONTOLOGY    #########################"
+        "#####################    LOAD PREVIOUS ONTOLOGY    #########################",
     )
     oldOnto.load(pathsDict["SoSaBoxCurrent"], "xml")
 
     print(
-        "#####################    EXPORT UPDATED ONTOLOGY TO OWL   #########################"
+        "#####################    EXPORT UPDATED ONTOLOGY TO OWL   #########################",
     )
     # save ontology to OWL
     sosOnto.exportOntology(aboxPath=pathsDict["SoSaBox"])
 
     print(
-        '#####################    EXPORT ONTOLOGY TO EXCEL TERMINOLOGY   #########################'
+        '#####################    EXPORT ONTOLOGY TO EXCEL TERMINOLOGY   #########################',
     )
     excelTerminology = SoSTerminology(pathsDict['excelTerminology'])
     ontology_to_terminology(
@@ -165,7 +165,7 @@ if len(PYTHONPATH_list) > 0:
     )
 
     print(
-        "#####################    CALCULATE DIFFERENCES BETWEEN BEFORE AND AFTER UPDATE #########################"
+        "#####################    CALCULATE DIFFERENCES BETWEEN BEFORE AND AFTER UPDATE #########################",
     )
     toolbox.calculate_difference_before_after(
         oldOntology=oldOnto,
@@ -183,38 +183,35 @@ if len(PYTHONPATH_list) > 0:
     )
 
     # Display output_log.txt file
-    with open('output_log.txt', 'r') as file:
+    with open('output_log.txt') as file:
         content = file.read()
         print(content)
 
     logging.disable(logging.INFO)
 
     print(
-        "###################################    CODE DATA EXTRACTION DONE    ##################################"
+        "###################################    CODE DATA EXTRACTION DONE    ##################################",
     )
 
 
 print(
-    '#####################    SEND GOOGLE CHAT NOTIFICATION    #########################'
+    '#####################    SEND GOOGLE CHAT NOTIFICATION    #########################',
 )
 
 if 'BUILD_URL' in environ_dict:
     BUILD_URL = environ_dict['BUILD_URL']
 
 if webhookURL is not None and BUILD_URL is not None:
-    with open('short_log.txt', 'r') as short_log_file:
+    with open('short_log.txt') as short_log_file:
         shortLog = short_log_file.read()
 
-    if platform is None:
-        platform = ''
-    else:
-        platform = ' on platform ' + platform
+    platform = '' if platform is None else ' on platform ' + platform
 
     cards = [
         {
             "header": {
                 "title": "Decentralized Ontology Update" + platform,
-                "subtitle": "Mister Jenkins",
+                "subtitle": "CI/CD",
                 "imageUrl": "https://www.coolcatcollars.co.uk/user/products/large/Leopold.jpg",
                 "imageStyle": "IMAGE",
             },
@@ -231,14 +228,14 @@ if webhookURL is not None and BUILD_URL is not None:
                                     "textButton": {
                                         "text": "FULL LOG",
                                         "onClick": {"openLink": {"url": BUILD_URL}},
-                                    }
-                                }
-                            ]
-                        }
-                    ]
+                                    },
+                                },
+                            ],
+                        },
+                    ],
                 },
             ],
-        }
+        },
     ]
 
     sendGChatNotification(webhook_url=webhookURL, textMessage=None, cards=cards)

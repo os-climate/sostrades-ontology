@@ -1,5 +1,6 @@
 '''
 Copyright 2022 Airbus SAS
+Modifications on 12/02/2025 Copyright 2025 Capgemini
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,13 +50,11 @@ class Parameter(SoSEntity):
             self.instances_list.append(usage)
 
     def add_unit(self, usage) -> None:
-        if usage.unit is not None:
-            if usage.unit not in self.unit_list:
-                self.unit_list.append(usage.unit)
+        if usage.unit is not None and usage.unit not in self.unit_list:
+            self.unit_list.append(usage.unit)
 
     def add_datatype(self, usage) -> None:
-        if usage.datatype is not None:
-            if usage.datatype not in self.datatype_list:
+        if usage.datatype is not None and usage.datatype not in self.datatype_list:
                 self.datatype_list.append(usage.datatype)
 
     def add_disciplineUsingParameter(self, disciplineID) -> None:

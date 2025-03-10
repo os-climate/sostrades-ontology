@@ -24,14 +24,10 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 
 
 class SoSTerminology:
-    """
-    Class to use the SoS Terminology
-    """
+    """Class to use the SoS Terminology"""
 
     def __init__(self, xlFilePath, loadOrCreate='load'):
-        """
-        Constructor
-        """
+        """Constructor"""
         self.filePath = xlFilePath
         if loadOrCreate == 'load':
             self.workbook = openpyxl.load_workbook(xlFilePath)
@@ -52,7 +48,7 @@ class SoSTerminology:
             for columnDict in columnsDict.values():
                 if columnDict['header'] not in headers:
                     print(
-                        f'{columnDict["header"]} is defined as a header but is not found in the Excel sheet'
+                        f'{columnDict["header"]} is defined as a header but is not found in the Excel sheet',
                     )
             columnsList = [
                 columnDict['header'] for columnDict in columnsDict.values()
@@ -60,20 +56,17 @@ class SoSTerminology:
             for header in headers:
                 if header not in columnsList:
                     print(
-                        f'{header} is found as a header in the Excel sheet but it is not defined in the code'
+                        f'{header} is found as a header in the Excel sheet but it is not defined in the code',
                     )
         return headers
 
     def get_sheet_dict(self, sheetName, headers, nameDictKey, startingRow=2):
         sheetDict = {}
         sheet = self.workbook[sheetName]
-        if nameDictKey != '':
-            indexDictKey = headers.index(nameDictKey)
-        else:
-            indexDictKey = 1
+        indexDictKey = headers.index(nameDictKey) if nameDictKey != '' else 1
 
         for i, row in enumerate(
-            sheet.iter_rows(min_row=startingRow, max_col=len(headers), values_only=True)
+            sheet.iter_rows(min_row=startingRow, max_col=len(headers), values_only=True),
         ):
             isNone = True
             row_dict = {}
@@ -107,12 +100,7 @@ class SoSTerminology:
                     return ',\n'.join([str(i) for i in arrayToConvert])
                 else:
                     return ''
-            elif (
-                isinstance(arrayToConvert, int)
-                or isinstance(arrayToConvert, float)
-                or isinstance(arrayToConvert, dict)
-                or isinstance(arrayToConvert, str)
-            ):
+            elif isinstance(arrayToConvert, (int, float, dict, str)):
                 return str(arrayToConvert)
             else:
                 print(f'Unknown type for {arrayToConvert}')
@@ -127,10 +115,10 @@ class SoSTerminology:
             stringB = stringB.replace('_dict', '').replace('_df', '')
             if stringA != stringB:
                 similarity1 = textdistance.damerau_levenshtein.similarity(
-                    stringA.lower(), stringB.lower()
+                    stringA.lower(), stringB.lower(),
                 )
                 similarity2 = textdistance.lcsseq.normalized_similarity(
-                    stringA.lower(), stringB.lower()
+                    stringA.lower(), stringB.lower(),
                 )
                 if similarity1 < 11 and similarity2 > 0.7:
                     similar.append(stringB)
@@ -165,7 +153,7 @@ class SoSTerminology:
         for row, rowDict in enumerate(dictToWrite):
             for col, key in enumerate(dictToWrite[rowDict]):
                 sheet.cell(
-                    column=col + 1, row=row + startRow, value=dictToWrite[rowDict][key]
+                    column=col + 1, row=row + startRow, value=dictToWrite[rowDict][key],
                 )
 
     def add_xl_table(self, tableName, sheet):
@@ -211,7 +199,7 @@ class SoSTerminology:
             for cell in row:
                 if cell.value:
                     dims[cell.column_letter] = max(
-                        (dims.get(cell.column_letter, 0), len(str(cell.value)))
+                        (dims.get(cell.column_letter, 0), len(str(cell.value))),
                     )
         for col, value in dims.items():
             maxWidth = 50
@@ -222,10 +210,10 @@ class SoSTerminology:
 
     def add_formatting(self, sheet, column, formatType, formatting='', formula=''):
         start = openpyxl.utils.cell.absolute_coordinate(
-            sheet.cell(2, column).coordinate
+            sheet.cell(2, column).coordinate,
         )
         end = openpyxl.utils.cell.absolute_coordinate(
-            sheet.cell(sheet.max_row, column).coordinate
+            sheet.cell(sheet.max_row, column).coordinate,
         )
         rangeString = start + ':' + end
 
@@ -256,46 +244,44 @@ class SoSTerminology:
         sheet.conditional_formatting.add(rangeString, rule)
 
     def add_list_to_sheet(self, listToAdd, sheetName, columnName):
-        if len(listToAdd):
-            if sheetName in self.workbook.sheetnames:
-                sheet = self.workbook[sheetName]
-                headers = self.get_sheet_headers(sheetName)
-                if columnName in headers:
-                    col_index = headers.index(columnName)
-                    # retrieve first empty row
-                    rowCount = 0
-                    for max_row, row in enumerate(sheet, 1):
-                        if row[col_index].value is not None:
-                            rowCount += 1
+        if len(listToAdd) and sheetName in self.workbook.sheetnames:
+            sheet = self.workbook[sheetName]
+            headers = self.get_sheet_headers(sheetName)
+            if columnName in headers:
+                col_index = headers.index(columnName)
+                # retrieve first empty row
+                rowCount = 0
+                for max_row, row in enumerate(sheet, 1):
+                    if row[col_index].value is not None:
+                        rowCount += 1
+                rowCount += 1
+
+                # add elements to the sheet
+                for element in listToAdd:
+                    cell = sheet.cell(
+                        column=col_index + 1, row=rowCount, value=str(element),
+                    )
                     rowCount += 1
 
-                    # add elements to the sheet
-                    for element in listToAdd:
-                        cell = sheet.cell(
-                            column=col_index + 1, row=rowCount, value=str(element)
-                        )
-                        rowCount += 1
-
     def update_list_in_sheet(self, listToUpdate, sheetName, columnName):
-        if len(listToUpdate):
-            if sheetName in self.workbook.sheetnames:
-                sheet = self.workbook[sheetName]
-                headers = self.get_sheet_headers(sheetName)
-                if columnName in headers:
-                    col_index = headers.index(columnName)
+        if len(listToUpdate) and sheetName in self.workbook.sheetnames:
+            sheet = self.workbook[sheetName]
+            headers = self.get_sheet_headers(sheetName)
+            if columnName in headers:
+                col_index = headers.index(columnName)
 
-                    # clear list:
-                    rowCount = 0
-                    for max_row, row in enumerate(sheet, 1):
-                        if rowCount > 0 and row[col_index].value is not None:
-                            cell = sheet.cell(
-                                column=col_index + 1, row=rowCount + 1, value=None
-                            )
-                            rowCount += 1
-                    # write new list
-                    rowCount = 2
-                    for element in listToUpdate:
+                # clear list:
+                rowCount = 0
+                for max_row, row in enumerate(sheet, 1):
+                    if rowCount > 0 and row[col_index].value is not None:
                         cell = sheet.cell(
-                            column=col_index + 1, row=rowCount + 1, value=element
+                            column=col_index + 1, row=rowCount + 1, value=None,
                         )
                         rowCount += 1
+                # write new list
+                rowCount = 2
+                for element in listToUpdate:
+                    cell = sheet.cell(
+                        column=col_index + 1, row=rowCount + 1, value=element,
+                    )
+                    rowCount += 1

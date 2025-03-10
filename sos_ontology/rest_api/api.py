@@ -16,12 +16,15 @@ limitations under the License.
 '''
 
 import logging
+import os
+import tempfile
 import time
 
 from flask import Flask, jsonify, make_response, request, send_file, session
 from werkzeug.exceptions import BadRequest
 
 from sos_ontology.core.sos_ontology import SoSOntology
+from sos_ontology.rest_api.utils import copy_file
 
 
 def random_string_for_secret_key():
@@ -43,6 +46,33 @@ def random_string_for_secret_key():
 
     return random.sample(all_characters, 32)
 
+
+# When in API mode, create a copy of the file in a tempoary copy of the ontology
+# So it can be loaded in parallel by several workers
+# Because rdflib does not allow parallel loading of the same file
+file_paths = SoSOntology.get_files_paths()
+
+ontology_owl_file_path, ontology_excel_file_path, ontology_log_file_path = file_paths
+
+# Create a temporary folder.
+temp_folder = tempfile.mkdtemp(prefix="ontology_temp_")
+
+# List of files to copy.
+files_to_copy = [
+    ontology_owl_file_path,
+    ontology_excel_file_path,
+    ontology_log_file_path,
+]
+
+# Copy each file into the temporary folder.
+for file_path in files_to_copy:
+    if not os.path.exists(file_path):
+        raise Exception(f"File not found {file_path}")
+    dest_path = os.path.join(temp_folder, os.path.basename(file_path))
+    copy_file(file_path, dest_path)
+
+# Update the ONTOLOGY_FOLDER environment variable.
+os.environ['ONTOLOGY_FOLDER'] = temp_folder
 
 SoSOntology.instance()
 
@@ -98,7 +128,6 @@ def get_general_information():
             ]
         }
     """
-
     ontology = SoSOntology.instance()
 
     resp = make_response(jsonify(ontology.get_general_information()), 200)
@@ -164,7 +193,6 @@ def load_study_ontology_data():
         }
 
     """
-
     data_request = request.json.get('study_ontology_request', None)
 
     missing_parameter = []
@@ -197,7 +225,6 @@ def get_full_parameter_label_list():
             }
         ]
     """
-
     ontology = SoSOntology.instance()
 
     resp = make_response(jsonify(ontology.get_full_parameter_label_list()), 200)
@@ -228,7 +255,6 @@ def get_full_process_list():
             }
         ]
     """
-
     ontology = SoSOntology.instance()
 
     resp = make_response(jsonify(ontology.get_full_process_list()), 200)
@@ -270,7 +296,6 @@ def get_full_discipline_list():
             }
         ]
     """
-
     ontology = SoSOntology.instance()
 
     resp = make_response(jsonify(ontology.get_full_discipline_list()), 200)
@@ -322,7 +347,6 @@ def get_full_parameter_list():
             }
         ]
     """
-
     ontology = SoSOntology.instance()
 
     resp = make_response(jsonify(ontology.get_full_parameter_list()), 200)
@@ -364,9 +388,7 @@ def retrieve_documentations():
 
 @app.route('/api/ontology/v1/download', methods=['GET'])
 def download_ontology_owl():
-    """
-    Methods that return the ontology owl to be downloaded
-    """
+    """Methods that return the ontology owl to be downloaded"""
     args = request.args
     if args is not None:
         filetype = args.get("filetype", None)
@@ -378,23 +400,19 @@ def download_ontology_owl():
                 path = ontology.ontology_excel_file_path
             else:
                 return str(
-                    f'Filetype {filetype} does not exists. Possible options are filetype == owl or filetype == xlsx'
+                    f'Filetype {filetype} does not exists. Possible options are filetype == owl or filetype == xlsx',
                 )
 
             try:
                 return send_file(path, as_attachment=True)
             except Exception as e:
                 return str(e)
-    return str(
-        'No correct parameter were given. Possible options are filetype == owl or filetype == xlsx'
-    )
+    return 'No correct parameter were given. Possible options are filetype == owl or filetype == xlsx'
 
 
 @app.route('/api/ontology/v1/download_logs', methods=['GET'])
 def download_ontology_logs():
-    """
-    Methods that return the ontology creation logs to be downloaded
-    """
+    """Methods that return the ontology creation logs to be downloaded"""
     ontology = SoSOntology.instance()
     path = ontology.ontology_log_file_path
 
@@ -450,7 +468,6 @@ def load_ontology_request():
         }
 
     """
-
     data_request = request.json.get('ontology_request', None)
 
     missing_parameter = []
@@ -483,7 +500,6 @@ def load_ontology_models_status():
             }
         }
     """
-
     ontology = SoSOntology.instance()
 
     result = {}
@@ -500,7 +516,6 @@ def load_ontology_models_status_filtered():
 
     Returned response is a list of class ModelStatus
     """
-
     linked_process_dict = request.json.get('linked_process_dict', None)
 
     ontology = SoSOntology.instance()
@@ -515,23 +530,23 @@ def load_ontology_process_metadata(process_identifier):
     ontology = SoSOntology.instance()
 
     return make_response(
-        jsonify(ontology.get_process_metadata(process_identifier)), 200
+        jsonify(ontology.get_process_metadata(process_identifier)), 200,
     )
 
 
 @app.route('/api/ontology/process/by/names', methods=['POST'])
 def load_ontology_process_metadata_by_names():
-    """given a list of process identifier, return a dictionary with each of their
+    """
+    given a list of process identifier, return a dictionary with each of their
     metadata
     """
-
     processes_name = request.json.get('processes_name', None)
 
     if processes_name is None:
         raise BadRequest('Missing mandatory parameter list "processes_name"')
     if not isinstance(processes_name, list):
         raise BadRequest(
-            f'Parameter "processes_name" has the wrong type, intended "list" received "{type(processes_name)}"'
+            f'Parameter "processes_name" has the wrong type, intended "list" received "{type(processes_name)}"',
         )
 
     ontology = SoSOntology.instance()
@@ -547,26 +562,27 @@ def load_ontology_process_metadata_by_names():
 
 @app.route('/api/ontology/repository/<string:repository_identifier>', methods=['GET'])
 def load_ontology_repository_metadata(repository_identifier):
+    """Gets the repository metadata"""
     ontology = SoSOntology.instance()
 
     return make_response(
-        jsonify(ontology.get_repo_metadata(repository_identifier)), 200
+        jsonify(ontology.get_repo_metadata(repository_identifier)), 200,
     )
 
 
 @app.route('/api/ontology/repository/by/names', methods=['POST'])
 def load_ontology_repository_metadata_by_names():
-    """given a list of repository identifier, return a dictionary with each of their
+    """
+    given a list of repository identifier, return a dictionary with each of their
     metadata
     """
-
     repositories_name = request.json.get('repositories_name', None)
 
     if repositories_name is None:
         raise BadRequest('Missing mandatory repository list "repositories_name"')
     if not isinstance(repositories_name, list):
         raise BadRequest(
-            f'Parameter "repositories_name" has the wrong type, intended "list" received "{type(repositories_name)}"'
+            f'Parameter "repositories_name" has the wrong type, intended "list" received "{type(repositories_name)}"',
         )
 
     ontology = SoSOntology.instance()
@@ -582,7 +598,7 @@ def load_ontology_repository_metadata_by_names():
 
 @app.route('/api/ontology/n2', methods=['POST'])
 def load_ontology_n2():
-
+    """Gets the n2 matrix"""
     treeView = request.json.get('treeview', None)
 
     missing_parameter = []
@@ -605,35 +621,38 @@ def load_ontology_n2():
 
 
 @app.route(
-    '/api/ontology/markdown_documentation/<string:element_identifier>', methods=['GET']
+    '/api/ontology/markdown_documentation/<string:element_identifier>', methods=['GET'],
 )
 def load_ontology_markdown_documentation(element_identifier):
+    """Gets the markdown documentation of the element"""
     ontology = SoSOntology.instance()
 
     return make_response(
-        jsonify(ontology.get_markdown_documentation(element_identifier)), 200
+        jsonify(ontology.get_markdown_documentation(element_identifier)), 200,
     )
 
 
 @app.route('/api/ping', methods=['GET'])
 def ping():
+    """Standard ping route"""
     return make_response(jsonify('pong'), 200)
 
 
 @app.before_request
 def before_request():
+    """Store time for after request handler to log information"""
     session[START_TIME] = time.time()
 
 
 @app.after_request
 def after_request(response):
-
+    """After request handler to log information"""
     duration = 0
     if START_TIME in session:
         duration = time.time() - session[START_TIME]
 
     app.logger.info(
-        f'{request.remote_addr}, {request.method}, {request.scheme}, {request.full_path}, {response.status}, {duration} sec.'
+        f'{request.remote_addr}, {request.method}, {request.scheme}, {request.full_path}, {response.status}, {duration} sec.',
     )
     return response
 
