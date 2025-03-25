@@ -286,8 +286,13 @@ class SoSCodeDataExtractor:
                         if isinstance(node, ast.ImportFrom):
                             module = node.module
                         for n in node.names:
-                            imports[n.name] = {
-                                "module": module, "name": n.name}
+
+                            if n.asname is not None:
+                                imports[n.asname] = {
+                                    "module": module, "name": n.name}
+                            else:
+                                imports[n.name] = {
+                                    "module": module, "name": n.name}
                 return imports
 
         except Exception as ex:
