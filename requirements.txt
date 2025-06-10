@@ -3,7 +3,6 @@
 
 # External libraries
 Flask==2.3.3
-gitpython==3.1.43
 jsonpickle==3.2.2
 numpy==1.26.4
 openpyxl==3.1.5
