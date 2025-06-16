@@ -374,7 +374,7 @@ class SoSOntology(Ontology):
 
     def get_study_ontology_data(self, study_ontology_request: dict):
         """
-        methods that retrieves ontology data for a given input list of disciplines and parameter usages
+        Methods that retrieves ontology data for a given input list of disciplines and parameter usages
 
         Args:
             study_ontology_request (dict): _description_

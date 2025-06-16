@@ -9,14 +9,16 @@ numpy==1.26.4
 openpyxl==3.1.5
 pandas==2.2.2
 rdflib==5.0.0
-requests==2.32.3
+requests==2.32.4
 git+https://github.com/AleksTk/table-logger.git@v0.3.7  # table-logger==0.3.7 not released on pypi
 textdistance==4.6.2
 werkzeug==2.3.8
 
 # Development requirements
-pytest==8.3.5
-pytest-cov==6.1.0
-pytest-xdist==3.6.1
-pytest-durations==1.4.0
-ruff==0.6.8
+# breaking change in 8.2.0 https://docs.pytest.org/en/stable/changelog.html#pytest-8-2-0-2024-04-27
+# Will be fixed in 8.3.0 https://github.com/pytest-dev/pytest/issues/12275#issuecomment-2108348204
+pytest==8.1.2
+pytest-cov==6.2.0
+pytest-xdist==3.7.0
+pytest-durations==1.5.2
+ruff==0.11.13

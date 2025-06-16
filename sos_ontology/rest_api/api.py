@@ -537,7 +537,7 @@ def load_ontology_process_metadata(process_identifier):
 @app.route('/api/ontology/process/by/names', methods=['POST'])
 def load_ontology_process_metadata_by_names():
     """
-    given a list of process identifier, return a dictionary with each of their
+    Given a list of process identifier, return a dictionary with each of their
     metadata
     """
     processes_name = request.json.get('processes_name', None)
@@ -573,7 +573,7 @@ def load_ontology_repository_metadata(repository_identifier):
 @app.route('/api/ontology/repository/by/names', methods=['POST'])
 def load_ontology_repository_metadata_by_names():
     """
-    given a list of repository identifier, return a dictionary with each of their
+    Given a list of repository identifier, return a dictionary with each of their
     metadata
     """
     repositories_name = request.json.get('repositories_name', None)

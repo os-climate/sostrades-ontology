@@ -918,7 +918,7 @@ class SoSCodeDataExtractor:
                     markdown_data = ""
 
                     try:
-                        with open(markdown_filepath, "r+t", encoding="utf-8") as f:
+                        with open(markdown_filepath, "r+", encoding="utf-8") as f:
                             markdown_data = f.read()
 
                         # Find file reference in markdown file
