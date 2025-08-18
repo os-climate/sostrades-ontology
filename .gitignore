@@ -1,6 +1,8 @@
 __pycache__
 .project
 .pydevproject
+.python-version
+uv.lock
 .settings/
 coverage.xml
 nosetests.xml
