@@ -21,7 +21,7 @@ import base64
 import copy
 import logging
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from importlib import import_module
 from logging import Logger
 from os import environ, listdir, pathsep, scandir, sep
@@ -282,7 +282,7 @@ class SoSCodeDataExtractor:
                 p = ast.parse(data)
                 for node in ast.walk(p):
                     module = None
-                    if isinstance(node, (ast.Import, ast.ImportFrom)):
+                    if isinstance(node, ast.Import | ast.ImportFrom):
                         if isinstance(node, ast.ImportFrom):
                             module = node.module
                         for n in node.names:
@@ -1178,7 +1178,7 @@ class SoSCodeDataExtractor:
                             commit = repo.active_branch.commit
                         commited_date = datetime.fromtimestamp(
                             commit.committed_date,
-                            timezone.utc,
+                            UTC,
                         )
 
                         if previous_code_repo_dict.get(repo_name, {}) != {}:

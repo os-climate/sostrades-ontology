@@ -34,7 +34,7 @@ class SoSToolbox:
                     return ',\n'.join([str(i) for i in arrayToConvert])
                 else:
                     return ''
-            elif isinstance(arrayToConvert, (int, float, dict, str)):
+            elif isinstance(arrayToConvert, (int | float | dict | str)):
                 return str(arrayToConvert)
             else:
                 print(f'Unknown type for {arrayToConvert}')

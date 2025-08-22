@@ -294,7 +294,7 @@ class Ontology:
                 if valueLiteral is not None and len(valueLiteral) > 0:
                     returnLiteral = ',\n'.join([str(i) for i in valueLiteral])
             elif (
-                isinstance(valueLiteral, (int, float, dict, str))
+                isinstance(valueLiteral, int | float | dict | str)
             ):
                 returnLiteral = str(valueLiteral)
 
@@ -316,7 +316,7 @@ class Ontology:
                 if valueLiteral is not None and len(valueLiteral) > 0:
                     returnLiteral = ',\n'.join([str(i) for i in valueLiteral])
             elif (
-                isinstance(valueLiteral, (int, float, dict, str))
+                isinstance(valueLiteral, int | float | dict | str)
             ):
                 returnLiteral = str(valueLiteral)
 
