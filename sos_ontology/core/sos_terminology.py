@@ -72,7 +72,7 @@ class SoSTerminology:
             row_dict = {}
             NoneType = type(None)
             for j in range(len(headers)):
-                if not isinstance(row[j], (str, NoneType)):
+                if not isinstance(row[j], (str | NoneType)):
                     if isinstance(row[j], (datetime.datetime)):
                         row_dict[headers[j]] = row[j].strftime('%d %B %Y')
                 else:
@@ -100,7 +100,7 @@ class SoSTerminology:
                     return ',\n'.join([str(i) for i in arrayToConvert])
                 else:
                     return ''
-            elif isinstance(arrayToConvert, (int, float, dict, str)):
+            elif isinstance(arrayToConvert, (int | float | dict | str)):
                 return str(arrayToConvert)
             else:
                 print(f'Unknown type for {arrayToConvert}')
