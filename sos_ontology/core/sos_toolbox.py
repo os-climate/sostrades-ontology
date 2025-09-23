@@ -130,7 +130,7 @@ class SimpleTableLogger:
     def separator(self, columns=None):
         """
         Write a separator row for the specified columns or all columns
-        
+
         Args:
             columns (list, optional): List of column names to add separators for.
                                     If None, separates all columns.
