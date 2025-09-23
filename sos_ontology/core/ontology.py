@@ -21,8 +21,8 @@ from os.path import basename
 
 import numpy as np
 import pandas as pd
-from rdflib import ConjunctiveGraph, Literal, Namespace, URIRef
-from rdflib.namespace import OWL, RDF, XSD, split_uri
+from rdflib import Dataset, Literal, Namespace, URIRef
+from rdflib.namespace import OWL, RDF, RDFS, XSD, split_uri
 from rdflib.term import bind
 
 from sos_ontology.core.sos_toolbox import SoSToolbox
@@ -36,7 +36,7 @@ class Ontology:
         # Retrieve logging system
         self.logger = logging.getLogger('SoS.Ontology')
 
-        self.graph = ConjunctiveGraph()
+        self.graph = Dataset()
         self.namespace_dict = {}
         self.countAddedTriples = dict({'individuals': 0, 'triples': 0})
         self.namespace_dict = {}
@@ -56,7 +56,7 @@ class Ontology:
 
     def load(self, path, onto_format):
         # Load ontology owl file
-        self.graph.load(path, format=onto_format)
+        self.graph.parse(path, format=onto_format)
         self.logger.info(
             f'Ontology {basename(path)} loaded with {len(self.graph)} triples',
         )
@@ -141,11 +141,14 @@ class Ontology:
         return queryResults
 
     def label(self, objectValue):
-        labelList = self.graph.preferredLabel(objectValue)
+        # In rdflib 7.x, preferredLabel is no longer available, so we manually query for RDFS.label
         if objectValue is not None:
-            if len(labelList) > 0:
-                return labelList[0][1].value
+            # Try to get the RDFS label
+            label_value = self.graph.value(objectValue, RDFS.label)
+            if label_value is not None:
+                return str(label_value)
             else:
+                # Fallback to extracting from URI
                 splitURI = split_uri(objectValue)
                 return splitURI[len(splitURI) - 1]
         else:
@@ -240,8 +243,10 @@ class Ontology:
             # self.add_triple(s, p, o_updated)
 
     def add_triples_list(self, triplesList):
-        # make use of addN method
-        self.graph.addN(triplesList)
+        # Convert triples to quads for Dataset.addN by adding default_context
+        # Dataset.addN requires (subject, predicate, object, graph) format
+        quads = [(triple[0], triple[1], triple[2], self.graph.default_context) for triple in triplesList]
+        self.graph.addN(quads)
         # for triple in triplesList:
         #     self.add_triple(triple[0], triple[1], triple[2])
 
