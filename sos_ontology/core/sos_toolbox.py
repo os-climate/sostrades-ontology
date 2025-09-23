@@ -39,22 +39,30 @@ class SimpleTableLogger:
         self._write_header()
 
     def _write_header(self):
-        """Write table header with column names"""
+        """Write table header with column names and top border"""
         header_parts = []
         separator_parts = []
+        top_border_parts = []
 
         for col in self.columns:
             width = self.column_widths[col]
             header_parts.append(col.ljust(width))
             separator_parts.append('-' * width)
+            top_border_parts.append('-' * width)
 
-        header_line = ' | '.join(header_parts) + '\n'
-        separator_line = '-+-'.join(separator_parts) + '\n'
+        # Top border
+        top_border_line = '+-' + '-+-'.join(top_border_parts) + '-+\n'
+        # Header with side borders
+        header_line = '| ' + ' | '.join(header_parts) + ' |\n'
+        # Header separator with side borders
+        separator_line = '+-' + '-+-'.join(separator_parts) + '-+\n'
 
         if self.file:
+            self.file.write(top_border_line.encode('utf-8'))
             self.file.write(header_line.encode('utf-8'))
             self.file.write(separator_line.encode('utf-8'))
         else:
+            print(top_border_line, end='')
             print(header_line, end='')
             print(separator_line, end='')
 
@@ -79,7 +87,7 @@ class SimpleTableLogger:
             else:
                 row_parts.append(' ' * self.column_widths[col])
 
-        row_line = ' | '.join(row_parts) + '\n'
+        row_line = '| ' + ' | '.join(row_parts) + ' |\n'
 
         if self.file:
             self.file.write(row_line.encode('utf-8'))
@@ -113,11 +121,49 @@ class SimpleTableLogger:
                     formatted_value = ' ' * self.column_widths[col]
                 row_parts.append(formatted_value)
 
-            row_line = ' | '.join(row_parts) + '\n'
+            row_line = '| ' + ' | '.join(row_parts) + ' |\n'
             if self.file:
                 self.file.write(row_line.encode('utf-8'))
             else:
                 print(row_line, end='')
+
+    def separator(self, columns=None):
+        """
+        Write a separator row for the specified columns or all columns
+        
+        Args:
+            columns (list, optional): List of column names to add separators for.
+                                    If None, separates all columns.
+
+        """
+        separator_parts = []
+        junction_chars = []
+
+        for i, col in enumerate(self.columns):
+            width = self.column_widths[col]
+            if columns is None or col in columns:
+                # Add separator for this column
+                separator_parts.append('-' * width)
+                # Junction character depends on whether this column has separator
+                junction_chars.append('-')
+            else:
+                # Add empty space for this column
+                separator_parts.append(' ' * width)
+                # Junction character is space for non-separator columns
+                junction_chars.append(' ')
+
+        # Build the row with appropriate junction characters
+        row_line = '+'
+        for i, (part, junction_char) in enumerate(zip(separator_parts, junction_chars)):
+            row_line += junction_char + part + junction_char
+            if i < len(separator_parts) - 1:
+                row_line += '+'
+        row_line += '+\n'
+
+        if self.file:
+            self.file.write(row_line.encode('utf-8'))
+        else:
+            print(row_line, end='')
 
 
 class SoSToolbox:
@@ -296,7 +342,7 @@ class SoSToolbox:
                         removed_dict = dict(enumerate(diffDict["removed_list"]))
                         for i in range(max_item):
                             tbl_log(new_dict.get(i, ''), removed_dict.get(i, ''))
-                        tbl_log('-' * added_col_width, '-' * removed_col_width)
+                        tbl_log.separator()
 
             else:
                 short_log_file.write(b'No changes, nothing to update')
@@ -324,6 +370,7 @@ class SoSToolbox:
                         tbl_log(
                             process_error_dict['message'], process_error_dict['error'],
                         )
+                    tbl_log.separator()
 
                 # write info about Usecases that are impossible to load
                 if "loadUsecase" in logs_dict["errors"] and len(logs_dict["errors"]["loadUsecase"]) > 0:
@@ -345,6 +392,7 @@ class SoSToolbox:
                         tbl_log(
                             process_error_dict['message'], process_error_dict['error'],
                         )
+                    tbl_log.separator()
 
             # write info about ontology info missing
             if "ontologyInfo" in logs_dict:
@@ -378,6 +426,7 @@ class SoSToolbox:
                     )
                     for entity_dict in entity_list:
                         tbl_log(entity_dict['id'], entity_dict['error'])
+                    tbl_log.separator()
 
             # write info when parameter is missing from glossary
             if "no_parameter_info" in logs_dict and logs_dict["no_parameter_info"] != {}:
@@ -478,7 +527,7 @@ class SoSToolbox:
                         tbl(code_repo, param)
                     else:
                         tbl('', param)
-                tbl('-' * max_width_first_col, '-' * max_width_second_col)
+                tbl.separator()
 
     def log_inconsistencies_as_table(self, unsorted_inconsistencies_dict, log_file):
         if unsorted_inconsistencies_dict != {}:
@@ -572,13 +621,5 @@ class SoSToolbox:
                                 f'{value}: {len(disciplines_list)} disciplines',
                             )
                     if inconsistency_type_count + 1 < len(param_dict.keys()):
-                        tbl(
-                            '',
-                            '-' * max_width_second_col,
-                            '-' * max_width_third_col,
-                        )
-                tbl(
-                    '-' * max_width_first_col,
-                    '-' * max_width_second_col,
-                    '-' * max_width_third_col,
-                )
+                        tbl.separator(['Type', 'Discipline / Glossary'])
+                tbl.separator()
