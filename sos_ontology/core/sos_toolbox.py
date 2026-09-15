@@ -16,7 +16,154 @@ limitations under the License.
 '''
 
 import jsonpickle
-from table_logger import TableLogger
+
+
+class SimpleTableLogger:
+    """Simple replacement for table-logger with basic formatting capabilities"""
+
+    def __init__(self, columns, file=None, colwidth=None, default_colwidth=20):
+        self.columns = columns.split(',') if isinstance(columns, str) else columns
+        self.file = file
+        self.colwidth = colwidth or {}
+        self.default_colwidth = default_colwidth
+
+        # Calculate column widths
+        self.column_widths = {}
+        for col in self.columns:
+            if col in self.colwidth:
+                self.column_widths[col] = self.colwidth[col]
+            else:
+                self.column_widths[col] = max(len(col), self.default_colwidth)
+
+        # Write header
+        self._write_header()
+
+    def _write_header(self):
+        """Write table header with column names and top border"""
+        header_parts = []
+        separator_parts = []
+        top_border_parts = []
+
+        for col in self.columns:
+            width = self.column_widths[col]
+            header_parts.append(col.ljust(width))
+            separator_parts.append('-' * width)
+            top_border_parts.append('-' * width)
+
+        # Top border
+        top_border_line = '+-' + '-+-'.join(top_border_parts) + '-+\n'
+        # Header with side borders
+        header_line = '| ' + ' | '.join(header_parts) + ' |\n'
+        # Header separator with side borders
+        separator_line = '+-' + '-+-'.join(separator_parts) + '-+\n'
+
+        if self.file:
+            self.file.write(top_border_line.encode('utf-8'))
+            self.file.write(header_line.encode('utf-8'))
+            self.file.write(separator_line.encode('utf-8'))
+        else:
+            print(top_border_line, end='')
+            print(header_line, end='')
+            print(separator_line, end='')
+
+    def __call__(self, *args):
+        """Log a row of data"""
+        row_parts = []
+
+        for i, (col, value) in enumerate(zip(self.columns, args)):
+            if i < len(args):
+                str_value = str(value) if value is not None else ''
+                width = self.column_widths[col]
+
+                # Handle multi-line values
+                if '\n' in str_value:
+                    lines = str_value.split('\n')
+                    # For multi-line, just use the first line for the main row
+                    formatted_value = lines[0][:width].ljust(width)
+                else:
+                    formatted_value = str_value[:width].ljust(width)
+
+                row_parts.append(formatted_value)
+            else:
+                row_parts.append(' ' * self.column_widths[col])
+
+        row_line = '| ' + ' | '.join(row_parts) + ' |\n'
+
+        if self.file:
+            self.file.write(row_line.encode('utf-8'))
+        else:
+            print(row_line, end='')
+
+        # Handle multi-line values - write additional lines
+        max_lines = 1
+        for i, value in enumerate(args):
+            if i < len(self.columns) and value is not None:
+                str_value = str(value)
+                if '\n' in str_value:
+                    max_lines = max(max_lines, len(str_value.split('\n')))
+
+        # Write additional lines for multi-line content
+        for line_num in range(1, max_lines):
+            row_parts = []
+            for i, (col, value) in enumerate(zip(self.columns, args)):
+                if i < len(args) and value is not None:
+                    str_value = str(value)
+                    if '\n' in str_value:
+                        lines = str_value.split('\n')
+                        if line_num < len(lines):
+                            width = self.column_widths[col]
+                            formatted_value = lines[line_num][:width].ljust(width)
+                        else:
+                            formatted_value = ' ' * self.column_widths[col]
+                    else:
+                        formatted_value = ' ' * self.column_widths[col]
+                else:
+                    formatted_value = ' ' * self.column_widths[col]
+                row_parts.append(formatted_value)
+
+            row_line = '| ' + ' | '.join(row_parts) + ' |\n'
+            if self.file:
+                self.file.write(row_line.encode('utf-8'))
+            else:
+                print(row_line, end='')
+
+    def separator(self, columns=None):
+        """
+        Write a separator row for the specified columns or all columns
+
+        Args:
+            columns (list, optional): List of column names to add separators for.
+                                    If None, separates all columns.
+
+        """
+        separator_parts = []
+        junction_chars = []
+
+        for i, col in enumerate(self.columns):
+            width = self.column_widths[col]
+            if columns is None or col in columns:
+                # Add separator for this column
+                separator_parts.append('-' * width)
+                # Junction character depends on whether this column has separator
+                junction_chars.append('-')
+            else:
+                # Add empty space for this column
+                separator_parts.append(' ' * width)
+                # Junction character is space for non-separator columns
+                junction_chars.append(' ')
+
+        # Build the row with appropriate junction characters
+        row_line = '+'
+        for i, (part, junction_char) in enumerate(zip(separator_parts, junction_chars)):
+            row_line += junction_char + part + junction_char
+            if i < len(separator_parts) - 1:
+                row_line += '+'
+        row_line += '+\n'
+
+        if self.file:
+            self.file.write(row_line.encode('utf-8'))
+        else:
+            print(row_line, end='')
 
 
 class SoSToolbox:
@@ -182,7 +329,7 @@ class SoSToolbox:
                         removed_col_width = max(
                             [len(p) for p in diffDict["removed_list"]] + [7],
                         )
-                        tbl_log = TableLogger(
+                        tbl_log = SimpleTableLogger(
                             columns='Added,Removed',
                             file=log_file,
                             colwidth={
@@ -195,7 +342,7 @@ class SoSToolbox:
                         removed_dict = dict(enumerate(diffDict["removed_list"]))
                         for i in range(max_item):
                             tbl_log(new_dict.get(i, ''), removed_dict.get(i, ''))
-                        tbl_log('-' * added_col_width, '-' * removed_col_width)
+                        tbl_log.separator()
 
             else:
                 short_log_file.write(b'No changes, nothing to update')
@@ -216,13 +363,14 @@ class SoSToolbox:
                         b"\n\n--------------Processes that fail to load:--------------\n\n",
                     )
 
-                    tbl_log = TableLogger(
+                    tbl_log = SimpleTableLogger(
                         columns='Process,Error', file=log_file, default_colwidth=70,
                     )
                     for process_error_dict in logs_dict["errors"]["loadProcess"]:
                         tbl_log(
                             process_error_dict['message'], process_error_dict['error'],
                         )
+                    tbl_log.separator()
 
                 # write info about Usecases that are impossible to load
                 if "loadUsecase" in logs_dict["errors"] and len(logs_dict["errors"]["loadUsecase"]) > 0:
@@ -237,13 +385,14 @@ class SoSToolbox:
                         b"\n\n--------------Usecases that fail to load:--------------\n\n",
                     )
 
-                    tbl_log = TableLogger(
+                    tbl_log = SimpleTableLogger(
                         columns='Usecase,Error', file=log_file, default_colwidth=70,
                     )
                     for process_error_dict in logs_dict["errors"]["loadUsecase"]:
                         tbl_log(
                             process_error_dict['message'], process_error_dict['error'],
                         )
+                    tbl_log.separator()
 
             # write info about ontology info missing
             if "ontologyInfo" in logs_dict:
@@ -270,13 +419,14 @@ class SoSToolbox:
                         [len(entity_dict['error']) for entity_dict in entity_list]
                         + [len('Error')],
                     )
-                    tbl_log = TableLogger(
+                    tbl_log = SimpleTableLogger(
                         columns='Entity,Error',
                         file=log_file,
                         colwidth={'Entity': entity_width, 'Error': error_width},
                     )
                     for entity_dict in entity_list:
                         tbl_log(entity_dict['id'], entity_dict['error'])
+                    tbl_log.separator()
 
             # write info when parameter is missing from glossary
             if "no_parameter_info" in logs_dict and logs_dict["no_parameter_info"] != {}:
@@ -363,7 +513,7 @@ class SoSToolbox:
                 ],
             )
             max_width_second_col = max([max_width_second_col, len(second_col_name)])
-            tbl = TableLogger(
+            tbl = SimpleTableLogger(
                 columns=f'{first_col_name},{second_col_name}',
                 colwidth={
                     first_col_name: max_width_first_col,
@@ -377,7 +527,7 @@ class SoSToolbox:
                         tbl(code_repo, param)
                     else:
                         tbl('', param)
-                tbl('-' * max_width_first_col, '-' * max_width_second_col)
+                tbl.separator()
 
     def log_inconsistencies_as_table(self, unsorted_inconsistencies_dict, log_file):
         if unsorted_inconsistencies_dict != {}:
@@ -416,7 +566,7 @@ class SoSToolbox:
             max_width_second_col = max([len(k) for k in second_col_elements])
             max_width_third_col = max([len(k) for k in third_col_elements])
 
-            tbl = TableLogger(
+            tbl = SimpleTableLogger(
                 columns='Parameter,Type,Discipline / Glossary',
                 colwidth={
                     'Parameter': max_width_first_col,
@@ -470,14 +620,6 @@ class SoSToolbox:
                                 '',
                                 f'{value}: {len(disciplines_list)} disciplines',
                             )
-                    if inconsistency_type_count < len(param_dict.keys()):
-                        tbl(
-                            '',
-                            '-' * max_width_second_col,
-                            '-' * max_width_third_col,
-                        )
-                tbl(
-                    '-' * max_width_first_col,
-                    '-' * max_width_second_col,
-                    '-' * max_width_third_col,
-                )
+                    if inconsistency_type_count + 1 < len(param_dict.keys()):
+                        tbl.separator(['Type', 'Discipline / Glossary'])
+                tbl.separator()

@@ -21,7 +21,7 @@ from os import environ
 from os.path import dirname, exists, isfile, join
 
 from rdflib import Literal, Namespace, URIRef
-from rdflib.namespace import DC, OWL, RDF, RDFS, SKOS, XSD, split_uri
+from rdflib.namespace import DC, DCTERMS, OWL, RDF, RDFS, SKOS, XSD, split_uri
 
 import sos_ontology
 from sos_ontology.core.ontology import Ontology
@@ -945,7 +945,7 @@ class SoSOntology(Ontology):
         creationDateTriple = [
             (
                 ontoURI,
-                DC.modified,
+                DCTERMS.modified,
                 Literal(update_date, datatype=XSD.string),
                 self.graph,
             ),
@@ -1894,7 +1894,7 @@ class SoSOntology(Ontology):
                     print(f'Failed creating {aboxPath}')
 
             # we export the graph with all the added triples
-            self.graph.serialize(destination=aboxPath)
+            self.graph.serialize(destination=aboxPath, format='xml')
 
             print(f'SoS Ontology saved with {len(self.graph)} triples !')
 
@@ -2424,7 +2424,7 @@ class SoSOntology(Ontology):
             self.graph.value(ontoURI, OWL.versionIRI, None, default=None, any=True),
         )
         last_updated = str(
-            self.graph.value(ontoURI, DC.modified, None, default=None, any=True),
+            self.graph.value(ontoURI, DCTERMS.modified, None, default=None, any=True),
         )
         general_information['description'] = description
         general_information['iri'] = str(ontoURI)

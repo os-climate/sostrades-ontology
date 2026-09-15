@@ -133,9 +133,8 @@ class SoSCodeDataExtractor:
         #     'sostrades-core': self.code_repositories_dict['sostrades-core']
         # }
         print(
-            f'Ready to extract info from {len(self.code_repositories_dict.keys())} code repositories',
+            f'Ready to extract info from {len(self.code_repositories_dict.keys())} code repositories : {list(self.code_repositories_dict.keys())}',
         )
-        print(list(self.code_repositories_dict.keys()))
 
     def add_to_log(self, category, sub_category=None, message=None, exception=None):
         if self.logs_dict is not None:
